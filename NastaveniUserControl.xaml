@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Referee.NastaveniUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:Referee"
+             mc:Ignorable="d" 
+             d:DesignHeight="509" d:DesignWidth="932">
+    <Grid>
+        <TextBlock Text="Údaje zobrazované v přímém tisku"/>
+        <TextBlock Text="Created by Ondřej Machota" HorizontalAlignment="Right" Width="167" Height="26" VerticalAlignment="Bottom"/>
+        <ItemsControl x:Name="DirectPrintSelectionItemsControl" Grid.IsSharedSizeScope="True" Margin="0,22,0,0" HorizontalAlignment="Left" Width="206">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:SelectableViewModel}">
+                    <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Checkerz" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsSelected}" Style="{StaticResource MaterialDesignActionLightToggleButton}" Content="{Binding Code}" />
+                            <StackPanel Margin="8 0 0 0" Grid.Column="1">
+                                <TextBlock FontWeight="Bold" Text="{Binding Jmeno}" />
+                                <TextBlock Text="{Binding Jmeno}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button x:Name="SaveSettingsButton" Content="Uložit" Style="{StaticResource MaterialDesignRaisedAccentButton}" Margin="0,0,32,31" HorizontalAlignment="Right" Width="135" VerticalAlignment="Bottom" Click="SaveSettingsButton_Click"/>
+    </Grid>
+</UserControl>
