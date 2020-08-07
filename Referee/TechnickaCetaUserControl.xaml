@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Referee"
+             xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
              mc:Ignorable="d" 
              d:DesignHeight="509" d:DesignWidth="932">
     
@@ -25,7 +26,7 @@
                         <TextBox.Text>
                             <Binding Path="JmenoRozhodciho" Source="{StaticResource DataValid}" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRule/>
+                                    <infrastructure:NotEmptyValidationRule/>
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
@@ -34,7 +35,7 @@
                         <TextBox.Text>
                             <Binding Path="PrijmeniRozhodciho" Source="{StaticResource DataValid}" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRule />
+                                    <infrastructure:NotEmptyValidationRule />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
@@ -52,7 +53,7 @@
                         <TextBox.Text>
                             <Binding Path="AdresaRozhodciho" Source="{StaticResource DataValid}" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRule />
+                                    <infrastructure:NotEmptyValidationRule />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
@@ -61,7 +62,7 @@
                         <TextBox.Text>
                             <Binding Path="MestoRozhodciho" Source="{StaticResource DataValid}" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRule />
+                                    <infrastructure:NotEmptyValidationRule />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>

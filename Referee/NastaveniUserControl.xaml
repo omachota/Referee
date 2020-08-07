@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Referee"
+             xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
              mc:Ignorable="d" 
              d:DesignHeight="509" d:DesignWidth="932">
     <Grid>
@@ -12,7 +13,7 @@
         <TextBlock Text="Created by Ondřej Machota" HorizontalAlignment="Right" Width="167" Height="26" VerticalAlignment="Bottom"/>
         <ItemsControl x:Name="DirectPrintSelectionItemsControl" Grid.IsSharedSizeScope="True" Margin="0,22,0,0" HorizontalAlignment="Left" Width="206">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:SelectableViewModel}">
+                <DataTemplate DataType="{x:Type infrastructure:SelectableViewModel}">
                     <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}">
                         <Grid>
                             <Grid.ColumnDefinitions>

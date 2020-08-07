@@ -15,6 +15,7 @@ using iTextSharp.text.pdf;
 using Paragraph = iTextSharp.text.Paragraph;
 using System.Collections;
 using System.Reflection;
+using Referee.Models;
 
 namespace Referee
 {
@@ -149,13 +150,13 @@ namespace Referee
         {
             if (ValidateNewRozhodci())
             {
-                Rozhodci rozhodci = new Rozhodci(0, JmenoTextBox.Text, PrijmeniTextBox.Text, DatumNarozeniDatePicker.Text.ToString(), AdresaTextBox.Text, MestoTextBox.Text);
+                Rozhodci rozhodci = new Rozhodci(JmenoTextBox.Text, PrijmeniTextBox.Text, DateTime.Parse(DatumNarozeniDatePicker.Text), AdresaTextBox.Text, MestoTextBox.Text, 0);
                 using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
                     pripojeni.Execute("INSERT INTO Rozhodci(Jmeno,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Jmeno,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", rozhodci);
                 }
                 VytvorNovehorozhodcihoButton.IsEnabled = false;
-                addNewRozhodciDialogHost.IsOpen = false;
+                AddNewRozhodciDialogHost.IsOpen = false;
                 NactiDataGridSRozhodcimiZnovu();
             }
         }
@@ -195,7 +196,7 @@ namespace Referee
             {
                 PrvkyVDialogHost(Visibility.Collapsed, 350, Visibility.Collapsed);
             }
-            addNewRozhodciDialogHost.IsOpen = false;
+            AddNewRozhodciDialogHost.IsOpen = false;
         }
 
         private void EditovatRozhodcihoButton_Click(object sender, RoutedEventArgs e)
@@ -205,11 +206,11 @@ namespace Referee
 
             foreach (Rozhodci rozhodci in RozhodciDataGrid.SelectedItems)
             {
-                JmenoTextBox.Text = rozhodci.Jmeno;
-                PrijmeniTextBox.Text = rozhodci.Prijmeni;
-                AdresaTextBox.Text = rozhodci.AdresaBydliste;
-                MestoTextBox.Text = rozhodci.Mesto;
-                DatumNarozeniDatePicker.Text = rozhodci.DatumNarozeni;
+                JmenoTextBox.Text = rozhodci.FirstName;
+                PrijmeniTextBox.Text = rozhodci.LastName;
+                AdresaTextBox.Text = rozhodci.Address;
+                MestoTextBox.Text = rozhodci.City;
+                DatumNarozeniDatePicker.Text = rozhodci.BirthDate.ToShortDateString();
                 editovanyRozhodci = rozhodci.Id;
             }
         }
@@ -227,7 +228,7 @@ namespace Referee
             VytvorNovehorozhodcihoButton.Visibility = novy;
             VytvorNovehorozhodcihoButton.IsEnabled = true;
             SmazRozhodcihoButton.Visibility = smazat;
-            addNewRozhodciDialogHost.IsOpen = true;
+            AddNewRozhodciDialogHost.IsOpen = true;
         }
 
         private long editovanyRozhodci;
@@ -249,7 +250,7 @@ namespace Referee
 
                     prikaz.ExecuteNonQuery();
                 }
-                addNewRozhodciDialogHost.IsOpen = false;
+                AddNewRozhodciDialogHost.IsOpen = false;
                 EditujRozhodcihoButton.IsEnabled = false;
                 NactiDataGridSRozhodcimiZnovu();
             }
@@ -410,7 +411,7 @@ namespace Referee
                         tablukaSRozhodcimi.AddCell(poradoveCisloCellCykl);
 
                         string celeJmeno;
-                        try { celeJmeno = $"    { ListRozhodci[index].Jmeno } { ListRozhodci[index].Prijmeni }"; } catch { celeJmeno = " "; }
+                        try { celeJmeno = $"    { ListRozhodci[index].FirstName } { ListRozhodci[index].LastName }"; } catch { celeJmeno = " "; }
                         if (clear == false)
                             celeJmeno = " ";
                         PdfPCell jmenoCellCykl = new PdfPCell(new Phrase(celeJmeno, new Font(bf, headerFontTableSize)));
@@ -420,7 +421,7 @@ namespace Referee
                         tablukaSRozhodcimi.AddCell(jmenoCellCykl);
 
                         string datumNarozeni;
-                        try { datumNarozeni = $"{ ListRozhodci[index].DatumNarozeni }"; } catch { datumNarozeni = " "; }
+                        try { datumNarozeni = $"{ ListRozhodci[index].BirthDate.ToShortDateString() }"; } catch { datumNarozeni = " "; }
                         if (clear == false)
                             datumNarozeni = " ";
                         PdfPCell datumNarozeniCellCykl = new PdfPCell(new Phrase(datumNarozeni, new Font(bf, headerFontTableSize)));
@@ -442,7 +443,7 @@ namespace Referee
                         tablukaSRozhodcimi.AddCell(potvrzeniCellCykl);
 
                         string presnaAdresa;
-                        try { presnaAdresa = $"    { ListRozhodci[index].AdresaBydliste }, { ListRozhodci[index].Mesto }"; } catch { presnaAdresa = " "; }
+                        try { presnaAdresa = $"    { ListRozhodci[index].Address }, { ListRozhodci[index].City }"; } catch { presnaAdresa = " "; }
                         if (clear == false)
                             presnaAdresa = " ";
                         PdfPCell adresaCellCykl;
@@ -596,7 +597,7 @@ namespace Referee
                 }
             }
             NactiDataGridSRozhodcimiZnovu();
-            addNewRozhodciDialogHost.IsOpen = false;
+            AddNewRozhodciDialogHost.IsOpen = false;
         }
     }
 }

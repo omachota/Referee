@@ -52,6 +52,10 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.6.0.325, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MaterialDesignThemes.2.6.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -62,6 +66,10 @@
       <HintPath>packages\System.Data.SQLite.Core.1.0.111.0\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -83,14 +91,29 @@
     <Compile Include="DateValidationRule.cs" />
     <Compile Include="DTGDColumb.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Infrastructure\AbstractNotifyPropertyChanged.cs" />
+    <Compile Include="Infrastructure\Command.cs" />
+    <Compile Include="Infrastructure\EditorMode.cs" />
+    <Compile Include="Infrastructure\NotEmptyValidationRule.cs" />
+    <Compile Include="Infrastructure\SelectableViewModel.cs" />
+    <Compile Include="Models\Cetar.cs" />
+    <Compile Include="Models\Rozhodci.cs" />
     <Compile Include="NastaveniUserControl.xaml.cs">
       <DependentUpon>NastaveniUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Rozhodci.cs" />
-    <Compile Include="SelectableViewModel.cs" />
     <Compile Include="TechnickaCeta.cs" />
     <Compile Include="TechnickaCetaUserControl.xaml.cs">
       <DependentUpon>TechnickaCetaUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\CetaUserControl.cs" />
+    <Compile Include="ViewModels\DialogSwitchViewModel.cs" />
+    <Compile Include="ViewModels\RozhodciViewModel.cs" />
+    <Compile Include="Views\CetaUserControl.xaml.cs">
+      <DependentUpon>CetaUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RozhodciUserControl.xaml.cs">
+      <DependentUpon>RozhodciUserControl.xaml</DependentUpon>
     </Compile>
     <Page Include="DirectPrintUserControl.xaml">
       <SubType>Designer</SubType>
@@ -120,9 +143,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CetaUserControl.xaml" />
+    <Page Include="Views\RozhodciUserControl.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NotEmptyValidationRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

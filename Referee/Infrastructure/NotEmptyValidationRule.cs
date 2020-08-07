@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace Referee
+namespace Referee.Infrastructure
 {
     public class NotEmptyValidationRule : ValidationRule
     {
