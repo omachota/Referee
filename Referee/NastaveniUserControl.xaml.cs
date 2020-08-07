@@ -26,7 +26,7 @@ namespace Referee
         {
             InitializeComponent();
             Helper helper = new Helper();
-            helper.SettingsFileExits();
+            helper.SettingsFileExists();
             DirectPrintSelectionItemsControl.ItemsSource = GetDTGDColumbs();
         }
 

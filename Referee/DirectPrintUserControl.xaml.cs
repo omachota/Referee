@@ -10,29 +10,27 @@ using System.Data;
 using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
-using MaterialDesignThemes.Wpf;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Paragraph = iTextSharp.text.Paragraph;
 using System.Collections;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Referee
 {
     /// <summary>
-    /// Interakční logika pro TechnickaCetaUserControl.xaml
+    /// Interakční logika pro DirectPrintUserControl.xaml
     /// </summary>
-    public partial class TechnickaCetaUserControl : UserControl
+    public partial class DirectPrintUserControl : UserControl
     {
-        public TechnickaCetaUserControl()
+        public DirectPrintUserControl()
         {
             InitializeComponent();
             GetDTGDColumbs();
             pocetStranComboBox.ItemsSource = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         }
 
-        private List<TechnickaCeta> ListTechnickaCeta = new List<TechnickaCeta>();
+        private List<Rozhodci> ListRozhodci = new List<Rozhodci>();
 
         /// <summary>
         /// Načte vybrané sloupce pro datagrid
@@ -67,7 +65,7 @@ namespace Referee
                     gridColumn.Header = list[i].Jmeno;
                     gridColumn.Binding = new Binding(list[i].Binding);
                     gridColumn.ElementStyle = cellStyle;
-                    CetariDataGrid.Columns.Add(gridColumn);
+                    RozhodciDataGrid.Columns.Add(gridColumn);
                 }
             }
             DataGridTemplateColumn gridDeleteColumn = new DataGridTemplateColumn();
@@ -79,10 +77,10 @@ namespace Referee
             btnReset.AddHandler(Button.ClickEvent, new RoutedEventHandler(DeleteButton_Click));
             dtm.VisualTree = btnReset;
             gridDeleteColumn.CellTemplate = dtm;
-            CetariDataGrid.Columns.Add(gridDeleteColumn);
-            ListTechnickaCeta = GetTechnickaCeta();
-            CetariDataGrid.ItemsSource = ListTechnickaCeta;
-            pocetCetaruTextBox.Text = $"Celkem: " + ListTechnickaCeta.Count.ToString();
+            RozhodciDataGrid.Columns.Add(gridDeleteColumn);
+            ListRozhodci = GetRozhodci();
+            RozhodciDataGrid.ItemsSource = ListRozhodci;
+            pocetRozhodcichTextBox.Text = $"Celkem: " + ListRozhodci.Count.ToString();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -91,16 +89,16 @@ namespace Referee
             OtevriDialogHostMode(Visibility.Collapsed, Visibility.Collapsed, Visibility.Visible);
         }
 
-        private void NactiDataGridSCetouZnovu()
+        private void NactiDataGridSRozhodcimiZnovu()
         {
-            ListTechnickaCeta.Clear();
-            ListTechnickaCeta = GetTechnickaCeta();
-            CetariDataGrid.ItemsSource = null;
-            CetariDataGrid.ItemsSource = ListTechnickaCeta;
-            pocetCetaruTextBox.Text = $"Celkem: " + ListTechnickaCeta.Count.ToString();
+            ListRozhodci.Clear();
+            ListRozhodci = GetRozhodci();
+            RozhodciDataGrid.ItemsSource = null;
+            RozhodciDataGrid.ItemsSource = ListRozhodci;
+            pocetRozhodcichTextBox.Text = $"Celkem: " + ListRozhodci.Count.ToString();
             CheckBoxPouzit = false;
-            pocetVybranychCetaru = 0;
-            pocetVybranychCetaruTextBox.Text = "Vybráno: 0";
+            pocetVybranychRozhodci = 0;
+            pocetVybranychRozhodcichTextBox.Text = "Vybraní: 0";
         }
 
         private static string LoadConnectionString(string id = "Default")
@@ -108,17 +106,17 @@ namespace Referee
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
-        private List<TechnickaCeta> GetTechnickaCeta()
+        private List<Rozhodci> GetRozhodci()
         {
-            ListTechnickaCeta.Clear();
+            ListRozhodci.Clear();
             using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = pripojeni.Query<TechnickaCeta>("SELECT * FROM TechnickaCeta", new DynamicParameters());
+                var output = pripojeni.Query<Rozhodci>("SELECT * FROM Rozhodci", new DynamicParameters());
                 return output.ToList();
             }
         }
 
-        private void AddNovyCetar_Click(object sender, RoutedEventArgs e)
+        private void AddNovyRozhodci_Click(object sender, RoutedEventArgs e)
         {
             JmenoTextBox.Text = "";
             PrijmeniTextBox.Text = "";
@@ -143,26 +141,26 @@ namespace Referee
             AdresaTextBox.Visibility = udaje;
             MestoTextBox.Visibility = udaje;
             DialogHostContentGrid.Height = dialogHostHeight; // 100 pro smazání
-            popisekSmazatCetareTextBlock.Visibility = smazani;
-            SmazCetareButton.Visibility = smazani;
+            popisekSmazatRozhodcihoTextBlock.Visibility = smazani;
+            SmazRozhodcihoButton.Visibility = smazani;
         }
 
-        private void VytvorNovehoCetareButton_Click(object sender, RoutedEventArgs e)
+        private void VytvorNovehorozhodcihoButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ValidateNewCetar())
+            if (ValidateNewRozhodci())
             {
-                TechnickaCeta technickaCeta = new TechnickaCeta(0, JmenoTextBox.Text, PrijmeniTextBox.Text, DatumNarozeniDatePicker.Text.ToString(), AdresaTextBox.Text, MestoTextBox.Text);
+                Rozhodci rozhodci = new Rozhodci(0, JmenoTextBox.Text, PrijmeniTextBox.Text, DatumNarozeniDatePicker.Text.ToString(), AdresaTextBox.Text, MestoTextBox.Text);
                 using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
-                    pripojeni.Execute("INSERT INTO TechnickaCeta(Jmeno,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Jmeno,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", technickaCeta);
+                    pripojeni.Execute("INSERT INTO Rozhodci(Jmeno,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Jmeno,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", rozhodci);
                 }
-                VytvorNovehoCetareButton.IsEnabled = false;
-                addNewCetarDialogHost.IsOpen = false;
-                NactiDataGridSCetouZnovu();
+                VytvorNovehorozhodcihoButton.IsEnabled = false;
+                addNewRozhodciDialogHost.IsOpen = false;
+                NactiDataGridSRozhodcimiZnovu();
             }
         }
 
-        private bool ValidateNewCetar()
+        private bool ValidateNewRozhodci()
         {
             if (JmenoTextBox.Text == "")
             {
@@ -197,22 +195,22 @@ namespace Referee
             {
                 PrvkyVDialogHost(Visibility.Collapsed, 350, Visibility.Collapsed);
             }
-            addNewCetarDialogHost.IsOpen = false;
+            addNewRozhodciDialogHost.IsOpen = false;
         }
 
-        private void EditovatCetareButton_Click(object sender, RoutedEventArgs e)
+        private void EditovatRozhodcihoButton_Click(object sender, RoutedEventArgs e)
         {
             PrvkyVDialogHost(Visibility.Visible, 350, Visibility.Collapsed);
             OtevriDialogHostMode(Visibility.Visible, Visibility.Collapsed, Visibility.Collapsed);
 
-            foreach (TechnickaCeta technickaCeta in CetariDataGrid.SelectedItems)
+            foreach (Rozhodci rozhodci in RozhodciDataGrid.SelectedItems)
             {
-                JmenoTextBox.Text = technickaCeta.Jmeno;
-                PrijmeniTextBox.Text = technickaCeta.Prijmeni;
-                AdresaTextBox.Text = technickaCeta.AdresaBydliste;
-                MestoTextBox.Text = technickaCeta.Mesto;
-                DatumNarozeniDatePicker.Text = technickaCeta.DatumNarozeni;
-                editovanyCetar = technickaCeta.Id;
+                JmenoTextBox.Text = rozhodci.Jmeno;
+                PrijmeniTextBox.Text = rozhodci.Prijmeni;
+                AdresaTextBox.Text = rozhodci.AdresaBydliste;
+                MestoTextBox.Text = rozhodci.Mesto;
+                DatumNarozeniDatePicker.Text = rozhodci.DatumNarozeni;
+                editovanyRozhodci = rozhodci.Id;
             }
         }
 
@@ -224,55 +222,55 @@ namespace Referee
         /// <param name="smazat">SmazRozhodcihoButton.Visibility</param>
         private void OtevriDialogHostMode(Visibility edit, Visibility novy, Visibility smazat)
         {
-            EditujCetareButton.Visibility = edit;
-            EditujCetareButton.IsEnabled = true;
-            VytvorNovehoCetareButton.Visibility = novy;
-            VytvorNovehoCetareButton.IsEnabled = true;
-            SmazCetareButton.Visibility = smazat;
-            addNewCetarDialogHost.IsOpen = true;
+            EditujRozhodcihoButton.Visibility = edit;
+            EditujRozhodcihoButton.IsEnabled = true;
+            VytvorNovehorozhodcihoButton.Visibility = novy;
+            VytvorNovehorozhodcihoButton.IsEnabled = true;
+            SmazRozhodcihoButton.Visibility = smazat;
+            addNewRozhodciDialogHost.IsOpen = true;
         }
 
-        private long editovanyCetar;
+        private long editovanyRozhodci;
 
-        private void EditujCetareButton_Click(object sender, RoutedEventArgs e)
+        private void EditujRozhodcihoButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ValidateNewCetar())
+            if (ValidateNewRozhodci())
             {
                 using (SQLiteConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
                     pripojeni.Open();
-                    SQLiteCommand prikaz = new SQLiteCommand("UPDATE TechnickaCeta SET Jmeno = @jmeno, Prijmeni = @prijmeni, DatumNarozeni = @datumNarozeni, AdresaBydliste = @adresaBydliste, Mesto = @mesto WHERE Id = @editovanyCetar", pripojeni);
+                    SQLiteCommand prikaz = new SQLiteCommand("UPDATE Rozhodci SET Jmeno = @jmeno, Prijmeni = @prijmeni, DatumNarozeni = @datumNarozeni, AdresaBydliste = @adresaBydliste, Mesto = @mesto WHERE Id = @editovanyRozhodci", pripojeni);
                     prikaz.Parameters.AddWithValue("@jmeno", JmenoTextBox.Text);
                     prikaz.Parameters.AddWithValue("@prijmeni", PrijmeniTextBox.Text);
                     prikaz.Parameters.AddWithValue("@datumNarozeni", DatumNarozeniDatePicker.Text);
                     prikaz.Parameters.AddWithValue("@adresaBydliste", AdresaTextBox.Text);
                     prikaz.Parameters.AddWithValue("@mesto", MestoTextBox.Text);
-                    prikaz.Parameters.AddWithValue("@editovanyCetar", editovanyCetar);
+                    prikaz.Parameters.AddWithValue("@editovanyRozhodci", editovanyRozhodci);
 
                     prikaz.ExecuteNonQuery();
                 }
-                EditujCetareButton.IsEnabled = false;
-                addNewCetarDialogHost.IsOpen = false;
-                NactiDataGridSCetouZnovu();
+                addNewRozhodciDialogHost.IsOpen = false;
+                EditujRozhodcihoButton.IsEnabled = false;
+                NactiDataGridSRozhodcimiZnovu();
             }
         }
 
-        private List<int> vybraniCetari = new List<int>();
+        private List<int> vybraniRozhodci = new List<int>();
 
         private void PrintButton_Click(object sender, RoutedEventArgs e)
         {
-            var rows = GetDataGridRows(CetariDataGrid);
+            var rows = GetDataGridRows(RozhodciDataGrid);
             int i = 0;
             foreach (DataGridRow r in rows)
             {
-                foreach (DataGridColumn column in CetariDataGrid.Columns)
+                foreach (DataGridColumn column in RozhodciDataGrid.Columns)
                 {
                     if (column.GetCellContent(r) is CheckBox)
                     {
                         CheckBox cellContent = column.GetCellContent(r) as CheckBox;
                         if (cellContent.IsChecked == true)
                         {
-                            vybraniCetari.Add(i);
+                            vybraniRozhodci.Add(i);
                         }
                     }
                 }
@@ -283,7 +281,7 @@ namespace Referee
             {
                 Print(true, 0);
             }
-            vybraniCetari.Clear();
+            vybraniRozhodci.Clear();
         }
 
         private void ClearPrintButton_Click(object sender, RoutedEventArgs e)
@@ -306,12 +304,12 @@ namespace Referee
             Document document = new Document(PageSize.A4.Rotate(), 38f, 38f, 20f, 20f);
             try
             {
-                string PdfPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TechnickaCeta.pdf";
+                string PdfPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Rozhodci.pdf";
                 PdfWriter.GetInstance(document, new FileStream(PdfPath, FileMode.Create));
                 document.Open();
                 BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED); // (FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED)
                 BaseFont bfCur = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
-                int pocetStran = (int)Math.Ceiling((double)vybraniCetari.Count / 10);
+                int pocetStran = (int)Math.Ceiling((double)vybraniRozhodci.Count / 10);
                 if (pocetStran == 0)
                     pocetStran = 1;
                 if (clear == false)
@@ -347,11 +345,11 @@ namespace Referee
                     #endregion
 
                     #region TabulkaHeader
-                    PdfPTable tablukaSCetari = new PdfPTable(5);
-                    tablukaSCetari.TotalWidth = 600f;
-                    tablukaSCetari.LockedWidth = true;
+                    PdfPTable tablukaSRozhodcimi = new PdfPTable(5);
+                    tablukaSRozhodcimi.TotalWidth = 600f;
+                    tablukaSRozhodcimi.LockedWidth = true;
                     float[] sirky = { 65, 353, 100, 80, 170 };
-                    tablukaSCetari.SetTotalWidth(sirky);
+                    tablukaSRozhodcimi.SetTotalWidth(sirky);
                     int headerFontTableSize = 12;
 
                     PdfPCell poradoveCisloCell = new PdfPCell(new Phrase("Pořadové\nčíslo", new Font(bf, headerFontTableSize)));
@@ -359,37 +357,37 @@ namespace Referee
                     poradoveCisloCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     poradoveCisloCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     poradoveCisloCell.CalculatedHeight = 34;
-                    tablukaSCetari.AddCell(poradoveCisloCell);
+                    tablukaSRozhodcimi.AddCell(poradoveCisloCell);
 
                     PdfPCell jmenoCell = new PdfPCell(new Phrase("    Jméno a příjmení", new Font(bf, headerFontTableSize)));
                     jmenoCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     jmenoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                     jmenoCell.BorderWidthBottom = 0.2f;
-                    tablukaSCetari.AddCell(jmenoCell);
+                    tablukaSRozhodcimi.AddCell(jmenoCell);
 
                     PdfPCell datumNarozeniCell = new PdfPCell(new Phrase("Datum\nnarození", new Font(bf, headerFontTableSize)));
                     datumNarozeniCell.Rowspan = 2;
                     datumNarozeniCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     datumNarozeniCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    tablukaSCetari.AddCell(datumNarozeniCell);
+                    tablukaSRozhodcimi.AddCell(datumNarozeniCell);
 
                     PdfPCell odmenaKcCell = new PdfPCell(new Phrase("Odměna\nKč", new Font(bf, headerFontTableSize)));
                     odmenaKcCell.Rowspan = 2;
                     odmenaKcCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     odmenaKcCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    tablukaSCetari.AddCell(odmenaKcCell);
+                    tablukaSRozhodcimi.AddCell(odmenaKcCell);
 
                     PdfPCell potvrzeniCell = new PdfPCell(new Phrase("Potvrzení o přijetí odměny\nPodpis", new Font(bf, headerFontTableSize)));
                     potvrzeniCell.Rowspan = 2;
                     potvrzeniCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     potvrzeniCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    tablukaSCetari.AddCell(potvrzeniCell);
+                    tablukaSRozhodcimi.AddCell(potvrzeniCell);
 
                     PdfPCell adresaCell = new PdfPCell(new Phrase("    Přesná adresa", new Font(bf, headerFontTableSize)));
                     adresaCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     jmenoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                     adresaCell.BorderWidthTop = 0f;
-                    tablukaSCetari.AddCell(adresaCell);
+                    tablukaSRozhodcimi.AddCell(adresaCell);
                     #endregion
 
                     #region Tabulka Content
@@ -398,7 +396,7 @@ namespace Referee
                         int index;
                         try
                         {
-                            index = vybraniCetari[j + i * 10];
+                            index = vybraniRozhodci[j + i * 10];
                         }
                         catch
                         {
@@ -409,42 +407,42 @@ namespace Referee
                         poradoveCisloCellCykl.VerticalAlignment = Element.ALIGN_MIDDLE;
                         poradoveCisloCellCykl.HorizontalAlignment = Element.ALIGN_CENTER;
                         poradoveCisloCellCykl.CalculatedHeight = 34;
-                        tablukaSCetari.AddCell(poradoveCisloCellCykl);
+                        tablukaSRozhodcimi.AddCell(poradoveCisloCellCykl);
 
                         string celeJmeno;
-                        try { celeJmeno = $"    { ListTechnickaCeta[index].Jmeno } { ListTechnickaCeta[index].Prijmeni }"; } catch { celeJmeno = " "; }
+                        try { celeJmeno = $"    { ListRozhodci[index].Jmeno } { ListRozhodci[index].Prijmeni }"; } catch { celeJmeno = " "; }
                         if (clear == false)
                             celeJmeno = " ";
                         PdfPCell jmenoCellCykl = new PdfPCell(new Phrase(celeJmeno, new Font(bf, headerFontTableSize)));
                         jmenoCellCykl.VerticalAlignment = Element.ALIGN_MIDDLE;
                         jmenoCellCykl.HorizontalAlignment = Element.ALIGN_LEFT;
                         jmenoCellCykl.BorderWidthBottom = 0.2f;
-                        tablukaSCetari.AddCell(jmenoCellCykl);
+                        tablukaSRozhodcimi.AddCell(jmenoCellCykl);
 
                         string datumNarozeni;
-                        try { datumNarozeni = $"{ ListTechnickaCeta[index].DatumNarozeni }"; } catch { datumNarozeni = " "; }
+                        try { datumNarozeni = $"{ ListRozhodci[index].DatumNarozeni }"; } catch { datumNarozeni = " "; }
                         if (clear == false)
                             datumNarozeni = " ";
                         PdfPCell datumNarozeniCellCykl = new PdfPCell(new Phrase(datumNarozeni, new Font(bf, headerFontTableSize)));
                         datumNarozeniCellCykl.Rowspan = 2;
                         datumNarozeniCellCykl.VerticalAlignment = Element.ALIGN_MIDDLE;
                         datumNarozeniCellCykl.HorizontalAlignment = Element.ALIGN_CENTER;
-                        tablukaSCetari.AddCell(datumNarozeniCellCykl);
+                        tablukaSRozhodcimi.AddCell(datumNarozeniCellCykl);
 
                         PdfPCell odmenaKcCellCykl = new PdfPCell(new Phrase(" ", new Font(bf, headerFontTableSize)));
                         odmenaKcCellCykl.Rowspan = 2;
                         odmenaKcCellCykl.VerticalAlignment = Element.ALIGN_MIDDLE;
                         odmenaKcCellCykl.HorizontalAlignment = Element.ALIGN_CENTER;
-                        tablukaSCetari.AddCell(odmenaKcCellCykl);
+                        tablukaSRozhodcimi.AddCell(odmenaKcCellCykl);
 
                         PdfPCell potvrzeniCellCykl = new PdfPCell(new Phrase(" ", new Font(bf, headerFontTableSize)));
                         potvrzeniCellCykl.Rowspan = 2;
                         potvrzeniCellCykl.VerticalAlignment = Element.ALIGN_MIDDLE;
                         potvrzeniCellCykl.HorizontalAlignment = Element.ALIGN_CENTER;
-                        tablukaSCetari.AddCell(potvrzeniCellCykl);
+                        tablukaSRozhodcimi.AddCell(potvrzeniCellCykl);
 
                         string presnaAdresa;
-                        try { presnaAdresa = $"    { ListTechnickaCeta[index].AdresaBydliste }, { ListTechnickaCeta[index].Mesto }"; } catch { presnaAdresa = " "; }
+                        try { presnaAdresa = $"    { ListRozhodci[index].AdresaBydliste }, { ListRozhodci[index].Mesto }"; } catch { presnaAdresa = " "; }
                         if (clear == false)
                             presnaAdresa = " ";
                         PdfPCell adresaCellCykl;
@@ -460,31 +458,31 @@ namespace Referee
                         adresaCellCykl.VerticalAlignment = Element.ALIGN_MIDDLE;
                         adresaCellCykl.HorizontalAlignment = Element.ALIGN_LEFT;
                         adresaCellCykl.BorderWidthTop = 0f;
-                        tablukaSCetari.AddCell(adresaCellCykl);
+                        tablukaSRozhodcimi.AddCell(adresaCellCykl);
                     }
                     #endregion
 
                     #region Tabulka Bottom
                     PdfPCell prazdnaCell = new PdfPCell();
                     prazdnaCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                    tablukaSCetari.AddCell(prazdnaCell);
+                    tablukaSRozhodcimi.AddCell(prazdnaCell);
 
                     PdfPCell celkemVyplacenoCell = new PdfPCell(new Phrase("CELKEM VYPLACENO: ", new Font(bfCur, 15)));
                     celkemVyplacenoCell.HorizontalAlignment = Element.ALIGN_RIGHT;
                     celkemVyplacenoCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     celkemVyplacenoCell.Colspan = 2;
                     celkemVyplacenoCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    tablukaSCetari.AddCell(celkemVyplacenoCell);
+                    tablukaSRozhodcimi.AddCell(celkemVyplacenoCell);
 
                     PdfPCell vyplacenoCell = new PdfPCell();
                     vyplacenoCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    tablukaSCetari.AddCell(vyplacenoCell);
+                    tablukaSRozhodcimi.AddCell(vyplacenoCell);
 
                     PdfPCell prazdnaCell2 = new PdfPCell();
                     prazdnaCell2.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                    tablukaSCetari.AddCell(prazdnaCell2);
+                    tablukaSRozhodcimi.AddCell(prazdnaCell2);
 
-                    document.Add(tablukaSCetari);
+                    document.Add(tablukaSRozhodcimi);
 
                     document.Add(new Paragraph("  ", new Font(bf, 6)));
                     document.Add(new Paragraph("Vyplatil...............................................     Dne...............................................     Podpis...............................................", new Font(bf, 12)));
@@ -500,11 +498,7 @@ namespace Referee
             {
                 MessageBox.Show(ioe.Message);
             }
-            try
-            {
-                document.Close();
-            }
-            catch { MessageBox.Show("Dokument se nepodařilo zavřít.", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+            document.Close();
         }
 
         private void TisknoutRozhodcihoCheckBox_Checked(object sender, RoutedEventArgs e)
@@ -512,14 +506,14 @@ namespace Referee
             SetDataGridCheckBoxColumn(true);
             CheckBoxPouzit = true;
             int vybrani = ListCheckBoxes.Count((x) => x.IsChecked == true);
-            pocetVybranychCetaruTextBox.Text = "Vybráno: " + vybrani;
+            pocetVybranychRozhodcichTextBox.Text = "Vybraní: " + vybrani;
         }
 
         private void TisknoutRozhodcihoCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             SetDataGridCheckBoxColumn(false);
             CheckBoxPouzit = true;
-            pocetVybranychCetaruTextBox.Text = "Vybráno: 0";
+            pocetVybranychRozhodcichTextBox.Text = "Vybraní: 0";
         }
 
         private List<CheckBox> ListCheckBoxes = new List<CheckBox>();
@@ -527,10 +521,10 @@ namespace Referee
         private void SetDataGridCheckBoxColumn(bool CheckBoxChecked)
         {
             ListCheckBoxes.Clear();
-            var rows = GetDataGridRows(CetariDataGrid);
+            var rows = GetDataGridRows(RozhodciDataGrid);
             foreach (DataGridRow r in rows)
             {
-                foreach (DataGridColumn column in CetariDataGrid.Columns)
+                foreach (DataGridColumn column in RozhodciDataGrid.Columns)
                 {
                     if (column.GetCellContent(r) is CheckBox)
                     {
@@ -547,19 +541,19 @@ namespace Referee
                 }
             }
         }
-        private int pocetVybranychCetaru = 0;
+        private int pocetVybranychRozhodci = 0;
         private bool CheckBoxPouzit = false;
         private void CellContentCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             if (CheckBoxPouzit)
             {
                 int vybrani = ListCheckBoxes.Count((x) => x.IsChecked == true);
-                pocetVybranychCetaruTextBox.Text = "Vybráno: " + vybrani;
+                pocetVybranychRozhodcichTextBox.Text = "Vybraní: " + vybrani;
             }
             else
             {
-                pocetVybranychCetaru--;
-                pocetVybranychCetaruTextBox.Text = "Vybráno: " + pocetVybranychCetaru;
+                pocetVybranychRozhodci--;
+                pocetVybranychRozhodcichTextBox.Text = "Vybraní: " + pocetVybranychRozhodci;
             }
         }
 
@@ -568,12 +562,12 @@ namespace Referee
             if (CheckBoxPouzit)
             {
                 int vybrani = ListCheckBoxes.Count((x) => x.IsChecked == true);
-                pocetVybranychCetaruTextBox.Text = "Vybráno: " + vybrani;
+                pocetVybranychRozhodcichTextBox.Text = "Vybraní: " + vybrani;
             }
             else
             {
-                pocetVybranychCetaru++;
-                pocetVybranychCetaruTextBox.Text = "Vybráno: " + pocetVybranychCetaru;
+                pocetVybranychRozhodci++;
+                pocetVybranychRozhodcichTextBox.Text = "Vybraní: " + pocetVybranychRozhodci;
             }
         }
 
@@ -588,21 +582,21 @@ namespace Referee
             }
         }
 
-        private void SmazCetareButton_Click(object sender, RoutedEventArgs e)
+        private void SmazRozhodcihoButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (TechnickaCeta technickaCeta in CetariDataGrid.SelectedItems)
+            foreach (Rozhodci rozhodci in RozhodciDataGrid.SelectedItems)
             {
                 using (SQLiteConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
                     pripojeni.Open();
-                    SQLiteCommand prikaz = new SQLiteCommand("DELETE FROM TechnickaCeta Where Id=@id", pripojeni);
-                    prikaz.Parameters.AddWithValue("@id", technickaCeta.Id);
+                    SQLiteCommand prikaz = new SQLiteCommand("DELETE FROM Rozhodci Where Id=@id", pripojeni);
+                    prikaz.Parameters.AddWithValue("@id", rozhodci.Id);
                     prikaz.ExecuteNonQuery();
                     pripojeni.Close();
                 }
             }
-            NactiDataGridSCetouZnovu();
-            addNewCetarDialogHost.IsOpen = false;
+            NactiDataGridSRozhodcimiZnovu();
+            addNewRozhodciDialogHost.IsOpen = false;
         }
     }
 }

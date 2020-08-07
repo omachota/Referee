@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MaterialDesignThemes.Wpf;
 
 namespace Referee
@@ -25,9 +15,9 @@ namespace Referee
         public MainWindow()
         {
             Helper helper = new Helper();
-            helper.SettingsFileExits();
+            helper.SettingsFileExists();
             InitializeComponent();
-            GridProUserControl.Children.Add(dialogHost);
+            GridProUserControl.Children.Add(_dialogHost);
             //MainGrid.Children.Add(NovyZavodnikDialogHost);
             MenuListView.SelectedIndex = 0;
         }
@@ -60,9 +50,12 @@ namespace Referee
             // Begin dragging the window
             try
             {
-                this.DragMove();
+                DragMove();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void OpenCloseMenuButton_Click(object sender, RoutedEventArgs e)
@@ -71,13 +64,13 @@ namespace Referee
             {
                 Storyboard OpenMenu = (Storyboard)OpenCloseMenuButton.FindResource("OpenMenu");
                 OpenMenu.Begin();
-                dialogHost.IsOpen = true;
+                _dialogHost.IsOpen = true;
             }
             else
             {
                 Storyboard CloseMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 CloseMenu.Begin();
-                dialogHost.IsOpen = false;
+                _dialogHost.IsOpen = false;
             }
         }
 
@@ -88,11 +81,11 @@ namespace Referee
                 Storyboard CloseMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 CloseMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
-                dialogHost.IsOpen = false;
+                _dialogHost.IsOpen = false;
             }
         }
 
-        private DialogHost dialogHost = new DialogHost();
+        private readonly DialogHost _dialogHost = new DialogHost();
 
         private void MenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -101,7 +94,7 @@ namespace Referee
                 Storyboard CloseMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 CloseMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
-                dialogHost.IsOpen = false;
+                _dialogHost.IsOpen = false;
             }
             GridProUserControl.Children.Clear();
             int index = MenuListView.SelectedIndex;
@@ -120,7 +113,7 @@ namespace Referee
                     GridProUserControl.Children.Add(nastaveniUserControl);
                     break;
             }
-            GridProUserControl.Children.Add(dialogHost);
+            GridProUserControl.Children.Add(_dialogHost);
         }
     }
 }

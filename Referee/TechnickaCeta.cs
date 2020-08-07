@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace Referee
 {
     public class TechnickaCeta
     {
-        public Int64 Id { get; set; }
+        public long Id { get; set; }
         public string Jmeno { get; set; }
         public string Prijmeni { get; set; }
         public string DatumNarozeni { get; set; }

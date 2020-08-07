@@ -18,10 +18,7 @@ namespace Referee
         private bool rozhodciJeVybrany;
         public bool RozhodciJeVybrany
         {
-            get
-            {
-                return rozhodciJeVybrany;
-            }
+            get => rozhodciJeVybrany;
             set
             {
                 rozhodciJeVybrany = value;

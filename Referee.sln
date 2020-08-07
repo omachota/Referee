@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Referee", "Referee.csproj", "{364B83A8-DCDD-45FA-9F75-5008627AD245}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Referee", "Referee\Referee.csproj", "{364B83A8-DCDD-45FA-9F75-5008627AD245}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RefereeSetup", "..\RefereeSetup\RefereeSetup.vdproj", "{343E94DA-229B-4C87-9F8B-7F4D114D68C1}"
 EndProject
