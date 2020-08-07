@@ -28,7 +28,7 @@ namespace Referee
         {
             InitializeComponent();
             GetDTGDColumbs();
-            pocetStranComboBox.ItemsSource = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            pocetStranComboBox.ItemsSource = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         }
 
         private List<Rozhodci> ListRozhodci = new List<Rozhodci>();
@@ -52,20 +52,20 @@ namespace Referee
             {
                 TargetType = typeof(TextBlock),
                 Setters =
-                    {
-                        new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Center),
-                        new Setter(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center),
-                        new Setter(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Left)
-                    }
+                {
+                    new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Center),
+                    new Setter(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center),
+                    new Setter(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Left)
+                }
             };
             for (int i = 0; i < list.Count; i++)
             {
-                if (list[i].IsSelected == true)
+                if (list[i].IsSelected)
                 {
-                    DataGridTextColumn gridColumn = new DataGridTextColumn();
-                    gridColumn.Header = list[i].Jmeno;
-                    gridColumn.Binding = new Binding(list[i].Binding);
-                    gridColumn.ElementStyle = cellStyle;
+                    DataGridTextColumn gridColumn = new DataGridTextColumn
+                    {
+                        Header = list[i].Jmeno, Binding = new Binding(list[i].Binding), ElementStyle = cellStyle
+                    };
                     RozhodciDataGrid.Columns.Add(gridColumn);
                 }
             }
@@ -81,7 +81,7 @@ namespace Referee
             RozhodciDataGrid.Columns.Add(gridDeleteColumn);
             ListRozhodci = GetRozhodci();
             RozhodciDataGrid.ItemsSource = ListRozhodci;
-            pocetRozhodcichTextBox.Text = $"Celkem: " + ListRozhodci.Count.ToString();
+            pocetRozhodcichTextBox.Text = "Celkem: " + ListRozhodci.Count;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -110,10 +110,17 @@ namespace Referee
         private List<Rozhodci> GetRozhodci()
         {
             ListRozhodci.Clear();
-            using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                var output = pripojeni.Query<Rozhodci>("SELECT * FROM Rozhodci", new DynamicParameters());
-                return output.ToList();
+                using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
+                {
+                    var output = pripojeni.Query<Rozhodci>("SELECT * FROM Rozhodci", new DynamicParameters());
+                    return output.ToList();
+                }
+            }
+            catch (Exception e)
+            {
+               return new List<Rozhodci>(new []{ new Rozhodci("d", "f", DateTime.Now, "d", "C", 0)});
             }
         }
 

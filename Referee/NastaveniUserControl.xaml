@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="Referee.NastaveniUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Referee"
              xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
     <Grid>
         <TextBlock Text="Údaje zobrazované v přímém tisku"/>
@@ -20,7 +20,7 @@
                                 <ColumnDefinition SharedSizeGroup="Checkerz" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsSelected}" Style="{StaticResource MaterialDesignActionLightToggleButton}" Content="{Binding Code}" />
+                            <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsSelected}" Style="{StaticResource MaterialDesignActionLightToggleButton}" />
                             <StackPanel Margin="8 0 0 0" Grid.Column="1">
                                 <TextBlock FontWeight="Bold" Text="{Binding Jmeno}" />
                                 <TextBlock Text="{Binding Jmeno}" />
