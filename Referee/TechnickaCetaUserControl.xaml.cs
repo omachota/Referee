@@ -48,7 +48,7 @@ namespace Referee
                 File.WriteAllText(DTGDColumbsPath, zapis);
                 text = zapis;
             }
-            List<DTGDColumb> list = (List<DTGDColumb>)JsonConvert.DeserializeObject(text, typeof(List<DTGDColumb>));
+            List<OptionalColumn> list = (List<OptionalColumn>)JsonConvert.DeserializeObject(text, typeof(List<OptionalColumn>));
             var cellStyle = new Style
             {
                 TargetType = typeof(TextBlock),
@@ -65,7 +65,7 @@ namespace Referee
                 {
                     DataGridTextColumn gridColumn = new DataGridTextColumn
                     {
-                        Header = list[i].Jmeno, Binding = new Binding(list[i].Binding), ElementStyle = cellStyle
+                        Header = list[i].Header, Binding = new Binding(list[i].Binding), ElementStyle = cellStyle
                     };
                     CetariDataGrid.Columns.Add(gridColumn);
                 }
@@ -154,7 +154,7 @@ namespace Referee
                 TechnickaCeta technickaCeta = new TechnickaCeta(0, JmenoTextBox.Text, PrijmeniTextBox.Text, DatumNarozeniDatePicker.Text.ToString(), AdresaTextBox.Text, MestoTextBox.Text);
                 using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
-                    pripojeni.Execute("INSERT INTO TechnickaCeta(Jmeno,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Jmeno,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", technickaCeta);
+                    pripojeni.Execute("INSERT INTO TechnickaCeta(Header,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Header,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", technickaCeta);
                 }
                 VytvorNovehoCetareButton.IsEnabled = false;
                 addNewCetarDialogHost.IsOpen = false;
@@ -246,7 +246,7 @@ namespace Referee
                 using (SQLiteConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
                     pripojeni.Open();
-                    SQLiteCommand prikaz = new SQLiteCommand("UPDATE TechnickaCeta SET Jmeno = @jmeno, Prijmeni = @prijmeni, DatumNarozeni = @datumNarozeni, AdresaBydliste = @adresaBydliste, Mesto = @mesto WHERE Id = @editovanyCetar", pripojeni);
+                    SQLiteCommand prikaz = new SQLiteCommand("UPDATE TechnickaCeta SET Header = @jmeno, Prijmeni = @prijmeni, DatumNarozeni = @datumNarozeni, AdresaBydliste = @adresaBydliste, Mesto = @mesto WHERE Id = @editovanyCetar", pripojeni);
                     prikaz.Parameters.AddWithValue("@jmeno", JmenoTextBox.Text);
                     prikaz.Parameters.AddWithValue("@prijmeni", PrijmeniTextBox.Text);
                     prikaz.Parameters.AddWithValue("@datumNarozeni", DatumNarozeniDatePicker.Text);

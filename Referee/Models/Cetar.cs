@@ -3,7 +3,7 @@ using Referee.Infrastructure;
 
 namespace Referee.Models
 {
-	public class Cetar : AbstractNotifyPropertyChanged
+	public class Cetar : AbstractNotifyPropertyChanged, IPerson
 	{
 		private string _firstName;
 		private string _lastName;
@@ -11,6 +11,7 @@ namespace Referee.Models
 		private string _address;
 		private string _city;
 		private bool _isSelected;
+		private int? _reward;
 
 		public Cetar(string firstName, string lastName, DateTime birthDate, string address, string city, int id)
 		{
@@ -59,6 +60,12 @@ namespace Referee.Models
 		{
 			get => _isSelected;
 			set => SetAndRaise(ref _isSelected, value);
+		}
+
+		public int? Reward
+		{
+			get => _reward;
+			set => SetAndRaise(ref _reward, value);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
@@ -13,8 +15,13 @@ namespace Referee.ViewModels
 		private int _selectedRozhodciCount;
 		private bool _isDialogHostOpen;
 		private int _rawPagesCount;
-		private List<int> _rawPages;
-		private List<Rozhodci> _rozhoci;
+		private bool? _isAllSelected;
+		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
+		private Rozhodci _selectedRozhodciCache;
+		private List<Rozhodci> _selectedRozhodciCollection = new List<Rozhodci>();
+
+		public ObservableCollection<int> RawPages { get; set; } = new ObservableCollection<int>(Enumerable.Range(1, 9));
+		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new ObservableCollection<Rozhodci>();
 
 		public ICommand OpenDialogHost { get; }
 		public ICommand RawPrintCommand { get; }
@@ -23,25 +30,17 @@ namespace Referee.ViewModels
 		public ICommand CloseDialogHostCommand { get; }
 		public ICommand DeleteRozhodciCommand { get; }
 		public ICommand CreateOrEditRozhodciCommand { get; }
-		public ICommand SelectedAllCommand { get; }
-		public ICommand UnselectedAllCommand { get; }
-		public ICommand CellContentCheckBoxChecked { get; }
-		public ICommand CellContentCheckBoxUnchecked { get; }
 
-		public List<Rozhodci> Rozhoci
+		public RozhodciViewModel()
 		{
-			get => _rozhoci;
-			set => SetAndRaise(ref _rozhoci, value);
-		}
-
-		public RozhodciViewModel(List<int> rawPages)
-		{
-			_rawPages = rawPages;
+			DialogSwitchViewModel = new DialogSwitchViewModel("HEader", "EE");
 			OpenDialogHost = new Command<EditorMode>(x =>
 			{
 				IsDialogHostOpen = true;
 				if (x is EditorMode mode)
 					DialogSwitchViewModel.SetValues(mode);
+				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
+					_selectedRozhodciCache = new Rozhodci(_selectedRozhodci);
 			});
 			RawPrintCommand = new Command(() =>
 			{
@@ -49,23 +48,43 @@ namespace Referee.ViewModels
 			});
 			SelectionPrintCommand = new Command(() =>
 			{
-				/* TODO : SelectionPrint */
+				Debug.WriteLine($"{_selectedRozhodciCollection.Count}");
+				Debug.WriteLine($"Odměna: {SelectedRozhodci.Reward}");
+				bool countRewards = true;
+				for (int i = 0; i < _selectedRozhodciCollection.Count; i++)
+				{
+					if (!_selectedRozhodciCollection[i].Reward.HasValue)
+					{
+						countRewards = false;
+						break;
+					}
+				}
+
+				int? sum = 0;
+				if (countRewards)
+					_selectedRozhodciCollection.ForEach(x => sum += x.Reward);
+				else
+					sum = null;
+				Debug.WriteLine($"Celkem: {sum}");
 			});
 #pragma warning disable 4014
-			LoadCommand = new Command(() => LoadRozhodciAsync());
+			LoadCommand = new Command(() => LoadRozhodciAsync().ContinueWith(_ => RawPagesCount = 5));
 #pragma warning restore 4014
-			CloseDialogHostCommand = new Command(() => IsDialogHostOpen = false);
-			DeleteRozhodciCommand = new Command(() => { });
+			CloseDialogHostCommand = new Command(() =>
+			{
+				IsDialogHostOpen = false;
+				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
+				{
+					var index = RozhodciCollection.IndexOf(_selectedRozhodci);
+					RozhodciCollection[index] = _selectedRozhodciCache;
+				}
+			});
+			DeleteRozhodciCommand = new Command(() => { Debug.WriteLine($"Delete: {SelectedRozhodci.Id}"); });
 			CreateOrEditRozhodciCommand = new Command(() =>
 			{
 				/*if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
 					*/
 			});
-			SelectedAllCommand = new Command(() => { Debug.Write(nameof(SelectedAllCommand)); });
-			UnselectedAllCommand = new Command(() => { Debug.Write(nameof(UnselectedAllCommand)); });
-			CellContentCheckBoxChecked = new Command(() => { Debug.Write(nameof(CellContentCheckBoxChecked)); });
-			CellContentCheckBoxUnchecked = new Command(() => { Debug.Write(nameof(CellContentCheckBoxChecked)); });
-			SelectedRozhodciCount = 10;
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; set; }
@@ -88,18 +107,53 @@ namespace Referee.ViewModels
 			set => SetAndRaise(ref _rawPagesCount, value);
 		}
 
-		public List<int> RawPages
+		public bool? IsAllSelected
 		{
-			get => _rawPages;
-			set => SetAndRaise(ref _rawPages, value);
+			get
+			{
+				var selected = RozhodciCollection.Select(x => x.IsSelected).Distinct().ToList();
+				if (selected.Count == 0)
+					return false;
+				return selected.Count == 1 ? selected.Single() : (bool?) null;
+			}
+			set
+			{
+				if (value.HasValue)
+				{
+					for (int i = 0; i < RozhodciCollection.Count; i++)
+					{
+						RozhodciCollection[i].IsSelected = value.Value;
+					}
+
+					SetAndRaise(ref _isAllSelected, value);
+				}
+			}
+		}
+
+		public Rozhodci SelectedRozhodci
+		{
+			get => _selectedRozhodci;
+			set => SetAndRaise(ref _selectedRozhodci, value);
 		}
 
 		private async Task LoadRozhodciAsync()
 		{
+			// TODO: Load Rozhodci from database
+
 			for (int i = 0; i < 5; i++)
 			{
-				Rozhoci.Add(new Rozhodci(i.ToString(), "Test", DateTime.Now, "Address", "City", i));
-				await Task.Delay(50);
+				Rozhodci rozhoci = new Rozhodci(i.ToString(), "Test", DateTime.Now, "Address", "City", i);
+				rozhoci.PropertyChanged += (sender, args) =>
+				{
+					if (args.PropertyName == nameof(SelectableViewModel.IsSelected))
+					{
+						_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
+						SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+						OnPropertyChanged(nameof(IsAllSelected));
+					}
+				};
+				RozhodciCollection.Add(rozhoci);
+				await Task.Delay(500);
 			}
 		}
 	}

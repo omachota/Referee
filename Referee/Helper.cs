@@ -2,30 +2,31 @@
 using System.IO;
 using Newtonsoft.Json;
 using System.Reflection;
+using Referee.Models;
 
 namespace Referee
 {
 	public class Helper
 	{
-		private readonly List<DTGDColumb> _dTgdColumbs = new List<DTGDColumb>
+		private readonly List<OptionalColumn> _optionalColumns = new List<OptionalColumn>
 		{
-			new DTGDColumb("Jméno", "Jmeno", true),
-			new DTGDColumb("Příjmení", "Prijmeni", true),
-			new DTGDColumb("Datum narození", "DatumNarozeni", true),
-			new DTGDColumb("Adresa", "AdresaBydliste", true),
-			new DTGDColumb("Město", "Mesto", true),
+			new OptionalColumn("Jméno", nameof(IPerson.FirstName), true),
+			new OptionalColumn("Příjmení", nameof(IPerson.LastName), true),
+			new OptionalColumn("Datum narození", nameof(IPerson.BirthDate), true),
+			new OptionalColumn("Adresa", nameof(IPerson.Address), true),
+			new OptionalColumn("Město", nameof(IPerson.City), true),
 		};
 
 		public string GenerateNewSetting()
 		{
-			string nastaveniJsonText = JsonConvert.SerializeObject(_dTgdColumbs);
+			string nastaveniJsonText = JsonConvert.SerializeObject(_optionalColumns);
 			return nastaveniJsonText;
 		}
 
 
 		public void SettingsFileExists()
 		{
-			string DTGDColumbsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\DTGDColumbs.json";
+			string DTGDColumbsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Settings.json");
 			if (!File.Exists(DTGDColumbsPath))
 			{
 				File.Create(DTGDColumbsPath);

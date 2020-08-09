@@ -30,9 +30,9 @@ namespace Referee
             DirectPrintSelectionItemsControl.ItemsSource = GetDTGDColumbs();
         }
 
-        private List<DTGDColumb> dTGDColumbs = new List<DTGDColumb>();
+        private List<OptionalColumn> dTGDColumbs = new List<OptionalColumn>();
 
-        private List<DTGDColumb> GetDTGDColumbs()
+        private List<OptionalColumn> GetDTGDColumbs()
         {
             string DTGDColumbsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\DTGDColumbs.json";
             string text = File.ReadAllText(DTGDColumbsPath);
@@ -43,7 +43,7 @@ namespace Referee
                 File.WriteAllText(DTGDColumbsPath, zapis);
                 text = zapis;
             }
-            dTGDColumbs = (List<DTGDColumb>)JsonConvert.DeserializeObject(text, typeof(List<DTGDColumb>));
+            dTGDColumbs = (List<OptionalColumn>)JsonConvert.DeserializeObject(text, typeof(List<OptionalColumn>));
             return dTGDColumbs;
         }
 

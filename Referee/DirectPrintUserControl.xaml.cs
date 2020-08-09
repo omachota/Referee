@@ -47,7 +47,7 @@ namespace Referee
                 File.WriteAllText(DTGDColumbsPath, zapis);
                 text = zapis;
             }
-            List<DTGDColumb> list = (List<DTGDColumb>)JsonConvert.DeserializeObject(text, typeof(List<DTGDColumb>));
+            List<OptionalColumn> list = (List<OptionalColumn>)JsonConvert.DeserializeObject(text, typeof(List<OptionalColumn>));
             var cellStyle = new Style
             {
                 TargetType = typeof(TextBlock),
@@ -64,7 +64,7 @@ namespace Referee
                 {
                     DataGridTextColumn gridColumn = new DataGridTextColumn
                     {
-                        Header = list[i].Jmeno, Binding = new Binding(list[i].Binding), ElementStyle = cellStyle
+                        Header = list[i].Header, Binding = new Binding(list[i].Binding), ElementStyle = cellStyle
                     };
                     RozhodciDataGrid.Columns.Add(gridColumn);
                 }
@@ -160,7 +160,7 @@ namespace Referee
                 Rozhodci rozhodci = new Rozhodci(JmenoTextBox.Text, PrijmeniTextBox.Text, DateTime.Parse(DatumNarozeniDatePicker.Text), AdresaTextBox.Text, MestoTextBox.Text, 0);
                 using (IDbConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
-                    pripojeni.Execute("INSERT INTO Rozhodci(Jmeno,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Jmeno,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", rozhodci);
+                    pripojeni.Execute("INSERT INTO Rozhodci(Header,Prijmeni, DatumNarozeni, AdresaBydliste, Mesto) VALUES (@Header,@Prijmeni, @DatumNarozeni, @AdresaBydliste, @Mesto)", rozhodci);
                 }
                 VytvorNovehorozhodcihoButton.IsEnabled = false;
                 AddNewRozhodciDialogHost.IsOpen = false;
@@ -247,7 +247,7 @@ namespace Referee
                 using (SQLiteConnection pripojeni = new SQLiteConnection(LoadConnectionString()))
                 {
                     pripojeni.Open();
-                    SQLiteCommand prikaz = new SQLiteCommand("UPDATE Rozhodci SET Jmeno = @jmeno, Prijmeni = @prijmeni, DatumNarozeni = @datumNarozeni, AdresaBydliste = @adresaBydliste, Mesto = @mesto WHERE Id = @editovanyRozhodci", pripojeni);
+                    SQLiteCommand prikaz = new SQLiteCommand("UPDATE Rozhodci SET Header = @jmeno, Prijmeni = @prijmeni, DatumNarozeni = @datumNarozeni, AdresaBydliste = @adresaBydliste, Mesto = @mesto WHERE Id = @editovanyRozhodci", pripojeni);
                     prikaz.Parameters.AddWithValue("@jmeno", JmenoTextBox.Text);
                     prikaz.Parameters.AddWithValue("@prijmeni", PrijmeniTextBox.Text);
                     prikaz.Parameters.AddWithValue("@datumNarozeni", DatumNarozeniDatePicker.Text);
