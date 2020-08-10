@@ -2,9 +2,9 @@
 
 namespace Referee.Views
 {
-	public partial class RozhodciUserControl : UserControl
+	public partial class SettingsUserControl : UserControl
 	{
-		public RozhodciUserControl()
+		public SettingsUserControl()
 		{
 			InitializeComponent();
 		}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -19,39 +18,15 @@ namespace Referee
         {
             DataContext = mainViewModel;
             _mainViewModel = mainViewModel;
-            Helper helper = new Helper();
-            helper.SettingsFileExists();
             InitializeComponent();
 
-            mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Rozhodci);
-            //GridProUserControl.Children.Add(_dialogHost);
-            // MenuListView.SelectedIndex = 0;
-        }
-
-        private void MenuListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int index = MenuListBox.SelectedIndex;
-            switch (index)
-            {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    Environment.Exit(0);
-                    break;
-            }
+            MenuListView.SelectedIndex = 0;
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
 
-            // Begin dragging the window
             try
             {
                 DragMove();
@@ -68,13 +43,13 @@ namespace Referee
             {
                 Storyboard openMenu = (Storyboard)OpenCloseMenuButton.FindResource("OpenMenu");
                 openMenu.Begin();
-                _mainViewModel.IsInfoOpen = true;
+                _mainViewModel.IsDialogOpen = true;
             }
             else
             {
                 Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 closeMenu.Begin();
-                _mainViewModel.IsInfoOpen = false;
+                _mainViewModel.IsDialogOpen = false;
             }
         }
 
@@ -85,7 +60,7 @@ namespace Referee
                 Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 closeMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
-                _mainViewModel.IsInfoOpen = false;
+                _mainViewModel.IsDialogOpen = false;
             }
         }
 
@@ -96,11 +71,10 @@ namespace Referee
                 Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 closeMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
-                _mainViewModel.IsInfoOpen = false;
+                _mainViewModel.IsDialogOpen = false;
             }
-            int index = MenuListView.SelectedIndex;
 
-            switch (index)
+            switch (MenuListView.SelectedIndex)
             {
                 case 0:
                     _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Rozhodci);

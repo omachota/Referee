@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
+using Referee.Infrastructure.Print;
 using Referee.Models;
 
 namespace Referee.ViewModels
@@ -31,7 +32,7 @@ namespace Referee.ViewModels
 		public ICommand DeleteRozhodciCommand { get; }
 		public ICommand CreateOrEditRozhodciCommand { get; }
 
-		public RozhodciViewModel()
+		public RozhodciViewModel(Printer printer)
 		{
 			DialogSwitchViewModel = new DialogSwitchViewModel("HEader", "EE");
 			OpenDialogHost = new Command<EditorMode>(x =>
@@ -40,7 +41,12 @@ namespace Referee.ViewModels
 				if (x is EditorMode mode)
 					DialogSwitchViewModel.SetValues(mode);
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
-					_selectedRozhodciCache = new Rozhodci(_selectedRozhodci);
+				{
+					var index = RozhodciCollection.IndexOf(SelectedRozhodci);
+					if (index == -1)
+						SelectedRozhodci = new Rozhodci(_selectedRozhodciCache);
+					_selectedRozhodciCache = new Rozhodci(SelectedRozhodci);
+				}
 			});
 			RawPrintCommand = new Command(() =>
 			{
@@ -70,24 +76,34 @@ namespace Referee.ViewModels
 #pragma warning disable 4014
 			LoadCommand = new Command(() => LoadRozhodciAsync().ContinueWith(_ => RawPagesCount = 5));
 #pragma warning restore 4014
+			CreateOrEditRozhodciCommand = new Command(() =>
+			{
+				if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
+				{
+					Debug.WriteLine(SelectedRozhodci.Address);
+				}
+
+				IsDialogHostOpen = false;
+
+				Task.Delay(150).ContinueWith(_ => SelectedRozhodci = Rozhodci.CreateEmpty());
+			});
 			CloseDialogHostCommand = new Command(() =>
 			{
 				IsDialogHostOpen = false;
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
 				{
-					var index = RozhodciCollection.IndexOf(_selectedRozhodci);
+					var index = RozhodciCollection.IndexOf(SelectedRozhodci);
+					if (index == -1)
+						index = RozhodciCollection.IndexOf(RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id));
 					RozhodciCollection[index] = _selectedRozhodciCache;
 				}
+
+				SelectedRozhodci = Rozhodci.CreateEmpty();
 			});
 			DeleteRozhodciCommand = new Command(() => { Debug.WriteLine($"Delete: {SelectedRozhodci.Id}"); });
-			CreateOrEditRozhodciCommand = new Command(() =>
-			{
-				/*if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
-					*/
-			});
 		}
 
-		public DialogSwitchViewModel DialogSwitchViewModel { get; set; }
+		public DialogSwitchViewModel DialogSwitchViewModel { get; }
 
 		public int SelectedRozhodciCount
 		{

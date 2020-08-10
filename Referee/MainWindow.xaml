@@ -25,72 +25,67 @@
         </Storyboard>
     </Window.Resources>
 
-    <Grid x:Name="MainGrid">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <materialDesign:ColorZone Height="60" Background="{StaticResource PrimaryBlue700Brush}" Padding="16" Grid.ColumnSpan="2"
-                                      materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                <DockPanel Height="32" VerticalAlignment="Center">
-                    <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" IsPopupOpen="False" Foreground="White"
-                                             Visibility="Collapsed">
-                        <ListBox x:Name="MenuListBox" SelectionChanged="MenuListBox_SelectionChanged">
-                            <ListBoxItem>
-                                Nový rozhodčí
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                Nice
-                            </ListBoxItem>
-                            <ListBoxItem />
-                            <Separator Height="1" />
-                            <ListBoxItem>
-                                Zavřít
-                            </ListBoxItem>
-                        </ListBox>
-                    </materialDesign:PopupBox>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Referee" FontSize="20" Foreground="White" />
-                </DockPanel>
-            </materialDesign:ColorZone>
-            <Grid x:Name="MenuGrid" Width="60" Grid.Column="0" Background="{StaticResource PrimaryBlue700Brush}" HorizontalAlignment="Left"
-                  MouseLeave="MenuGrid_MouseLeave">
-                <Grid Height="140" VerticalAlignment="Top" Background="{StaticResource OrangeBrush}">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Height="35" Margin="0,12,12,0">
-                        <ToggleButton x:Name="OpenCloseMenuButton" Foreground="White" Style="{DynamicResource MaterialDesignHamburgerToggleButton}"
-                                      Click="OpenCloseMenuButton_Click" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <materialDesign:ColorZone Height="60"
+                                  Background="{StaticResource PrimaryBlue700Brush}"
+                                  Padding="16"
+                                  Grid.ColumnSpan="2"
+                                  materialDesign:ShadowAssist.ShadowDepth="Depth1" />
+        <Grid x:Name="MenuGrid"
+              Width="60"
+              Grid.Column="0"
+              Background="{StaticResource PrimaryBlue700Brush}" HorizontalAlignment="Left"
+              MouseLeave="MenuGrid_MouseLeave">
+            <Grid Height="140"
+                  VerticalAlignment="Top"
+                  Background="{StaticResource OrangeBrush}">
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Height="35"
+                            Margin="0,12,12,0">
+                    <ToggleButton x:Name="OpenCloseMenuButton"
+                                  Foreground="White"
+                                  Style="{DynamicResource MaterialDesignHamburgerToggleButton}"
+                                  Click="OpenCloseMenuButton_Click" />
+                </StackPanel>
+            </Grid>
+            <ListView x:Name="MenuListView"
+                      Margin="0,140,0,0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      SelectionMode="Single"
+                      SelectionChanged="MenuListView_SelectionChanged">
+                <ListViewItem Height="60">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="UserCardDetails" HorizontalAlignment="Center" Margin="7" Height="30" Width="30"
+                                                 Foreground="White" />
+                        <TextBlock Text="Rozhodčí" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
                     </StackPanel>
-                </Grid>
-                <ListView x:Name="MenuListView" Margin="0,140,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single"
-                          SelectionChanged="MenuListView_SelectionChanged">
-                    <ListViewItem Height="60">
-                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="UserCardDetails" HorizontalAlignment="Center" Margin="7" Height="30" Width="30"
-                                                     Foreground="White" />
-                            <TextBlock Text="Rozhodčí" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Shovel" HorizontalAlignment="Center" Margin="7" Height="30" Width="30" Foreground="White" />
-                            <TextBlock Text="Technická četa" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Settings" HorizontalAlignment="Center" Margin="7" Height="30" Width="30"
-                                                     Foreground="White" />
-                            <TextBlock Text="Nastavení" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
-                        </StackPanel>
-                    </ListViewItem>
-                </ListView>
-            </Grid>
-            <Grid x:Name="GridProUserControl" Margin="0,60,0,0" Grid.Column="1">
-                <materialDesign:DialogHost IsOpen="{Binding IsInfoOpen}"
-                                           CloseOnClickAway="True">
-                    <ContentControl Content="{Binding WindowManager.ActiveViewModel}"/>
-                </materialDesign:DialogHost>
-            </Grid>
+                </ListViewItem>
+                <ListViewItem Height="60">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Shovel" HorizontalAlignment="Center" Margin="7" Height="30" Width="30" Foreground="White" />
+                        <TextBlock Text="Technická četa" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Height="60">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Settings" HorizontalAlignment="Center" Margin="7" Height="30" Width="30"
+                                                 Foreground="White" />
+                        <TextBlock Text="Nastavení" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+        </Grid>
+        <Grid x:Name="GridProUserControl" Margin="0,60,0,0" Grid.Column="1">
+            <materialDesign:DialogHost IsOpen="{Binding IsDialogOpen}"
+                                       CloseOnClickAway="True">
+                <ContentControl Content="{Binding WindowManager.ActiveViewModel}" />
+            </materialDesign:DialogHost>
         </Grid>
     </Grid>
 </Window>

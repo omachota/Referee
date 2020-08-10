@@ -42,8 +42,6 @@ namespace Referee.Infrastructure.SettingsFd
 
 			if (!File.Exists(FilePath))
 			{
-				File.Create(FilePath);
-
 				using (StreamWriter streamWriter = new StreamWriter(FilePath))
 				{
 					await streamWriter.WriteAsync(JsonConvert.SerializeObject(Constants.DefaultSettings));

@@ -1,32 +1,30 @@
 using System.Windows;
 using System.Windows.Input;
 using Referee.Infrastructure;
+using Referee.Infrastructure.SettingsFd;
 using Referee.Infrastructure.WindowNavigation;
 
 namespace Referee.ViewModels
 {
 	public class MainViewModel : BaseViewModel
 	{
-		private bool _isInfoOpen;
-
-		public ICommand ExitApplication { get; }
-		public ICommand OpenInfo { get; }
-		public ICommand CloseInfo { get; }
+		private bool _isDialogOpen;
+		public ICommand OpenDialog { get; }
+		public ICommand CloseDialog { get; }
 
 		public WindowManager WindowManager { get; set; }
 
-		public MainViewModel()
+		public MainViewModel(Settings settings)
 		{
-			WindowManager = new WindowManager();
-			ExitApplication = new Command(() =>  Application.Current.Shutdown());
-			OpenInfo = new Command(() => IsInfoOpen = true);
-			CloseInfo = new Command(() => IsInfoOpen = false);
+			WindowManager = new WindowManager(settings);
+			OpenDialog = new Command(() => IsDialogOpen = true);
+			CloseDialog = new Command(() => IsDialogOpen = false);
 		}
 
-		public bool IsInfoOpen
+		public bool IsDialogOpen
 		{
-			get => _isInfoOpen;
-			set => SetAndRaise(ref _isInfoOpen, value);
+			get => _isDialogOpen;
+			set => SetAndRaise(ref _isDialogOpen, value);
 		}
 
 	}

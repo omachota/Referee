@@ -20,8 +20,12 @@
                 <views:RozhodciUserControl/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModels:CetaUserControl}">
+            <DataTemplate DataType="{x:Type viewModels:CetaViewModel}">
                 <views:CetaUserControl/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+                <views:SettingsUserControl/>
             </DataTemplate>
 
         </ResourceDictionary>
