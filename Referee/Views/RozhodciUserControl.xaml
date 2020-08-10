@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Referee.ViewModels"
-             xmlns:referee="clr-namespace:Referee"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
@@ -176,7 +175,7 @@
                             <!-- Reward -->
                             <materialDesign:DataGridTextColumn Binding="{Binding Reward, TargetNullValue={x:Static system:String.Empty}}"
                                                                        Header="Odměna"
-                                                                       Width="80"
+                                                                       Width="85"
                                                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">

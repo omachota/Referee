@@ -10,10 +10,13 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.LightGreen.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Green.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <SolidColorBrush x:Key="PrimaryBlue700Brush" Color="#32adff"/>
+            <!--Colors-->
+            <Color x:Key="ColorPrimaryMid">#0c8ce8</Color>
+
+            <SolidColorBrush x:Key="PrimaryBlueMidBrush" Color="{StaticResource ColorPrimaryMid}"/>
             <SolidColorBrush x:Key="OrangeBrush" Color="#ffc107"/>
 
             <DataTemplate DataType="{x:Type viewModels:RozhodciViewModel}">

@@ -3,29 +3,202 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:Referee.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
+
     <Grid Margin="7">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50*" />
             <ColumnDefinition Width="50*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <TextBlock>Settings</TextBlock>
+            <materialDesign:Card Margin="0 0 2 0">
+                <StackPanel Margin="5">
+                    <TextBlock>Automaticky vyplňované údaje</TextBlock>
+                    <ListBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineListBox}">
+                        <ListBoxItem IsSelected="{Binding Settings.IsClubNameEnabled}">
+                            <ListBoxItem.Style>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <CheckBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}"
+                                                      IsChecked="{Binding Settings.IsClubNameEnabled}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                      ContentStringFormat="{TemplateBinding ContentTemplateSelector}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBoxItem.Style>
+                            Název oddílu
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <ListBoxItem.Style>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <CheckBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}"
+                                                      IsChecked="{Binding Settings.IsCompetitionNameEnabled}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                      ContentStringFormat="{TemplateBinding ContentTemplateSelector}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBoxItem.Style>
+                            Název soutěže
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <ListBoxItem.Style>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <CheckBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}"
+                                                      IsChecked="{Binding Settings.IsCompetitionDateEnabled}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                      ContentStringFormat="{TemplateBinding ContentTemplateSelector}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBoxItem.Style>
+                            Datum konání soutěže
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <ListBoxItem.Style>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <CheckBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}"
+                                                      IsChecked="{Binding Settings.IsCompetitionTimeEnabled}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                      ContentStringFormat="{TemplateBinding ContentTemplateSelector}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBoxItem.Style>
+                            Doba konání soutěže
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <ListBoxItem.Style>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <CheckBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}"
+                                                      IsChecked="{Binding Settings.IsCompetitionPlaceEnabled}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                      ContentStringFormat="{TemplateBinding ContentTemplateSelector}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBoxItem.Style>
+                            Místo konání soutěže
+                        </ListBoxItem>
+                    </ListBox>
+                    <TextBox Text="{Binding Settings.ClubName}"
+                         Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                         Margin="5"
+                         VerticalAlignment="Top"
+                         Height="40"
+                         TextWrapping="Wrap"
+                         materialDesign:HintAssist.Hint="Název oddílu"
+                         IsEnabled="{Binding Settings.IsClubNameEnabled}" />
+                    <TextBox Text="{Binding Settings.CompetitionName}"
+                         Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                         Margin="5"
+                         VerticalAlignment="Top"
+                         Height="40"
+                         TextWrapping="Wrap"
+                         materialDesign:HintAssist.Hint="Název soutěže"
+                         IsEnabled="{Binding Settings.IsCompetitionNameEnabled}" />
+                    <StackPanel Orientation="Horizontal">
+                        <DatePicker SelectedDate="{Binding Settings.CompetitionStartDate}"
+                                Margin="5"
+                                VerticalAlignment="Top"
+                                materialDesign:HintAssist.Hint="Datum začátku konání soutěže"
+                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                IsEnabled="{Binding Settings.IsCompetitionDateEnabled}" />
+                        <DatePicker SelectedDate="{Binding Settings.CompetitionEndDate}"
+                                Margin="5"
+                                VerticalAlignment="Top"
+                                materialDesign:HintAssist.Hint="Datum konce konání soutěže"
+                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                IsEnabled="{Binding Settings.IsCompetitionDateEnabled}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit/blob/master/MaterialDesignThemes.Wpf/Themes/MaterialDesignTheme.DatePicker.xaml -->
+                        <!-- https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit/blob/master/MaterialDesignThemes.Wpf/Themes/MaterialDesignTheme.TimePicker.xaml -->
+                        <!-- TODO: DatePickerTextBox  -> TimePickerTextBox  -->
+                        <materialDesign:TimePicker SelectedTime="{Binding Settings.CompetitionStartTime}"
+                                                   materialDesign:HintAssist.Hint="Čas začátku soutěže"
+                                                   IsEnabled="{Binding Settings.IsCompetitionTimeEnabled}"
+                                                   Margin="5"
+                                                   Is24Hours="True" />
+                        <materialDesign:TimePicker SelectedTime="{Binding Settings.CompetitionEndTime}"
+                                               materialDesign:HintAssist.Hint="Čas konce soutěže"
+                                               IsEnabled="{Binding Settings.IsCompetitionTimeEnabled}"
+                                               Margin="5"
+                                               Is24Hours="True">
+                            <materialDesign:TimePicker.Style>
+                                <Style TargetType="{x:Type materialDesign:TimePicker}" BasedOn="{StaticResource MaterialDesignFloatingHintTimePicker}">
+                                    <Setter Property="materialDesign:TextFieldAssist.HasOutlinedTextField" Value="True" />
+                                    <Setter Property="materialDesign:TextFieldAssist.TextFieldCornerRadius" Value="4" />
+                                </Style>
+                            </materialDesign:TimePicker.Style>
+                        </materialDesign:TimePicker>
+                    </StackPanel>
+                    <TextBox Text="{Binding Settings.CompetitionPlace}"
+                         Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                         Margin="5"
+                         VerticalAlignment="Top"
+                         Height="40"
+                         TextWrapping="Wrap"
+                         materialDesign:HintAssist.Hint="Místo konání soutěže"
+                         IsEnabled="{Binding Settings.IsCompetitionPlaceEnabled}" />
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="MaterialDesignOutlinedPasswordFieldPasswordBoxEnabledComboBox">
+                            Enabled
+                        </CheckBox>
+                        <TextBox Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                             Margin="5 0"
+                             VerticalAlignment="Top"
+                             IsEnabled="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedPasswordFieldPasswordBoxEnabledComboBox}"
+                             materialDesign:HintAssist.Hint="Text" />
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:Card>
         </Grid>
         <Grid Grid.Column="1">
             <GroupBox Header="Info o aplikaci">
                 <Grid>
                     <StackPanel>
                         <TextBlock Margin="5"
-                                   Text="Aplikaci vytvořil: Ondřej Machota"/>
+                                   Text="Aplikaci vytvořil: Ondřej Machota" />
                         <TextBlock Margin="5"
-                                   Text="Email: ondrejmachota@gmail.com"/>
+                                   Text="Email: ondrejmachota@gmail.com" />
                         <TextBlock Margin="5"
-                                   Text="Repozitář: "/>
+                                   Text="Repozitář: " />
                     </StackPanel>
                 </Grid>
             </GroupBox>

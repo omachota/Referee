@@ -31,14 +31,14 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <materialDesign:ColorZone Height="60"
-                                  Background="{StaticResource PrimaryBlue700Brush}"
+                                  Mode="PrimaryMid"
                                   Padding="16"
                                   Grid.ColumnSpan="2"
                                   materialDesign:ShadowAssist.ShadowDepth="Depth1" />
         <Grid x:Name="MenuGrid"
               Width="60"
               Grid.Column="0"
-              Background="{StaticResource PrimaryBlue700Brush}" HorizontalAlignment="Left"
+              Background="{StaticResource PrimaryBlueMidBrush}" HorizontalAlignment="Left"
               MouseLeave="MenuGrid_MouseLeave">
             <Grid Height="140"
                   VerticalAlignment="Top"
