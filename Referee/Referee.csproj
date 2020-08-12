@@ -24,6 +24,9 @@
     <Page Update="Views\SettingsUserControl.xaml">
       <Generator></Generator>
     </Page>
+    <Page Update="Themes\TimePickerStyle.xaml">
+      <Generator></Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -113,6 +113,7 @@
                                                     EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
                                 <DataGridCheckBoxColumn.Header>
                                     <Border Background="Transparent">
+                                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                                         <CheckBox IsChecked="{Binding Data.IsAllSelected, Source={StaticResource DataContextProxy}}" />
                                     </Border>
                                 </DataGridCheckBoxColumn.Header>

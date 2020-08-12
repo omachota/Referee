@@ -11,12 +11,14 @@
         WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
+        <!-- ReSharper disable once Xaml.RedundantResource -->
         <Storyboard x:Key="OpenMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Width)" Storyboard.TargetName="MenuGrid">
                 <EasingDoubleKeyFrame KeyTime="0" Value="60" />
                 <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="190" />
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+        <!-- ReSharper disable once Xaml.RedundantResource -->
         <Storyboard x:Key="CloseMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Width)" Storyboard.TargetName="MenuGrid">
                 <EasingDoubleKeyFrame KeyTime="0" Value="190" />
