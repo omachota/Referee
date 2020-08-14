@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.Print;
+using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
 
 namespace Referee.ViewModels
@@ -32,7 +33,7 @@ namespace Referee.ViewModels
 		public ICommand DeleteRozhodciCommand { get; }
 		public ICommand CreateOrEditRozhodciCommand { get; }
 
-		public RozhodciViewModel(Printer printer)
+		public RozhodciViewModel(Settings settings, Printer printer)
 		{
 			DialogSwitchViewModel = new DialogSwitchViewModel("HEader", "EE");
 			OpenDialogHost = new Command<EditorMode>(x =>

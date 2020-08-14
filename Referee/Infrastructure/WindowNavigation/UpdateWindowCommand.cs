@@ -33,10 +33,10 @@ namespace Referee.Infrastructure.WindowNavigation
 				switch (viewType)
 				{
 					case ViewType.Rozhodci:
-						_windowManager.ActiveViewModel = new RozhodciViewModel(_printer);
+						_windowManager.ActiveViewModel = new RozhodciViewModel(_settings, _printer);
 						break;
 					case ViewType.Ceta:
-						_windowManager.ActiveViewModel = new CetaViewModel(_printer);
+						_windowManager.ActiveViewModel = new CetaViewModel(_settings, _printer);
 						break;
 					case ViewType.Settings:
 						_windowManager.ActiveViewModel = new SettingsViewModel(_settings);

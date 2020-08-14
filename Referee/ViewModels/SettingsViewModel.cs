@@ -1,16 +1,19 @@
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Windows.Input;
+using Referee.Infrastructure;
 using Referee.Infrastructure.SettingsFd;
 
 namespace Referee.ViewModels
 {
 	public class SettingsViewModel : BaseViewModel
 	{
+		private readonly string _repositoryAddress = "https://github.com/omachota/Referee";
+
+		public ICommand OpenRepositoryCommand { get; }
 
 		public SettingsViewModel(Settings settings)
 		{
 			Settings = settings;
-			Task.Delay(2500).ContinueWith(_ => Debug.WriteLine(Settings.IsClubNameEnabled));
+			OpenRepositoryCommand = new Command(() => ChromeLauncher.OpenLink(_repositoryAddress));
 		}
 
 		public Settings Settings { get; set; }

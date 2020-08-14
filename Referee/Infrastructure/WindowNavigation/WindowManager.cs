@@ -22,7 +22,7 @@ namespace Referee.Infrastructure.WindowNavigation
 		{
 			_settings = settings;
 			_printer = new Printer(settings);
-			_activeViewModel = new RozhodciViewModel(_printer);
+			_activeViewModel = new RozhodciViewModel(_settings, _printer);
 		}
 
 		public ViewType ViewType { get; set; }

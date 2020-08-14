@@ -5,14 +5,17 @@ namespace Referee.Infrastructure.SettingsFd
 	public class Settings : AbstractNotifyPropertyChanged
 	{
 		public Settings(string clubName, string competitionName, DateTime competitionStartDate,
-		                DateTime competitionEndDate, string competitionPlace)
+		                DateTime competitionEndDate, string competitionPlace, DbSettings dbSettings)
 		{
 			ClubName = clubName;
 			CompetitionName = competitionName;
 			CompetitionStartDate = competitionStartDate;
 			CompetitionEndDate = competitionEndDate;
 			CompetitionPlace = competitionPlace;
+			DbSettings = dbSettings;
 		}
+
+		public DbSettings DbSettings { get; set; }
 
 		// public List<OptionalColumn> OptionalColumns;
 
