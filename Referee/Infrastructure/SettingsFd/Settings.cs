@@ -4,6 +4,11 @@ namespace Referee.Infrastructure.SettingsFd
 {
 	public class Settings : AbstractNotifyPropertyChanged
 	{
+		public Settings()
+		{
+
+		}
+
 		public Settings(string clubName, string competitionName, DateTime competitionStartDate,
 		                DateTime competitionEndDate, string competitionPlace, DbSettings dbSettings)
 		{

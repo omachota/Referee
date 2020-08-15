@@ -26,10 +26,12 @@ namespace Referee.Infrastructure.WindowNavigation
 			return true;
 		}
 
-		public void Execute(object parameter)
+		public async void Execute(object parameter)
 		{
 			if (parameter is ViewType viewType && _windowManager.ViewType != viewType)
 			{
+				await SettingsHelper.SaveSettingsAsync(_settings);
+
 				switch (viewType)
 				{
 					case ViewType.Rozhodci:

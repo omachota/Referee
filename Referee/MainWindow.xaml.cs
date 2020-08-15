@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using Referee.Infrastructure.SettingsFd;
 using Referee.Infrastructure.WindowNavigation;
 using Referee.ViewModels;
 
@@ -86,6 +88,13 @@ namespace Referee
                     _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Settings);
                     break;
             }
+        }
+
+        protected override async void OnClosed(EventArgs e)
+        {
+            await SettingsHelper.SaveSettingsAsync(_mainViewModel.Settings);
+
+            base.OnClosed(e);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Referee.Infrastructure.SettingsFd
 	{
 		private static readonly string FilePath = Path.Combine(Constants.WorkingDirectory, "Settings.json");
 
-		public static async Task SaveSettings(Settings settings)
+		public static async Task SaveSettingsAsync(Settings settings)
 		{
 			await CheckFolderAndFile();
 
@@ -21,7 +21,7 @@ namespace Referee.Infrastructure.SettingsFd
 			}
 		}
 
-		public static async Task<Settings> FetchSettings()
+		public static async Task<Settings> LoadSettings()
 		{
 			await CheckFolderAndFile();
 

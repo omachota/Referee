@@ -18,6 +18,7 @@ namespace Referee.ViewModels
 		private bool _isDialogHostOpen;
 		private int _rawPagesCount;
 		private bool? _isAllSelected;
+		private readonly Settings _settings;
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _selectedRozhodciCache;
 		private List<Rozhodci> _selectedRozhodciCollection = new List<Rozhodci>();
@@ -35,17 +36,22 @@ namespace Referee.ViewModels
 
 		public RozhodciViewModel(Settings settings, Printer printer)
 		{
-			DialogSwitchViewModel = new DialogSwitchViewModel("HEader", "EE");
+			_settings = settings;
+			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "rozhodčího");
 			OpenDialogHost = new Command<EditorMode>(x =>
 			{
 				IsDialogHostOpen = true;
+				SelectedRozhodci ??= Rozhodci.CreateEmpty();
 				if (x is EditorMode mode)
 					DialogSwitchViewModel.SetValues(mode);
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
 				{
 					var index = RozhodciCollection.IndexOf(SelectedRozhodci);
 					if (index == -1)
-						SelectedRozhodci = new Rozhodci(_selectedRozhodciCache);
+					{
+						_selectedRozhodciCache ??= Rozhodci.CreateEmpty();
+						SelectedRozhodci = RozhodciCollection.FirstOrDefault(r => r.Id == _selectedRozhodciCache.Id);
+					}
 					_selectedRozhodciCache = new Rozhodci(SelectedRozhodci);
 				}
 			});
@@ -56,7 +62,6 @@ namespace Referee.ViewModels
 			SelectionPrintCommand = new Command(() =>
 			{
 				Debug.WriteLine($"{_selectedRozhodciCollection.Count}");
-				Debug.WriteLine($"Odměna: {SelectedRozhodci.Reward}");
 				bool countRewards = true;
 				for (int i = 0; i < _selectedRozhodciCollection.Count; i++)
 				{
@@ -83,20 +88,21 @@ namespace Referee.ViewModels
 				{
 					Debug.WriteLine(SelectedRozhodci.Address);
 				}
+				else
+				{
+					RozhodciCollection[0].CopyValuesFrom(SelectedRozhodci);
+				}
 
 				IsDialogHostOpen = false;
 
-				Task.Delay(150).ContinueWith(_ => SelectedRozhodci = Rozhodci.CreateEmpty());
-			});
+				SelectedRozhodci = Rozhodci.CreateEmpty();
+			}, () => Extensions.ValidateRozhodci(SelectedRozhodci));
 			CloseDialogHostCommand = new Command(() =>
 			{
 				IsDialogHostOpen = false;
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
 				{
-					var index = RozhodciCollection.IndexOf(SelectedRozhodci);
-					if (index == -1)
-						index = RozhodciCollection.IndexOf(RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id));
-					RozhodciCollection[index] = _selectedRozhodciCache;
+					SelectedRozhodci.CopyValuesFrom(_selectedRozhodciCache);
 				}
 
 				SelectedRozhodci = Rozhodci.CreateEmpty();
@@ -155,12 +161,9 @@ namespace Referee.ViewModels
 
 		private async Task LoadRozhodciAsync()
 		{
-			// TODO: Load Rozhodci from database
-
-			for (int i = 0; i < 5; i++)
+			await foreach (var rozhodci in RozhodciService.LoadRozhodciFromDb(_settings))
 			{
-				Rozhodci rozhoci = new Rozhodci(i.ToString(), "Test", DateTime.Now, "Address", "City", i);
-				rozhoci.PropertyChanged += (sender, args) =>
+				rozhodci.PropertyChanged += (sender, args) =>
 				{
 					if (args.PropertyName == nameof(SelectableViewModel.IsSelected))
 					{
@@ -169,8 +172,7 @@ namespace Referee.ViewModels
 						OnPropertyChanged(nameof(IsAllSelected));
 					}
 				};
-				RozhodciCollection.Add(rozhoci);
-				await Task.Delay(500);
+				RozhodciCollection.Add(rozhodci);
 			}
 		}
 	}

@@ -22,77 +22,74 @@
         <materialDesign:DialogHost IsOpen="{Binding IsDialogHostOpen}"
                                    CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
-                <Grid x:Name="DialogHostContentGrid" Width="240" Height="350">
-                    <TextBlock x:Name="PopisekSmazatRozhodcihoTextBlock" Text="Opradvu chcete rozhodčího smazat?" HorizontalAlignment="Center"
-                               Margin="0,20" Visibility="Collapsed" />
-                    <Button x:Name="VytvorNovehorozhodcihoButton" Content="Vložit" VerticalAlignment="Bottom" Width="80" Margin="10,10"
-                            HorizontalAlignment="Right" Command="{Binding CreateOrEditRozhodciCommand}" />
-                    <Button x:Name="EditujRozhodcihoButton" Content="Edituj" VerticalAlignment="Bottom" Width="80" Margin="10,10"
-                            HorizontalAlignment="Right" Command="{Binding CreateOrEditRozhodciCommand}" Visibility="Collapsed" />
-                    <Button x:Name="SmazRozhodcihoButton"
-                            Content="Smaž"
-                            VerticalAlignment="Bottom"
-                            Width="80"
-                            Margin="10,10"
-                            HorizontalAlignment="Right"
-                            Command="{Binding DeleteRozhodciCommand}"
-                            Visibility="Collapsed" />
-                    <Button x:Name="ZavriDialogHostButton"
-                            Content="Zavřít"
-                            VerticalAlignment="Bottom"
-                            Width="80"
-                            Margin="10,10"
-                            HorizontalAlignment="Left"
-                            Command="{Binding CloseDialogHostCommand}"
-                            Background="Red"
-                            BorderBrush="Red" />
-                    <TextBox x:Name="JmenoTextBox" materialDesign:HintAssist.Hint="Jméno" VerticalAlignment="Top" Margin="10">
-                        <TextBox.Text>
-                            <Binding Path="SelectedRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <infrastructure:NotEmptyValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                    <TextBox x:Name="PrijmeniTextBox" materialDesign:HintAssist.Hint="Příjmení" VerticalAlignment="Top" Margin="10,50">
-                        <TextBox.Text>
-                            <Binding Path="SelectedRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <infrastructure:NotEmptyValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                    <DatePicker x:Name="DatumNarozeniDatePicker" materialDesign:HintAssist.Hint="Datum narození" VerticalAlignment="Top"
-                                Margin="10,90">
-                        <DatePicker.SelectedDate>
-                            <Binding Path="SelectedRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <infrastructure:DateValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </DatePicker.SelectedDate>
-                    </DatePicker>
-                    <TextBox x:Name="AdresaTextBox" materialDesign:HintAssist.Hint="Adresa bydliště" VerticalAlignment="Top" Margin="10,130">
-                        <TextBox.Text>
-                            <Binding Path="SelectedRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <infrastructure:NotEmptyValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                    <TextBox x:Name="MestoTextBox" materialDesign:HintAssist.Hint="Město" VerticalAlignment="Bottom" Margin="10,155">
-                        <TextBox.Text>
-                            <Binding Path="SelectedRozhodci.City" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <infrastructure:NotEmptyValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </Grid>
+                <GroupBox x:Name="DialogHostContentGrid"
+                          Header="{Binding DialogSwitchViewModel.EditorTitle}"
+                          Width="240" Height="370">
+                    <StackPanel>
+                        <TextBox x:Name="JmenoTextBox" materialDesign:HintAssist.Hint="Jméno" VerticalAlignment="Top" Margin="10, 5">
+                            <TextBox.Text>
+                                <Binding Path="SelectedRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBox x:Name="PrijmeniTextBox" materialDesign:HintAssist.Hint="Příjmení" VerticalAlignment="Top" Margin="10">
+                            <TextBox.Text>
+                                <Binding Path="SelectedRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <DatePicker x:Name="DatumNarozeniDatePicker" materialDesign:HintAssist.Hint="Datum narození" VerticalAlignment="Top"
+                                    Margin="10">
+                            <DatePicker.SelectedDate>
+                                <Binding Path="SelectedRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <infrastructure:DateValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DatePicker.SelectedDate>
+                        </DatePicker>
+                        <TextBox x:Name="AdresaTextBox" materialDesign:HintAssist.Hint="Bydliště" VerticalAlignment="Top" Margin="10">
+                            <TextBox.Text>
+                                <Binding Path="SelectedRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBox x:Name="MestoTextBox" materialDesign:HintAssist.Hint="Město" VerticalAlignment="Bottom" Margin="10">
+                            <TextBox.Text>
+                                <Binding Path="SelectedRozhodci.City" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <Grid Margin="0, 40">
+                            <Button x:Name="ZavriDialogHostButton"
+                                    Content="Zavřít"
+                                    Width="80"
+                                    Margin="10,10"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding CloseDialogHostCommand}"
+                                    Background="Red"
+                                    BorderBrush="Red" />
+                            <Button x:Name="VytvorNovehorozhodcihoButton"
+                                    Content="{Binding DialogSwitchViewModel.EditorButtonContent}"
+                                    Width="80"
+                                    Margin="10,10"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding CreateOrEditRozhodciCommand}" />
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <materialDesign:Card Margin="0,0,145,0" VerticalAlignment="Stretch">
@@ -102,6 +99,7 @@
                               CanUserSortColumns="True"
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
+                              CanUserAddRows="False"
                               SelectedItem="{Binding SelectedRozhodci}">
                         <DataGrid.Resources>
                             <infrastructure:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
@@ -175,9 +173,9 @@
                             </DataGridTextColumn>
                             <!-- Reward -->
                             <materialDesign:DataGridTextColumn Binding="{Binding Reward, TargetNullValue={x:Static system:String.Empty}}"
-                                                                       Header="Odměna"
-                                                                       Width="85"
-                                                                       EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                                                               Header="Odměna"
+                                                               Width="85"
+                                                               EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment" Value="Right" />
@@ -245,40 +243,40 @@
                             <StackPanel VerticalAlignment="Top"
                                         Width="110">
                                 <Button x:Name="PrintButton"
-                                    Style="{StaticResource MaterialDesignRaisedButton}"
-                                    Margin="0,10,0,0"
-                                    Height="33"
-                                    ToolTip="Vytvoří PDF s vybranými rozhodčími"
-                                    Command="{Binding SelectionPrintCommand}">
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Margin="0,10,0,0"
+                                        Height="33"
+                                        ToolTip="Vytvoří PDF s vybranými rozhodčími"
+                                        Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
                                 <TextBlock Text="{Binding SelectedRozhodciCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
-                                       FontSize="15"
-                                       Margin="0,6,0,0"
-                                       Height="21"/>
+                                           FontSize="15"
+                                           Margin="0,6,0,0"
+                                           Height="21" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal"
                                         Margin="0 12">
                                 <Button x:Name="ClearPrintButton"
-                                    Style="{StaticResource MaterialDesignRaisedButton}"
-                                    Margin="0,0,0,0"
-                                    Height="34"
-                                    HorizontalAlignment="Right"
-                                    Width="67"
-                                    VerticalAlignment="Top"
-                                    Command="{Binding RawPrintCommand}">
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Margin="0,0,0,0"
+                                        Height="34"
+                                        HorizontalAlignment="Right"
+                                        Width="67"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding RawPrintCommand}">
                                     <TextBlock Text="Čistý tisk" TextWrapping="Wrap" FontSize="10" Height="25" />
                                 </Button>
                                 <ComboBox x:Name="PocetStranComboBox"
-                                      Margin="5,0"
-                                      ItemsSource="{Binding RawPages}"
-                                      SelectedItem="{Binding RawPagesCount}"
-                                      VerticalAlignment="Top"
-                                      ToolTip="Zadejte počet stran k vytištění"
-                                      SelectedIndex="0"
-                                      Height="34"
-                                      Width="38"
-                                      HorizontalAlignment="Right">
+                                          Margin="5,0"
+                                          ItemsSource="{Binding RawPages}"
+                                          SelectedItem="{Binding RawPagesCount}"
+                                          VerticalAlignment="Top"
+                                          ToolTip="Počet stran"
+                                          SelectedIndex="0"
+                                          Height="34"
+                                          Width="38"
+                                          HorizontalAlignment="Right">
                                     <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <VirtualizingStackPanel />
