@@ -14,7 +14,7 @@ namespace Referee.Infrastructure.SettingsFd
 
 			string content = JsonConvert.SerializeObject(settings);
 
-			using (StreamWriter streamWriter = new StreamWriter(FilePath, false))
+			await using (StreamWriter streamWriter = new StreamWriter(FilePath, false))
 			{
 				await streamWriter.WriteAsync(content);
 				await streamWriter.FlushAsync();
@@ -42,7 +42,7 @@ namespace Referee.Infrastructure.SettingsFd
 
 			if (!File.Exists(FilePath))
 			{
-				using (StreamWriter streamWriter = new StreamWriter(FilePath))
+				await using (StreamWriter streamWriter = new StreamWriter(FilePath))
 				{
 					await streamWriter.WriteAsync(JsonConvert.SerializeObject(Constants.DefaultSettings));
 					await streamWriter.FlushAsync();

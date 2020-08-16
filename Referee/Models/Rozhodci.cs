@@ -10,6 +10,11 @@ namespace Referee.Models
 		private DateTime _birthDate;
 		private string _address;
 		private string _city;
+		private string _email;
+		private string _class;
+		private string _telephoneNumber;
+		private string _registrationNumber;
+		private string _bankAccountNumber;
 		private bool _isSelected;
 		private int? _reward;
 
@@ -35,7 +40,7 @@ namespace Referee.Models
 
 		public static Rozhodci CreateEmpty()
 		{
-			return new Rozhodci(0,"", "", DateTime.Now, "", "");
+			return new Rozhodci(0, "", "", DateTime.Now, "", "");
 		}
 
 		public int Id { get; set; }
@@ -68,6 +73,36 @@ namespace Referee.Models
 		{
 			get => _city;
 			set => SetAndRaise(ref _city, value);
+		}
+
+		public string Email
+		{
+			get => _email;
+			set => SetAndRaise(ref _email, value);
+		}
+
+		public string Class
+		{
+			get => _class;
+			set => SetAndRaise(ref _class, value);
+		}
+
+		public string TelephoneNumber
+		{
+			get => _telephoneNumber;
+			set => SetAndRaise(ref _telephoneNumber, value);
+		}
+
+		public string RegistrationNumber
+		{
+			get => _registrationNumber;
+			set => SetAndRaise(ref _registrationNumber, value);
+		}
+
+		public string BankAccountNumber
+		{
+			get => _bankAccountNumber;
+			set => SetAndRaise(ref _bankAccountNumber, value);
 		}
 
 		public bool IsSelected

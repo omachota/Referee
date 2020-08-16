@@ -25,6 +25,7 @@ namespace Referee.Infrastructure.SettingsFd
 		// public List<OptionalColumn> OptionalColumns;
 
 		#region ClubName
+
 		private string _clubName;
 		private bool _isClubNameEnabled;
 
@@ -39,9 +40,11 @@ namespace Referee.Infrastructure.SettingsFd
 			get => _isClubNameEnabled;
 			set => SetAndRaise(ref _isClubNameEnabled, value);
 		}
+
 		#endregion
 
 		#region CompetitionName
+
 		private string _competitionName;
 		private bool _isCompetitionNameEnabled;
 
@@ -60,6 +63,7 @@ namespace Referee.Infrastructure.SettingsFd
 		#endregion
 
 		#region CompetitionDate
+
 		private DateTime? _competitionStartDate;
 		private DateTime? _competitionEndDate;
 		private bool _isCompetitionDateEnabled;
@@ -68,7 +72,6 @@ namespace Referee.Infrastructure.SettingsFd
 		{
 			get => _competitionStartDate;
 			set => SetAndRaise(ref _competitionStartDate, value);
-
 		}
 
 		public DateTime? CompetitionEndDate
@@ -86,6 +89,7 @@ namespace Referee.Infrastructure.SettingsFd
 		#endregion
 
 		#region CompetitionTime
+
 		private DateTime? _competitionStartTime;
 		private DateTime? _competitionEndTime;
 		private bool _isIsCompetitionTimeEnabled;

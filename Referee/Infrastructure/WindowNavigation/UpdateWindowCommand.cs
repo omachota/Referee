@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Input;
+using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.Print;
 using Referee.Infrastructure.SettingsFd;
 using Referee.ViewModels;
@@ -9,12 +10,14 @@ namespace Referee.Infrastructure.WindowNavigation
 	public class UpdateWindowCommand : ICommand
 	{
 		private readonly WindowManager _windowManager;
+		private readonly RozhodciService _rozhodciService;
 		private readonly Settings _settings;
 		private readonly Printer _printer;
 
-		public UpdateWindowCommand(WindowManager windowManager, Settings settings, Printer printer)
+		public UpdateWindowCommand(WindowManager windowManager, RozhodciService rozhodciService, Settings settings, Printer printer)
 		{
 			_windowManager = windowManager;
+			_rozhodciService = rozhodciService;
 			_settings = settings;
 			_printer = printer;
 		}
@@ -35,7 +38,7 @@ namespace Referee.Infrastructure.WindowNavigation
 				switch (viewType)
 				{
 					case ViewType.Rozhodci:
-						_windowManager.ActiveViewModel = new RozhodciViewModel(_settings, _printer);
+						_windowManager.ActiveViewModel = new RozhodciViewModel(_rozhodciService, _printer);
 						break;
 					case ViewType.Ceta:
 						_windowManager.ActiveViewModel = new CetaViewModel(_settings, _printer);
