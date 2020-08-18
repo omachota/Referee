@@ -116,5 +116,7 @@ namespace Referee.Models
 			get => _reward;
 			set => SetAndRaise(ref _reward, value);
 		}
+
+		public string FullName => $"{_firstName} {_lastName}";
 	}
 }

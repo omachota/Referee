@@ -40,18 +40,18 @@ namespace Referee.Infrastructure.Print
 			}
 		}
 
-		public async Task Print(List<Rozhodci> selectedRozhodci, int? sum)
+		public async Task Print(List<Rozhodci> selectedPersons)
 		{
 			if (!_isCreatingPdf)
 			{
 				_isCreatingPdf = true;
-				await Task.Run(() => Print(false, selectedRozhodci));
+				await Task.Run(() => Print(false, selectedPersons));
 				await Task.Delay(100);
 				_isCreatingPdf = false;
 			}
 		}
 
-		private void Print(bool isRaw, List<Rozhodci> selectedRozhodci, int rawpagesCount = 0)
+		private void Print<T>(bool isRaw, List<T> selectedPersons, int rawpagesCount = 0) where T : IPerson
 		{
 			var filePath = Path.Combine(Constants.WorkingDirectory, "vyplatni-listina-rozhodci.pdf");
 
@@ -61,7 +61,7 @@ namespace Referee.Infrastructure.Print
 				{
 					var doc = new Document(pdf, PageSize.A4.Rotate());
 					doc.SetMargins(23, 38, 20, 38);
-					int pagesCount = (int) Math.Ceiling((double) selectedRozhodci.Count / 10);
+					int pagesCount = (int) Math.Ceiling((double) selectedPersons.Count / 10);
 					if (pagesCount == 0)
 						pagesCount = 1;
 					if (isRaw)
@@ -84,9 +84,7 @@ namespace Referee.Infrastructure.Print
 
 					Table aboutcompetition = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(1).UseAllAvailableWidth();
 					if (_settings.IsCompetitionNameEnabled)
-					{
 						aboutcompetition.AddCell(AboutCompetitionCell($"Název sout\u011Bže: {_settings.CompetitionName}", bold));
-					}
 					else
 						aboutcompetition.AddCell(AboutCompetitionCell($"Název sout\u011Bže {new string('.', 89)}", bold));
 
@@ -126,17 +124,11 @@ namespace Referee.Infrastructure.Print
 
 					#region TableHead
 
-					Table rozhodciTable = new Table(new float[] {65, 355, 100, 80, 170})
-					                      .UseAllAvailableWidth()
-					                      .SetMarginTop(6f)
-					                      .SetFontSize(FontSize);
-					// ozhodciTable.AddHeaderCell(new Cell(2, 1).Add(new Paragraph("Pořadové \nčíslo")));
-
 					Cell pdfNumber = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
 					                               .SetVerticalAlignment(VerticalAlignment.MIDDLE)
 					                               .SetFont(font)
 					                               .SetPadding(0)
-					                               .SetBorder(new SolidBorder(1f));
+					                               .SetBorder(new SolidBorder(1));
 					pdfNumber.Add(new Paragraph("Pořadové"));
 					pdfNumber.Add(new Paragraph("číslo"));
 
@@ -144,15 +136,15 @@ namespace Referee.Infrastructure.Print
 					                          .SetVerticalAlignment(VerticalAlignment.MIDDLE)
 					                          .SetFont(font)
 					                          .SetHeight(17)
-					                          .SetBorder(new SolidBorder(1.3f))
-					                          .SetBorderBottom(new GrooveBorder(DeviceCmyk.BLACK, 1f, 0.5f))
+					                          .SetBorder(new SolidBorder(1.2f))
+					                          .SetBorderBottom(new GrooveBorder(DeviceCmyk.BLACK, 1, 0.5f))
 					                          .SetPadding(0);
 					nameCell.Add(new Paragraph("Jméno a příjmení")).SetPaddingLeft(17);
 					Cell addressCell = new Cell().SetTextAlignment(TextAlignment.LEFT)
 					                             .SetVerticalAlignment(VerticalAlignment.MIDDLE)
 					                             .SetFont(font)
 					                             .SetHeight(17)
-					                             .SetBorder(new SolidBorder(1.3f))
+					                             .SetBorder(new SolidBorder(1.2f))
 					                             .SetBorderTop(Border.NO_BORDER)
 					                             .SetPadding(0);
 					addressCell.Add(new Paragraph("Přesná adresa")).SetPaddingLeft(17);
@@ -178,97 +170,23 @@ namespace Referee.Infrastructure.Print
 					signCell.Add(new Paragraph("Potvrzení o přijetí odměny"));
 					signCell.Add(new Paragraph("Podpis"));
 
-
-					rozhodciTable.AddCell(pdfNumber);
-					rozhodciTable.AddCell(nameCell);
-					rozhodciTable.AddCell(birthDate);
-					rozhodciTable.AddCell(awardCell);
-					rozhodciTable.AddCell(signCell);
-					rozhodciTable.AddCell(addressCell);
-					rozhodciTable.SetWidth(765f);
-					rozhodciTable.SetBorder(Border.NO_BORDER);
-
-					#endregion
-
-					#region Table data
-
-					for (int j = 0; j < 10; j++)
-					{
-						Cell pdfNumberData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
-						                                   .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-						                                   .SetFont(font)
-						                                   .SetFontSize(15)
-						                                   .SetHeight(30)
-						                                   .SetPadding(0)
-						                                   .SetBorder(new SolidBorder(1))
-						                                   .SetBorderLeft(new SolidBorder(1));
-						pdfNumberData.Add(new Paragraph((j + 1).ToString()));
-
-						Cell nameCellData = new Cell().SetTextAlignment(TextAlignment.LEFT)
-						                              .SetFont(font)
-						                              .SetHeight(15)
-						                              .SetBorder(new SolidBorder(1.2f))
-						                              .SetBorderBottom(new GrooveBorder(DeviceCmyk.BLACK, 1, 0.5f))
-						                              .SetPadding(0);
-						if (!isRaw)
-							nameCellData.Add(new Paragraph("Jméno a příjmení")).SetPaddingLeft(17);
-						else
-							nameCellData.Add(new Paragraph("")).SetPaddingLeft(17);
-						Cell addressCellData = new Cell().SetTextAlignment(TextAlignment.LEFT)
-						                                 .SetFont(font)
-						                                 .SetHeight(15)
-						                                 .SetBorder(new SolidBorder(1.2f))
-						                                 .SetBorderTop(Border.NO_BORDER)
-						                                 .SetPadding(0);
-						if (!isRaw)
-							addressCellData.Add(new Paragraph("Přesná adresa")).SetPaddingLeft(17);
-						else
-							addressCellData.Add(new Paragraph("")).SetPaddingLeft(17);
-						Cell birthDateData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
-						                                   .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-						                                   .SetFont(font)
-						                                   .SetPadding(0)
-						                                   .SetHeight(30);
-						birthDateData.Add(!isRaw ? new Paragraph("Datum") : new Paragraph(""));
-
-						Cell awardCellData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
-						                                   .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-						                                   .SetFont(font)
-						                                   .SetPadding(0)
-						                                   .SetHeight(30);
-						awardCellData.Add(!isRaw ? new Paragraph("Odměna") : new Paragraph(""));
-
-						Cell signCellData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
-						                                  .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-						                                  .SetFont(font)
-						                                  .SetPadding(0)
-						                                  .SetHeight(30);
-						signCellData.Add(new Paragraph(""));
-
-						rozhodciTable.AddCell(pdfNumberData);
-						rozhodciTable.AddCell(nameCellData);
-						rozhodciTable.AddCell(birthDateData);
-						rozhodciTable.AddCell(awardCellData);
-						rozhodciTable.AddCell(signCellData);
-						rozhodciTable.AddCell(addressCellData);
-					}
-
 					#endregion
 
 					#region Tabulka Bottom
 
 					Cell emptyCell = new Cell().SetBorder(Border.NO_BORDER).SetPadding(0f);
-					rozhodciTable.AddCell(emptyCell);
 
 					Cell sumtextCell = new Cell(1, 2).SetFont(bold).SetFontSize(15).SetTextAlignment(TextAlignment.RIGHT)
 					                                 .SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetPadding(0);
 					sumtextCell.Add(new Paragraph("CELKEM VYPLACENO: ")).SetPaddingRight(2);
-					rozhodciTable.AddCell(sumtextCell);
 
-					Cell sumCell = new Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetPadding(0);
-					rozhodciTable.AddCell(sumCell);
-
-					rozhodciTable.AddCell(emptyCell);
+					Cell sumCell = new Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY)
+					                         .SetPadding(0)
+					                         .SetFont(bold)
+					                         .SetFontSize(15)
+					                         .SetTextAlignment(TextAlignment.CENTER)
+					                         .SetVerticalAlignment(VerticalAlignment.MIDDLE);
+					sumCell.Add(new Paragraph(!isRaw ? CountSum(selectedPersons) : ""));
 
 					Paragraph last = new Paragraph(
 						                 "Vyplatil...............................................     Dne...............................................     Podpis...............................................")
@@ -286,7 +204,103 @@ namespace Referee.Infrastructure.Print
 						doc.Add(evidenceText);
 						doc.Add(aboutcompetition);
 						doc.Add(aboutcompetition2);
+
+						#region Table
+
+						Table rozhodciTable = new Table(new float[] {65, 355, 100, 80, 170})
+						                      .UseAllAvailableWidth()
+						                      .SetMarginTop(6f)
+						                      .SetFontSize(FontSize);
+
+						rozhodciTable.SetWidth(765f);
+						rozhodciTable.SetBorder(Border.NO_BORDER);
+						rozhodciTable.AddCell(pdfNumber);
+						rozhodciTable.AddCell(nameCell);
+						rozhodciTable.AddCell(birthDate);
+						rozhodciTable.AddCell(awardCell);
+						rozhodciTable.AddCell(signCell);
+						rozhodciTable.AddCell(addressCell);
+
+						for (int j = 0; j < 10; j++)
+						{
+							int index = j + i * 10;
+							Cell pdfNumberData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
+							                                   .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+							                                   .SetFont(font)
+							                                   .SetFontSize(15)
+							                                   .SetHeight(30)
+							                                   .SetPadding(0)
+							                                   .SetBorder(new SolidBorder(1))
+							                                   .SetBorderLeft(new SolidBorder(1));
+							pdfNumberData.Add(new Paragraph((j + 1).ToString()));
+
+							Cell nameCellData = new Cell().SetTextAlignment(TextAlignment.LEFT)
+							                              .SetFont(font)
+							                              .SetHeight(15)
+							                              .SetBorder(new SolidBorder(1.2f))
+							                              .SetBorderBottom(new GrooveBorder(DeviceCmyk.BLACK, 1, 0.5f))
+							                              .SetPadding(0);
+
+							Cell addressCellData = new Cell().SetTextAlignment(TextAlignment.LEFT)
+							                                 .SetFont(font)
+							                                 .SetHeight(15)
+							                                 .SetBorder(new SolidBorder(1.2f))
+							                                 .SetBorderTop(Border.NO_BORDER)
+							                                 .SetPadding(0);
+
+							Cell birthDateData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
+							                                   .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+							                                   .SetFont(font)
+							                                   .SetPadding(0)
+							                                   .SetHeight(30);
+
+							Cell awardCellData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
+							                                   .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+							                                   .SetFont(font)
+							                                   .SetPadding(0)
+							                                   .SetHeight(30);
+
+							Cell signCellData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
+							                                  .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+							                                  .SetFont(font)
+							                                  .SetPadding(0)
+							                                  .SetHeight(30);
+							signCellData.Add(new Paragraph(""));
+
+							if (!isRaw && selectedPersons.Count > j + i * 10)
+							{
+								nameCellData.Add(new Paragraph(selectedPersons[index].FullName)).SetPaddingLeft(17);
+								addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
+								               .SetPaddingLeft(17);
+								birthDateData.Add(new Paragraph(selectedPersons[index].BirthDate.ToShortDateString()));
+								awardCellData.Add(new Paragraph(selectedPersons[index].Reward.HasValue
+									? selectedPersons[index].Reward.Value.ToString()
+									: ""));
+							}
+							else
+							{
+								nameCellData.Add(new Paragraph("")).SetPaddingLeft(17);
+								addressCellData.Add(new Paragraph("")).SetPaddingLeft(17);
+								birthDateData.Add(new Paragraph(""));
+								awardCellData.Add(new Paragraph(""));
+							}
+
+							rozhodciTable.AddCell(pdfNumberData);
+							rozhodciTable.AddCell(nameCellData);
+							rozhodciTable.AddCell(birthDateData);
+							rozhodciTable.AddCell(awardCellData);
+							rozhodciTable.AddCell(signCellData);
+							rozhodciTable.AddCell(addressCellData);
+						}
+
+						#endregion
+
+						rozhodciTable.AddCell(emptyCell);
+						rozhodciTable.AddCell(sumtextCell);
+						rozhodciTable.AddCell(sumCell);
+						rozhodciTable.AddCell(emptyCell);
 						doc.Add(rozhodciTable);
+
 						doc.Add(last);
 					}
 
@@ -305,6 +319,23 @@ namespace Referee.Infrastructure.Print
 			cell.SetTextAlignment(TextAlignment.LEFT);
 			cell.SetBorder(Border.NO_BORDER);
 			return cell;
+		}
+
+		private string CountSum<T>(List<T> selectedPersons) where T : IPerson
+		{
+			for (int i = 0; i < selectedPersons.Count; i++)
+			{
+				if (!selectedPersons[i].Reward.HasValue)
+				{
+					return "";
+				}
+			}
+
+			int? sum = 0;
+			selectedPersons.ForEach(x => sum += x.Reward);
+			if (sum.HasValue)
+				return sum.Value == 0 ? "" : sum?.ToString();
+			return "";
 		}
 	}
 }

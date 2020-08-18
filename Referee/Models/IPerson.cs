@@ -12,5 +12,6 @@ namespace Referee.Models
 		string City { get; set; }
 		bool IsSelected { get; set; }
 		int? Reward { get; set; }
+		public string FullName { get; }
 	}
 }

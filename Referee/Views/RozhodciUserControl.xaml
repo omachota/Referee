@@ -8,6 +8,7 @@
              xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              d:DataContext="{d:DesignInstance viewModels:RozhodciViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
@@ -24,77 +25,186 @@
             <materialDesign:DialogHost.DialogContent>
                 <GroupBox x:Name="DialogHostContentGrid"
                           Header="{Binding DialogSwitchViewModel.EditorTitle}"
-                          Width="240" Height="370">
-                    <StackPanel>
-                        <TextBox x:Name="JmenoTextBox" materialDesign:HintAssist.Hint="Jméno" VerticalAlignment="Top" Margin="10, 5">
-                            <TextBox.Text>
-                                <Binding Path="SelectedRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <TextBox x:Name="PrijmeniTextBox" materialDesign:HintAssist.Hint="Příjmení" VerticalAlignment="Top" Margin="10">
-                            <TextBox.Text>
-                                <Binding Path="SelectedRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <DatePicker x:Name="DatumNarozeniDatePicker" materialDesign:HintAssist.Hint="Datum narození" VerticalAlignment="Top"
-                                    Margin="10">
-                            <DatePicker.SelectedDate>
-                                <Binding Path="SelectedRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <infrastructure:DateValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </DatePicker.SelectedDate>
-                        </DatePicker>
-                        <TextBox x:Name="AdresaTextBox" materialDesign:HintAssist.Hint="Bydliště" VerticalAlignment="Top" Margin="10">
-                            <TextBox.Text>
-                                <Binding Path="SelectedRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <TextBox x:Name="MestoTextBox" materialDesign:HintAssist.Hint="Město" VerticalAlignment="Bottom" Margin="10">
-                            <TextBox.Text>
-                                <Binding Path="SelectedRozhodci.City" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue"/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <Grid Margin="0, 40">
-                            <Button x:Name="ZavriDialogHostButton"
-                                    Content="Zavřít"
-                                    Width="80"
-                                    Margin="10,10"
-                                    HorizontalAlignment="Left"
-                                    Command="{Binding CloseDialogHostCommand}"
-                                    Background="Red"
-                                    BorderBrush="Red" />
-                            <Button x:Name="VytvorNovehorozhodcihoButton"
-                                    Content="{Binding DialogSwitchViewModel.EditorButtonContent}"
-                                    Width="80"
-                                    Margin="10,10"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding CreateOrEditRozhodciCommand}" />
-                        </Grid>
-                    </StackPanel>
+                          Width="300" Height="{Binding DialogSwitchViewModel.DialogHeight}">
+                    <Grid>
+                        <StackPanel Visibility="{Binding DialogSwitchViewModel.Create}">
+                            <TextBox materialDesign:HintAssist.Hint="Jméno" VerticalAlignment="Top" Margin="10, 5">
+                                <TextBox.Text>
+                                    <Binding Path="CreateRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Příjmení" Margin="10">
+                                <TextBox.Text>
+                                    <Binding Path="CreateRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <DatePicker materialDesign:HintAssist.Hint="Datum narození" Margin="10">
+                                <DatePicker.SelectedDate>
+                                    <Binding Path="CreateRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:DateValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </DatePicker.SelectedDate>
+                            </DatePicker>
+                            <TextBox materialDesign:HintAssist.Hint="Bydliště" Margin="10">
+                                <TextBox.Text>
+                                    <Binding Path="CreateRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Město" Margin="10">
+                                <TextBox.Text>
+                                    <Binding Path="CreateRozhodci.City" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Email" Margin="10" Text="{Binding CreateRozhodci.Email}" MaxLength="100" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox materialDesign:HintAssist.Hint="Třída" Width="28"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Margin="10 5"
+                                         Text="{Binding CreateRozhodci.Class}">
+                                    <i:Interaction.Behaviors>
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="0" PromptChar="_" />
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBox materialDesign:HintAssist.Hint="Telefonní číslo" Width="80"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Margin="10 5"
+                                         Text="{Binding CreateRozhodci.TelephoneNumber}">
+                                    <i:Interaction.Behaviors>
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="000 000 000" PromptChar="_" />
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBox materialDesign:HintAssist.Hint="Evidenční číslo" Width="113"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Text="{Binding CreateRozhodci.RegistrationNumber}"
+                                         Margin="10 5" MaxLength="16" />
+                            </StackPanel>
+                            <TextBox materialDesign:HintAssist.Hint="Číslo účtu"
+                                     Text="{Binding CreateRozhodci.BankAccountNumber}"
+                                     Margin="10" MaxLength="20" />
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding DialogSwitchViewModel.Edit}">
+                            <TextBox materialDesign:HintAssist.Hint="Jméno" Margin="10, 5" MaxLength="40">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Příjmení" Margin="10" MaxLength="60">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <DatePicker materialDesign:HintAssist.Hint="Datum narození" Margin="10">
+                                <DatePicker.SelectedDate>
+                                    <Binding Path="SelectedRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:DateValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </DatePicker.SelectedDate>
+                            </DatePicker>
+                            <TextBox materialDesign:HintAssist.Hint="Bydliště" Margin="10" MaxLength="175">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Město" Margin="10" MaxLength="50">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedRozhodci.City" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Email" Margin="10" Text="{Binding SelectedRozhodci.Email}" MaxLength="100" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox materialDesign:HintAssist.Hint="Třída" Width="28"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Margin="10 5"
+                                         Text="{Binding SelectedRozhodci.Class}">
+                                    <i:Interaction.Behaviors>
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="0" PromptChar="_" />
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBox materialDesign:HintAssist.Hint="Telefonní číslo" Width="80"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Margin="10 5"
+                                         Text="{Binding SelectedRozhodci.TelephoneNumber}">
+                                    <i:Interaction.Behaviors>
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="000 000 000" PromptChar="_" />
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBox materialDesign:HintAssist.Hint="Evidenční číslo" Width="113"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Text="{Binding SelectedRozhodci.RegistrationNumber}"
+                                         Margin="10 5" MaxLength="16" />
+                            </StackPanel>
+                            <TextBox materialDesign:HintAssist.Hint="Číslo účtu"
+                                     Text="{Binding SelectedRozhodci.BankAccountNumber}"
+                                     Margin="10" MaxLength="20" />
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding DialogSwitchViewModel.Delete}">
+                            <TextBlock Margin="10" Text="Opravdu chcete rozhodčího smazat?"/>
+                        </StackPanel>
+                        <Button VerticalAlignment="Bottom"
+                                Content="Zavřít"
+                                Width="80"
+                                Margin="10,10"
+                                HorizontalAlignment="Left"
+                                Command="{Binding CloseDialogHostCommand}"
+                                Background="Red"
+                                BorderBrush="Red" />
+                        <Button VerticalAlignment="Bottom"
+                                Content="{Binding DialogSwitchViewModel.EditorButtonContent}"
+                                Width="80"
+                                Margin="10,10"
+                                HorizontalAlignment="Right"
+                                Command="{Binding CreateOrEditRozhodciCommand}" />
+                    </Grid>
                 </GroupBox>
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection}">
+                        <CollectionViewSource.SortDescriptions>
+                            <componentModel:SortDescription PropertyName="LastName" />
+                        </CollectionViewSource.SortDescriptions>
+                    </CollectionViewSource>
+                </Grid.Resources>
+
                 <materialDesign:Card Margin="0,0,145,0" VerticalAlignment="Stretch">
                     <DataGrid x:Name="RozhodciDataGrid"
-                              ItemsSource="{Binding RozhodciCollection, IsAsync=True}"
+                              ItemsSource="{Binding Source={StaticResource Rozhodci}, IsAsync=True}"
                               VerticalContentAlignment="Center"
                               CanUserSortColumns="True"
                               AutoGenerateColumns="False"
@@ -116,7 +226,8 @@
                                     </Border>
                                 </DataGridCheckBoxColumn.Header>
                                 <DataGridCheckBoxColumn.HeaderStyle>
-                                    <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                    <Style TargetType="{x:Type DataGridColumnHeader}"
+                                           BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment" Value="Center" />
                                     </Style>
                                 </DataGridCheckBoxColumn.HeaderStyle>
@@ -177,7 +288,8 @@
                                                                Width="85"
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                                 <DataGridTextColumn.HeaderStyle>
-                                    <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                    <Style TargetType="{x:Type DataGridColumnHeader}"
+                                           BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment" Value="Right" />
                                         <Setter Property="ContentTemplate">
                                             <Setter.Value>
@@ -226,13 +338,22 @@
                                     <DataTemplate>
                                         <Button x:Name="EditovatRozhodcihoButton"
                                                 Command="{Binding DataContext.DeleteRozhodciCommand, ElementName=RozhodciDataGrid}"
-                                                CommandParameter="{x:Static infrastructure:EditorMode.Edit}"
                                                 Width="50">
                                             <materialDesign:PackIcon Kind="Delete" />
                                         </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+                            <!-- BankAccountNumber -->
+                            <DataGridTextColumn Binding="{Binding BankAccountNumber}"
+                                                IsReadOnly="True"
+                                                Header="Číslo účtu">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </materialDesign:Card>
