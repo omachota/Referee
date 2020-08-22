@@ -53,7 +53,7 @@ namespace Referee.Infrastructure.Print
 
 		private void Print<T>(bool isRaw, List<T> selectedPersons, int rawpagesCount = 0) where T : IPerson
 		{
-			var filePath = Path.Combine(Constants.WorkingDirectory, "vyplatni-listina-rozhodci.pdf");
+			var filePath = Path.Combine(Constants.WorkingDirectory, typeof(T) == typeof(Rozhodci) ? "vyplatni-listina-rozhodci.pdf" : "vyplatni-listina-ceta.pdf");
 
 			using (var writer = new PdfWriter(filePath))
 			{

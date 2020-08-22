@@ -141,7 +141,7 @@ namespace Referee.ViewModels
 			{
 				rozhodci.PropertyChanged += (sender, args) =>
 				{
-					if (args.PropertyName == nameof(SelectableViewModel.IsSelected))
+					if (args.PropertyName == nameof(Rozhodci.IsSelected))
 					{
 						_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
 						SelectedRozhodciCount = _selectedRozhodciCollection.Count;

@@ -9,6 +9,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance viewModels:RozhodciViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
@@ -54,6 +55,9 @@
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </DatePicker.SelectedDate>
+                                <DatePicker.BlackoutDates>
+                                    <CalendarDateRange Start="{x:Static infrastructure:DateHelper.Tomorrow}" End="{x:Static sys:DateTime.MaxValue}"/>
+                                </DatePicker.BlackoutDates>
                             </DatePicker>
                             <TextBox materialDesign:HintAssist.Hint="Bydliště" Margin="10">
                                 <TextBox.Text>
@@ -127,6 +131,9 @@
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </DatePicker.SelectedDate>
+                                <DatePicker.BlackoutDates>
+                                    <CalendarDateRange Start="{x:Static infrastructure:DateHelper.Tomorrow}" End="{x:Static sys:DateTime.Today}"/>
+                                </DatePicker.BlackoutDates>
                             </DatePicker>
                             <TextBox materialDesign:HintAssist.Hint="Bydliště" Margin="10" MaxLength="175">
                                 <TextBox.Text>
@@ -174,7 +181,7 @@
                                      Margin="10" MaxLength="20" />
                         </StackPanel>
                         <StackPanel Visibility="{Binding DialogSwitchViewModel.Delete}">
-                            <TextBlock Margin="10" Text="Opravdu chcete rozhodčího smazat?"/>
+                            <TextBlock Margin="10" Text="Opravdu chcete rozhodčího smazat?" />
                         </StackPanel>
                         <Button VerticalAlignment="Bottom"
                                 Content="Zavřít"
