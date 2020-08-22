@@ -10,10 +10,21 @@ namespace Referee.ViewModels
 
 		public ICommand OpenRepositoryCommand { get; }
 
+		public ICommand RevertChanges { get; }
+
 		public SettingsViewModel(Settings settings)
 		{
 			Settings = settings;
+			var cachedSettings = new Settings(settings);
+			var changedMade = false;
+			Settings.PropertyChanged += (sender, args) => changedMade = true;
+			Settings.DbSettings.PropertyChanged += (sender, args) => changedMade = true;
 			OpenRepositoryCommand = new Command(() => ChromeLauncher.OpenLink(_repositoryAddress));
+			RevertChanges = new Command(() =>
+			{
+				Settings.CopyValuesFrom(cachedSettings);
+				changedMade = false;
+			}, () => changedMade);
 		}
 
 		public Settings Settings { get; set; }

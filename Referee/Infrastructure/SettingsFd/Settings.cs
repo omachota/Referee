@@ -4,9 +4,23 @@ namespace Referee.Infrastructure.SettingsFd
 {
 	public class Settings : AbstractNotifyPropertyChanged
 	{
-		public Settings()
-		{
+		public Settings() { }
 
+		public Settings(Settings settings)
+		{
+			ClubName = settings.ClubName;
+			CompetitionName = settings.CompetitionName;
+			CompetitionStartDate = settings.CompetitionStartDate;
+			CompetitionEndDate = settings.CompetitionEndDate;
+			CompetitionStartTime = settings.CompetitionStartTime;
+			CompetitionEndTime = settings.CompetitionEndTime;
+			CompetitionPlace = settings.CompetitionPlace;
+			IsClubNameEnabled = settings.IsClubNameEnabled;
+			IsCompetitionDateEnabled = settings.IsCompetitionDateEnabled;
+			IsCompetitionNameEnabled= settings.IsCompetitionNameEnabled;
+			IsCompetitionPlaceEnabled= settings.IsCompetitionPlaceEnabled;
+			IsCompetitionTimeEnabled= settings.IsCompetitionTimeEnabled;
+			DbSettings = new DbSettings(settings.DbSettings);
 		}
 
 		public Settings(string clubName, string competitionName, DateTime competitionStartDate,

@@ -111,6 +111,7 @@
                                          materialDesign:HintAssist.Hint="Heslo" />
                             </StackPanel>
                         </Expander>
+                        <Button Content="Zahodit změny" Margin="5" HorizontalAlignment="Right" Command="{Binding RevertChanges}"/>
                     </StackPanel>
                 </ScrollViewer>
             </materialDesign:Card>

@@ -8,6 +8,16 @@ namespace Referee.Infrastructure.SettingsFd
 		private string _database;
 		private string _password;
 
+		public DbSettings() { }
+
+		public DbSettings(DbSettings settings)
+		{
+			_serverAddress = settings._serverAddress;
+			_username = settings._username;
+			_database = settings._database;
+			_password = settings._password;
+		}
+
 		public DbSettings(string serverAddress, string username, string database, string password)
 		{
 			_serverAddress = serverAddress;
