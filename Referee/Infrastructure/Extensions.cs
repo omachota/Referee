@@ -6,19 +6,19 @@ namespace Referee.Infrastructure
 {
 	public static class Extensions
 	{
-		public static bool ValidateRozhodci(Rozhodci rozhodci)
+		public static bool ValidatePerson<T>(T person) where T : IPerson
 		{
-			if (rozhodci == null)
+			if (person == null)
 				return false;
-			if (rozhodci.FirstName == "")
+			if (person.FirstName == "")
 				return false;
-			if (rozhodci.LastName == "")
+			if (person.LastName == "")
 				return false;
-			if (rozhodci.Address == "")
+			if (person.Address == "")
 				return false;
-			if (rozhodci.City == "")
+			if (person.City == "")
 				return false;
-			if (rozhodci.BirthDate >= DateTime.Today)
+			if (person.BirthDate >= DateTime.Today)
 				return false;
 			return true;
 		}
@@ -30,6 +30,20 @@ namespace Referee.Infrastructure
 			rozhodci.BirthDate = rozhodciCache.BirthDate;
 			rozhodci.Address = rozhodciCache.Address;
 			rozhodci.City = rozhodciCache.City;
+			rozhodci.Email = rozhodciCache.Email;
+			rozhodci.Class = rozhodciCache.Class;
+			rozhodci.TelephoneNumber = rozhodciCache.TelephoneNumber;
+			rozhodci.RegistrationNumber = rozhodciCache.RegistrationNumber;
+			rozhodci.BankAccountNumber = rozhodciCache.BankAccountNumber;
+		}
+
+		public static void CopyValuesFrom(this Cetar cetar, Cetar cetarCache)
+		{
+			cetar.FirstName = cetarCache.FirstName;
+			cetar.LastName = cetarCache.LastName;
+			cetar.BirthDate = cetarCache.BirthDate;
+			cetar.Address = cetarCache.Address;
+			cetar.City = cetarCache.City;
 		}
 
 		public static void CopyValuesFrom(this Settings settings, Settings settingsCache)

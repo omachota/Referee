@@ -7,6 +7,7 @@ namespace Referee.ViewModels
 	public class DialogSwitchViewModel : AbstractNotifyPropertyChanged
 	{
 		private int _dialogHeight;
+		private int _height;
 		private readonly string _editorText;
 		private readonly string _type;
 		private string _editorTitle;
@@ -16,9 +17,10 @@ namespace Referee.ViewModels
 		private Visibility _delete;
 		private EditorMode _editorMode;
 
-		public DialogSwitchViewModel(string editorText, string type)
+		public DialogSwitchViewModel(string editorText, string type, int defaultHeight)
 		{
 			_editorTitle = $"{editorText} {type}";
+			_height = defaultHeight;
 			_editorButtonContent = editorText;
 			_editorText = editorText;
 			_type = type;
@@ -77,7 +79,7 @@ namespace Referee.ViewModels
 					Create = Visibility.Visible;
 					Edit = Visibility.Collapsed;
 					Delete = Visibility.Collapsed;
-					DialogHeight = 480;
+					DialogHeight = _height;
 					break;
 				case EditorMode.Edit:
 					EditorTitle = "Upravit " + _type;
@@ -85,7 +87,7 @@ namespace Referee.ViewModels
 					Create = Visibility.Collapsed;
 					Edit = Visibility.Visible;
 					Delete = Visibility.Collapsed;
-					DialogHeight = 480;
+					DialogHeight = _height;
 					break;
 				case EditorMode.Delete:
 					EditorTitle = "Smazat " + _type;

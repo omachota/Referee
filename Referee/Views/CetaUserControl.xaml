@@ -4,10 +4,377 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Referee.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance viewModels:CetaViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
-   <Grid>
 
-   </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <materialDesign:DialogHost IsOpen="{Binding IsDialogHostOpen}"
+                                   CloseOnClickAway="True">
+            <materialDesign:DialogHost.DialogContent>
+                <GroupBox x:Name="DialogHostContentGrid"
+                          Header="{Binding DialogSwitchViewModel.EditorTitle}"
+                          Width="280" Height="{Binding DialogSwitchViewModel.DialogHeight}">
+                    <Grid>
+                        <StackPanel Visibility="{Binding DialogSwitchViewModel.Create}">
+                            <TextBox materialDesign:HintAssist.Hint="Jméno" VerticalAlignment="Top" Margin="10, 5">
+                                <TextBox.Text>
+                                    <Binding Path="CreateCetar.FirstName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Příjmení" Margin="10">
+                                <TextBox.Text>
+                                    <Binding Path="CreateCetar.LastName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <DatePicker materialDesign:HintAssist.Hint="Datum narození" Margin="10">
+                                <DatePicker.SelectedDate>
+                                    <Binding Path="CreateCetar.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:DateValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </DatePicker.SelectedDate>
+                                <DatePicker.BlackoutDates>
+                                    <CalendarDateRange Start="{x:Static infrastructure:DateHelper.Tomorrow}" End="{x:Static sys:DateTime.MaxValue}" />
+                                </DatePicker.BlackoutDates>
+                            </DatePicker>
+                            <TextBox materialDesign:HintAssist.Hint="Bydliště" Margin="10">
+                                <TextBox.Text>
+                                    <Binding Path="CreateCetar.Address" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Město" Margin="10">
+                                <TextBox.Text>
+                                    <Binding Path="CreateCetar.City" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding DialogSwitchViewModel.Edit}">
+                            <TextBox materialDesign:HintAssist.Hint="Jméno" Margin="10, 5" MaxLength="40">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedCetar.FirstName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Příjmení" Margin="10" MaxLength="60">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedCetar.LastName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <DatePicker materialDesign:HintAssist.Hint="Datum narození" Margin="10">
+                                <DatePicker.SelectedDate>
+                                    <Binding Path="SelectedCetar.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:DateValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </DatePicker.SelectedDate>
+                                <DatePicker.BlackoutDates>
+                                    <CalendarDateRange Start="{x:Static infrastructure:DateHelper.Tomorrow}" End="{x:Static sys:DateTime.Today}" />
+                                </DatePicker.BlackoutDates>
+                            </DatePicker>
+                            <TextBox materialDesign:HintAssist.Hint="Bydliště" Margin="10" MaxLength="175">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedCetar.Address" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox materialDesign:HintAssist.Hint="Město" Margin="10" MaxLength="50">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedCetar.City" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding DialogSwitchViewModel.Delete}">
+                            <TextBlock Margin="10" Text="Opravdu chcete četaře smazat?" />
+                        </StackPanel>
+                        <Button VerticalAlignment="Bottom"
+                                Content="Zavřít"
+                                Width="80"
+                                Margin="10,10"
+                                HorizontalAlignment="Left"
+                                Command="{Binding CloseDialogHostCommand}"
+                                Background="Red"
+                                BorderBrush="Red" />
+                        <Button VerticalAlignment="Bottom"
+                                Content="{Binding DialogSwitchViewModel.EditorButtonContent}"
+                                Width="80"
+                                Margin="10,10"
+                                HorizontalAlignment="Right"
+                                Command="{Binding CreateOrEditCetarCommand}" />
+                    </Grid>
+                </GroupBox>
+            </materialDesign:DialogHost.DialogContent>
+            <Grid Margin="7">
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="Ceta" Source="{Binding CetaCollection}">
+                        <CollectionViewSource.SortDescriptions>
+                            <componentModel:SortDescription PropertyName="LastName" />
+                        </CollectionViewSource.SortDescriptions>
+                    </CollectionViewSource>
+                </Grid.Resources>
+
+                <materialDesign:Card Margin="0,0,145,0" VerticalAlignment="Stretch">
+                    <DataGrid x:Name="CetaDataGrid"
+                              ItemsSource="{Binding Source={StaticResource Ceta}, IsAsync=True}"
+                              VerticalContentAlignment="Center"
+                              CanUserSortColumns="True"
+                              AutoGenerateColumns="False"
+                              SelectionMode="Single"
+                              CanUserAddRows="False"
+                              SelectedItem="{Binding SelectedCetar}">
+                        <DataGrid.Resources>
+                            <infrastructure:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <!-- CheckBox -->
+                            <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                                                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                    EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                                <DataGridCheckBoxColumn.Header>
+                                    <Border Background="Transparent">
+                                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                        <CheckBox IsChecked="{Binding Data.IsAllSelected, Source={StaticResource DataContextProxy}}" />
+                                    </Border>
+                                </DataGridCheckBoxColumn.Header>
+                                <DataGridCheckBoxColumn.HeaderStyle>
+                                    <Style TargetType="{x:Type DataGridColumnHeader}"
+                                           BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridCheckBoxColumn.HeaderStyle>
+                            </DataGridCheckBoxColumn>
+                            <!-- FirstName -->
+                            <DataGridTextColumn Binding="{Binding FirstName}"
+                                                IsReadOnly="True"
+                                                Header="Jméno">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <!-- LastName -->
+                            <DataGridTextColumn Binding="{Binding LastName}"
+                                                IsReadOnly="True"
+                                                Header="Příjmení">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <!-- BirthDate -->
+                            <DataGridTextColumn Binding="{Binding BirthDate, StringFormat=dd.MM.yyyy}"
+                                                IsReadOnly="True"
+                                                Header="Datum narození">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <!-- Address -->
+                            <DataGridTextColumn Binding="{Binding Address}"
+                                                IsReadOnly="True"
+                                                Header="Adresa">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <!-- City -->
+                            <DataGridTextColumn Binding="{Binding City}"
+                                                IsReadOnly="True"
+                                                Header="Město">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <!-- Reward -->
+                            <materialDesign:DataGridTextColumn Binding="{Binding Reward, TargetNullValue={x:Static system:String.Empty}}"
+                                                               Header="Odměna"
+                                                               Width="85"
+                                                               EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="{x:Type DataGridColumnHeader}"
+                                           BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Right" />
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <TextBlock TextWrapping="Wrap" Text="{Binding}" TextAlignment="Center" />
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </materialDesign:DataGridTextColumn>
+                            <!-- EditColumn -->
+                            <DataGridTemplateColumn Header="Edit"
+                                                    IsReadOnly="True">
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="EditovatCetareButton"
+                                                Command="{Binding DataContext.OpenDialogHost, ElementName=CetaDataGrid}"
+                                                CommandParameter="{x:Static infrastructure:EditorMode.Edit}"
+                                                Width="50">
+                                            <materialDesign:PackIcon Kind="AccountEdit" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!-- DeleteColumn -->
+                            <DataGridTemplateColumn Header="Smazat"
+                                                    IsReadOnly="True">
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
+                                        <Setter Property="HorizontalContentAlignment"
+                                                Value="Center" />
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="EditovatCetareButton"
+                                                Command="{Binding DataContext.DeleteCetarCommand, ElementName=CetaDataGrid}"
+                                                Width="50">
+                                            <materialDesign:PackIcon Kind="Delete" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </materialDesign:Card>
+                <materialDesign:Card VerticalAlignment="Stretch" Margin="0,0,0,0" HorizontalAlignment="Right" Width="135">
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Width="110">
+                            <StackPanel VerticalAlignment="Top"
+                                        Width="110">
+                                <Button x:Name="PrintButton"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Margin="0,10,0,0"
+                                        Height="33"
+                                        ToolTip="Vytvoří PDF s vybranými četaři"
+                                        Command="{Binding SelectionPrintCommand}">
+                                    <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
+                                </Button>
+                                <TextBlock Text="{Binding SelectedCetaCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
+                                           FontSize="15"
+                                           Margin="0,6,0,0"
+                                           Height="21" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 12">
+                                <Button x:Name="ClearPrintButton"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Margin="0,0,0,0"
+                                        Height="34"
+                                        HorizontalAlignment="Right"
+                                        Width="67"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding RawPrintCommand}">
+                                    <TextBlock Text="Čistý tisk" TextWrapping="Wrap" FontSize="10" Height="25" />
+                                </Button>
+                                <ComboBox x:Name="PocetStranComboBox"
+                                          Margin="5,0"
+                                          ItemsSource="{Binding RawPages}"
+                                          SelectedItem="{Binding RawPagesCount}"
+                                          VerticalAlignment="Top"
+                                          ToolTip="Počet stran"
+                                          SelectedIndex="0"
+                                          Height="34"
+                                          Width="38"
+                                          HorizontalAlignment="Right">
+                                    <ComboBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ComboBox.ItemsPanel>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Width="110"
+                                    Margin="0 0 0 10"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom">
+                            <Button x:Name="AddNovyCetar"
+                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                                    Margin="0,0,0,0"
+                                    Height="33"
+                                    Command="{Binding OpenDialogHost}"
+                                    CommandParameter="{x:Static infrastructure:EditorMode.Create}"
+                                    ToolTip="Přidat nového četaře">
+                                <materialDesign:PackIcon Kind="AccountMultiplePlus" Width="25" Height="25" />
+                            </Button>
+                            <TextBlock Text="{Binding CetaCollection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
+                                       FontSize="15"
+                                       Margin="0,6,0,0"
+                                       HorizontalAlignment="Right"
+                                       Width="110"
+                                       Height="21"
+                                       VerticalAlignment="Bottom" />
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Card>
+            </Grid>
+        </materialDesign:DialogHost>
+    </Grid>
 </UserControl>

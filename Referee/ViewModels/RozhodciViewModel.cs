@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
-using Referee.Infrastructure.Print;
 using Referee.Models;
 
 namespace Referee.ViewModels
@@ -16,6 +15,7 @@ namespace Referee.ViewModels
 		private int _selectedRozhodciCount;
 		private bool _isDialogHostOpen;
 		private int _rawPagesCount;
+		private int _editIndex;
 		private bool? _isAllSelected;
 		private readonly RozhodciService _rozhodciService;
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
@@ -37,7 +37,7 @@ namespace Referee.ViewModels
 		public RozhodciViewModel(RozhodciService rozhodciService, Printer printer)
 		{
 			_rozhodciService = rozhodciService;
-			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "rozhodčího");
+			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "rozhodčího", 480);
 			RawPagesCount = 1;
 			OpenDialogHost = new Command<EditorMode>(x =>
 			{
@@ -46,13 +46,14 @@ namespace Referee.ViewModels
 				SelectedRozhodci ??= Rozhodci.CreateEmpty();
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
 				{
-					var index = RozhodciCollection.IndexOf(SelectedRozhodci);
-					if (index == -1)
+					_editIndex = RozhodciCollection.IndexOf(SelectedRozhodci);
+					if (_editIndex == -1)
 					{
 						SelectedRozhodci = RozhodciCollection.FirstOrDefault(r => r.Id == _selectedRozhodciCache.Id);
+						_editIndex = RozhodciCollection.IndexOf(SelectedRozhodci);
 					}
 
-					if (SelectedRozhodci.FullName != " ")
+					if (SelectedRozhodci != null && SelectedRozhodci.FullName != " ")
 						_selectedRozhodciCache = new Rozhodci(SelectedRozhodci);
 				}
 
@@ -69,7 +70,7 @@ namespace Referee.ViewModels
 				{
 					if (DialogSwitchViewModel.EditorMode == EditorMode.Delete)
 						return true;
-					return Extensions.ValidateRozhodci(DialogSwitchViewModel.EditorMode == EditorMode.Edit ? SelectedRozhodci : CreateRozhodci);
+					return Extensions.ValidatePerson(DialogSwitchViewModel.EditorMode == EditorMode.Edit ? SelectedRozhodci : CreateRozhodci);
 				});
 #pragma warning restore 4014
 			CloseDialogHostCommand = new Command(CloseDialog);
@@ -149,7 +150,7 @@ namespace Referee.ViewModels
 					}
 				};
 				RozhodciCollection.Add(rozhodci);
-				await Task.Delay(25);
+				await Task.Delay(35);
 			}
 		}
 
@@ -157,7 +158,10 @@ namespace Referee.ViewModels
 		{
 			IsDialogHostOpen = false;
 			if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
+			{
+				RozhodciCollection[_editIndex].CopyValuesFrom(_selectedRozhodciCache);
 				SelectedRozhodci = new Rozhodci(_selectedRozhodciCache);
+			}
 
 			if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
 				CreateRozhodci = Rozhodci.CreateEmpty();
@@ -165,25 +169,29 @@ namespace Referee.ViewModels
 
 		private async Task HandleRozhodci()
 		{
-			if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
+			switch (DialogSwitchViewModel.EditorMode)
 			{
-				RozhodciCollection.Add(await _rozhodciService.AddNewRozhodci(CreateRozhodci));
-				CreateRozhodci = Rozhodci.CreateEmpty();
-			}
-			else if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
-			{
-				//var index = RozhodciCollection.IndexOf(RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id));
-				var index = RozhodciCollection.IndexOf(SelectedRozhodci);
-				if (index == -1)
-					throw new IndexOutOfRangeException("Rozhodci was not found");
-				RozhodciCollection[index].CopyValuesFrom(SelectedRozhodci);
-				await _rozhodciService.UpdateRozhodciInDatabase(RozhodciCollection[index]);
-			}
-			else
-			{
-				var selected = RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id);
-				await _rozhodciService.DeleteRozhodciFromDatabase(selected);
-				RozhodciCollection.Remove(selected);
+				case EditorMode.Create:
+					RozhodciCollection.Add(await _rozhodciService.AddNewRozhodci(CreateRozhodci));
+					CreateRozhodci = Rozhodci.CreateEmpty();
+					break;
+				case EditorMode.Edit:
+				{
+					//var index = CetaCollection.IndexOf(CetaCollection.FirstOrDefault(x => x.Id == SelectedCetar.Id));
+					var index = RozhodciCollection.IndexOf(SelectedRozhodci);
+					if (index == -1)
+						throw new IndexOutOfRangeException("Rozhodci was not found");
+					RozhodciCollection[index].CopyValuesFrom(SelectedRozhodci);
+					await _rozhodciService.UpdateRozhodciInDatabase(RozhodciCollection[index]);
+					break;
+				}
+				case EditorMode.Delete:
+				{
+					var selected = RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id);
+					await _rozhodciService.DeleteRozhodciFromDatabase(selected);
+					RozhodciCollection.Remove(selected);
+					break;
+				}
 			}
 
 			IsDialogHostOpen = false;

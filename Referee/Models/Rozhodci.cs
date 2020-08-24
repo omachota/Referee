@@ -33,8 +33,24 @@ namespace Referee.Models
 			_isSelected = false;
 		}
 
+		public Rozhodci(int id, string firstName, string lastName, DateTime birthDate, string address, string city, string email, string @class,
+		                string telephoneNumber, string registrationNumber, string bankAccountNumber)
+		{
+			Id = id;
+			_firstName = firstName;
+			_lastName = lastName;
+			_birthDate = birthDate;
+			_address = address;
+			_city = city;
+			_email = email;
+			_class = @class;
+			_telephoneNumber = telephoneNumber;
+			_registrationNumber = registrationNumber;
+			_bankAccountNumber = bankAccountNumber;
+		}
+
 		public Rozhodci(Rozhodci rozhodci) : this(rozhodci.Id, rozhodci.FirstName, rozhodci.LastName, rozhodci.BirthDate, rozhodci.Address,
-			rozhodci.City)
+			rozhodci.City, rozhodci.Email, rozhodci.Class, rozhodci.TelephoneNumber, rozhodci.RegistrationNumber, rozhodci.BankAccountNumber)
 		{
 		}
 

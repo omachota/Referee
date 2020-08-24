@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using iText.IO.Font;
 using iText.Kernel.Colors;
@@ -15,7 +16,7 @@ using Document = iText.Layout.Document;
 using Paragraph = iText.Layout.Element.Paragraph;
 using Path = System.IO.Path;
 
-namespace Referee.Infrastructure.Print
+namespace Referee.Infrastructure
 {
 	public class Printer
 	{
@@ -40,12 +41,13 @@ namespace Referee.Infrastructure.Print
 			}
 		}
 
-		public async Task Print(List<Rozhodci> selectedPersons)
+		public async Task Print<T>(List<T> selectedPersons) where T : IPerson
 		{
 			if (!_isCreatingPdf)
 			{
 				_isCreatingPdf = true;
-				await Task.Run(() => Print(false, selectedPersons));
+				var sortedPersons = selectedPersons.OrderBy(x => x.LastName).ToList();
+				await Task.Run(() => Print(false, sortedPersons));
 				await Task.Delay(100);
 				_isCreatingPdf = false;
 			}
@@ -72,7 +74,9 @@ namespace Referee.Infrastructure.Print
 
 					Paragraph documentMainHeader = new Paragraph($"TJ, Sportovní klub, Atletický oddíl, Atletický klub: {_settings.ClubName}")
 					                               .SetFont(bold).SetFontSize(16).SetTextAlignment(TextAlignment.CENTER);
-					Paragraph vyplatniListinaHead = new Paragraph("VÝPLATNÍ LISTINA ODM\u011AN ROZHOD\u010CÍCH")
+					string listinaHeadText = "VÝPLATNÍ LISTINA ODMĚN ";
+					listinaHeadText += typeof(T) == typeof(Rozhodci) ? "ROZHODČÍCH" : "TECHNICKÉ ČETY";
+					Paragraph vyplatniListinaHead = new Paragraph(listinaHeadText)
 					                                .SetFont(bold).SetFontSize(16).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(-3);
 					Paragraph rules = new Paragraph(
 						                  "Níže podepsaní účastníci soutěže souhlasili s uvedením svých osobních údajů na této výplatní listině (jméno, příjmení, datum narození a adresa).")
@@ -84,43 +88,43 @@ namespace Referee.Infrastructure.Print
 
 					Table aboutcompetition = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(1).UseAllAvailableWidth();
 					if (_settings.IsCompetitionNameEnabled)
-						aboutcompetition.AddCell(AboutCompetitionCell($"Název sout\u011Bže: {_settings.CompetitionName}", bold));
+						aboutcompetition.AddCell(AboutCompetitionCell($"Název soutěže: {_settings.CompetitionName}", bold));
 					else
-						aboutcompetition.AddCell(AboutCompetitionCell($"Název sout\u011Bže {new string('.', 89)}", bold));
+						aboutcompetition.AddCell(AboutCompetitionCell($"Název soutěže {new string('.', 89)}", bold));
 
 					if (_settings.IsCompetitionDateEnabled)
 						if (_settings.CompetitionStartDate.HasValue && _settings.CompetitionEndDate == null)
 							aboutcompetition.AddCell(
-								AboutCompetitionCell($"Datum konání sout\u011Bže: {_settings.CompetitionStartDate.Value:dd.MM.yyyy}", bold));
+								AboutCompetitionCell($"Datum konání soutěže: {_settings.CompetitionStartDate.Value:dd.MM.yyyy}", bold));
 						else if (_settings.CompetitionStartDate.HasValue && _settings.CompetitionEndDate.HasValue)
 							aboutcompetition.AddCell(AboutCompetitionCell(
-								$"Datum konání sout\u011Bže: {_settings.CompetitionStartDate.Value:dd.MM.yyyy} - {_settings.CompetitionEndDate.Value:dd.MM.yyyy}",
+								$"Datum konání soutěže: {_settings.CompetitionStartDate.Value:dd.MM.yyyy} - {_settings.CompetitionEndDate.Value:dd.MM.yyyy}",
 								bold));
 						else
-							aboutcompetition.AddCell(AboutCompetitionCell($"Datum konání sout\u011Bže {new string('.', 70)}", bold));
+							aboutcompetition.AddCell(AboutCompetitionCell($"Datum konání soutěže {new string('.', 70)}", bold));
 					else
-						aboutcompetition.AddCell(AboutCompetitionCell($"Datum konání sout\u011Bže {new string('.', 70)}", bold));
+						aboutcompetition.AddCell(AboutCompetitionCell($"Datum konání soutěže {new string('.', 70)}", bold));
 
 					Table aboutcompetition2 = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(3).UseAllAvailableWidth();
 					if (_settings.IsCompetitionTimeEnabled)
 					{
 						if (_settings.CompetitionStartTime.HasValue && _settings.CompetitionEndTime == null)
 							aboutcompetition2.AddCell(
-								AboutCompetitionCell($"Doba konání sout\u011Bže: {_settings.CompetitionStartTime.Value:HH:mm} - ", bold));
+								AboutCompetitionCell($"Doba konání soutěže: {_settings.CompetitionStartTime.Value:HH:mm} - ", bold));
 						else if (_settings.CompetitionStartTime.HasValue && _settings.CompetitionEndTime.HasValue)
 							aboutcompetition2.AddCell(AboutCompetitionCell(
-								$"Doba konání sout\u011Bže: {_settings.CompetitionStartTime.Value:HH:mm} - {_settings.CompetitionEndTime.Value:HH:mm}",
+								$"Doba konání soutěže: {_settings.CompetitionStartTime.Value:HH:mm} - {_settings.CompetitionEndTime.Value:HH:mm}",
 								bold));
 						else
-							aboutcompetition2.AddCell(AboutCompetitionCell($"Doba konání sout\u011Bže {new string('.', 78)}", bold));
+							aboutcompetition2.AddCell(AboutCompetitionCell($"Doba konání soutěže {new string('.', 78)}", bold));
 					}
 					else
-						aboutcompetition2.AddCell(AboutCompetitionCell($"Doba konání sout\u011Bže {new string('.', 78)}", bold));
+						aboutcompetition2.AddCell(AboutCompetitionCell($"Doba konání soutěže {new string('.', 78)}", bold));
 
 					if (_settings.IsCompetitionPlaceEnabled)
-						aboutcompetition2.AddCell(AboutCompetitionCell($"Místo konání sout\u011Bže: {_settings.CompetitionPlace}", bold));
+						aboutcompetition2.AddCell(AboutCompetitionCell($"Místo konání soutěže: {_settings.CompetitionPlace}", bold));
 					else
-						aboutcompetition2.AddCell(AboutCompetitionCell($"Místo konání sout\u011Bže {new string('.', 72)}", bold));
+						aboutcompetition2.AddCell(AboutCompetitionCell($"Místo konání soutěže {new string('.', 72)}", bold));
 
 					#region TableHead
 
@@ -308,8 +312,7 @@ namespace Referee.Infrastructure.Print
 				}
 			}
 
-			string url = "/select, \"" + filePath;
-			ChromeLauncher.OpenLink(url);
+			ChromeLauncher.OpenLink(filePath, true);
 		}
 
 		private Cell AboutCompetitionCell(string text, PdfFont pdfFont)
@@ -334,6 +337,7 @@ namespace Referee.Infrastructure.Print
 			int? sum = 0;
 			selectedPersons.ForEach(x => sum += x.Reward);
 			if (sum.HasValue)
+				// ReSharper disable once PossibleInvalidOperationException
 				return sum.Value == 0 ? "" : sum?.ToString();
 			return "";
 		}

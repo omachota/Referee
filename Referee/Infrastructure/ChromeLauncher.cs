@@ -11,7 +11,7 @@ namespace Referee.Infrastructure
 			(string)(Registry.GetValue("HKEY_LOCAL_MACHINE" + ChromeAppKey, "", null) ??
 					  Registry.GetValue("HKEY_CURRENT_USER" + ChromeAppKey, "", null));
 
-		public static void OpenLink(string url)
+		public static void OpenLink(string url, bool isFile = false)
 		{
 			string chromeAppFileName = ChromeAppFileName;
 			if (string.IsNullOrEmpty(chromeAppFileName))
@@ -26,6 +26,8 @@ namespace Referee.Infrastructure
 				}
 			}
 
+			if (isFile)
+				url = "/select, \"" + url;
 			Process.Start(chromeAppFileName, url);
 		}
 	}
