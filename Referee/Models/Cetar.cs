@@ -3,7 +3,7 @@ using Referee.Infrastructure;
 
 namespace Referee.Models
 {
-	public class Cetar : AbstractNotifyPropertyChanged
+	public class Cetar : AbstractNotifyPropertyChanged, IPerson
 	{
 		private string _firstName;
 		private string _lastName;
@@ -11,19 +11,36 @@ namespace Referee.Models
 		private string _address;
 		private string _city;
 		private bool _isSelected;
+		private int? _reward;
 
-		public Cetar(string firstName, string lastName, DateTime birthDate, string address, string city, int id)
+		public Cetar()
 		{
+		}
+
+		public Cetar(int id, string firstName, string lastName, DateTime birthDate, string address, string city)
+		{
+			Id = id;
 			_firstName = firstName;
 			_lastName = lastName;
 			_birthDate = birthDate;
 			_address = address;
 			_city = city;
-			Id = id;
 			_isSelected = false;
 		}
 
-		public int Id { get; }
+
+
+		public Cetar(Cetar cetar) : this(cetar.Id, cetar.FirstName, cetar.LastName, cetar.BirthDate, cetar.Address,
+			cetar.City)
+		{
+		}
+
+		public static Cetar CreateEmpty()
+		{
+			return new Cetar(0, "", "", DateTime.Now, "", "");
+		}
+
+		public int Id { get; set;}
 
 		public string FirstName
 		{
@@ -60,5 +77,13 @@ namespace Referee.Models
 			get => _isSelected;
 			set => SetAndRaise(ref _isSelected, value);
 		}
+
+		public int? Reward
+		{
+			get => _reward;
+			set => SetAndRaise(ref _reward, value);
+		}
+
+		public string FullName => $"{_firstName} {_lastName}";
 	}
 }

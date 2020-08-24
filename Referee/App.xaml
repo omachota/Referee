@@ -2,26 +2,38 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:Referee.ViewModels"
-             xmlns:views="clr-namespace:Referee.Views"
-             StartupUri="MainWindow.xaml">
+             xmlns:views="clr-namespace:Referee.Views">
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.LightGreen.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Green.xaml" />
+
+                <ResourceDictionary Source="Themes/TimePickerStyle.xaml"/>
+                <ResourceDictionary Source="Themes/ListBoxItemStyle.xaml"/>
+                <ResourceDictionary Source="Themes/SettingsStyle.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
 
-            <SolidColorBrush x:Key="PrimaryBlue700Brush" Color="#32adff"/>
+            <!--Colors-->
+            <Color x:Key="ColorPrimaryMid">#0c8ce8</Color>
+
+            <SolidColorBrush x:Key="PrimaryBlueMidBrush" Color="{StaticResource ColorPrimaryMid}"/>
             <SolidColorBrush x:Key="OrangeBrush" Color="#ffc107"/>
 
             <DataTemplate DataType="{x:Type viewModels:RozhodciViewModel}">
                 <views:RozhodciUserControl/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModels:CetaUserControl}">
+            <DataTemplate DataType="{x:Type viewModels:CetaViewModel}">
                 <views:CetaUserControl/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+                <views:SettingsUserControl/>
             </DataTemplate>
 
         </ResourceDictionary>

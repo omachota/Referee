@@ -6,23 +6,34 @@ namespace Referee.ViewModels
 {
 	public class DialogSwitchViewModel : AbstractNotifyPropertyChanged
 	{
+		private int _dialogHeight;
+		private int _height;
 		private readonly string _editorText;
 		private readonly string _type;
 		private string _editorTitle;
 		private string _editorButtonContent;
 		private Visibility _create;
 		private Visibility _edit;
+		private Visibility _delete;
 		private EditorMode _editorMode;
 
-		public DialogSwitchViewModel(string editorText, string type)
+		public DialogSwitchViewModel(string editorText, string type, int defaultHeight)
 		{
 			_editorTitle = $"{editorText} {type}";
+			_height = defaultHeight;
 			_editorButtonContent = editorText;
 			_editorText = editorText;
 			_type = type;
 			_editorMode = EditorMode.Create;
 			Create = Visibility.Visible;
 			Edit = Visibility.Collapsed;
+			Delete = Visibility.Collapsed;
+		}
+
+		public int DialogHeight
+		{
+			get => _dialogHeight;
+			set => SetAndRaise(ref _dialogHeight, value);
 		}
 
 		public string EditorTitle
@@ -49,6 +60,12 @@ namespace Referee.ViewModels
 			set => SetAndRaise(ref _edit, value);
 		}
 
+		public Visibility Delete
+		{
+			get => _delete;
+			set => SetAndRaise(ref _delete, value);
+		}
+
 		public EditorMode EditorMode => _editorMode;
 
 		public void SetValues(EditorMode editorMode)
@@ -61,12 +78,24 @@ namespace Referee.ViewModels
 					EditorButtonContent = _editorText;
 					Create = Visibility.Visible;
 					Edit = Visibility.Collapsed;
+					Delete = Visibility.Collapsed;
+					DialogHeight = _height;
 					break;
 				case EditorMode.Edit:
 					EditorTitle = "Upravit " + _type;
 					EditorButtonContent = "Upravit";
 					Create = Visibility.Collapsed;
 					Edit = Visibility.Visible;
+					Delete = Visibility.Collapsed;
+					DialogHeight = _height;
+					break;
+				case EditorMode.Delete:
+					EditorTitle = "Smazat " + _type;
+					EditorButtonContent = "Smazat";
+					Create = Visibility.Collapsed;
+					Edit = Visibility.Collapsed;
+					Delete = Visibility.Visible;
+					DialogHeight = 140;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(editorMode), editorMode, null);

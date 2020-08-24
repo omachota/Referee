@@ -2,7 +2,7 @@ using Referee.Infrastructure;
 
 namespace Referee.ViewModels
 {
-	public class BaseViewModel : AbstractNotifyPropertyChanged
+	public abstract class BaseViewModel : AbstractNotifyPropertyChanged
 	{
 
 	}

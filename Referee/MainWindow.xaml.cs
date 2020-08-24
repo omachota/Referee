@@ -3,7 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using MaterialDesignThemes.Wpf;
+using Referee.Infrastructure.SettingsFd;
+using Referee.Infrastructure.WindowNavigation;
+using Referee.ViewModels;
 
 namespace Referee
 {
@@ -12,42 +14,21 @@ namespace Referee
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly MainViewModel _mainViewModel;
+
+        public MainWindow(MainViewModel mainViewModel)
         {
-            Helper helper = new Helper();
-            helper.SettingsFileExists();
+            DataContext = mainViewModel;
+            _mainViewModel = mainViewModel;
             InitializeComponent();
-            GridProUserControl.Children.Add(_dialogHost);
-            //MainGrid.Children.Add(NovyZavodnikDialogHost);
+
             MenuListView.SelectedIndex = 0;
-        }
-
-        //private DialogHost NovyZavodnikDialogHost = new DialogHost();
-
-        private void MenuListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int index = MenuListBox.SelectedIndex;
-            switch (index)
-            {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    Environment.Exit(0);
-                    break;
-            }
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
 
-            // Begin dragging the window
             try
             {
                 DragMove();
@@ -62,15 +43,15 @@ namespace Referee
         {
             if ((bool)OpenCloseMenuButton.IsChecked)
             {
-                Storyboard OpenMenu = (Storyboard)OpenCloseMenuButton.FindResource("OpenMenu");
-                OpenMenu.Begin();
-                _dialogHost.IsOpen = true;
+                Storyboard openMenu = (Storyboard)OpenCloseMenuButton.FindResource("OpenMenu");
+                openMenu.Begin();
+                _mainViewModel.IsDialogOpen = true;
             }
             else
             {
-                Storyboard CloseMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
-                CloseMenu.Begin();
-                _dialogHost.IsOpen = false;
+                Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
+                closeMenu.Begin();
+                _mainViewModel.IsDialogOpen = false;
             }
         }
 
@@ -78,42 +59,42 @@ namespace Referee
         {
             if (MenuGrid.Width > 180)
             {
-                Storyboard CloseMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
-                CloseMenu.Begin();
+                Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
+                closeMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
-                _dialogHost.IsOpen = false;
+                _mainViewModel.IsDialogOpen = false;
             }
         }
-
-        private readonly DialogHost _dialogHost = new DialogHost();
 
         private void MenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MenuGrid.Width > 180)
             {
-                Storyboard CloseMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
-                CloseMenu.Begin();
+                Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
+                closeMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
-                _dialogHost.IsOpen = false;
+                _mainViewModel.IsDialogOpen = false;
             }
-            GridProUserControl.Children.Clear();
-            int index = MenuListView.SelectedIndex;
-            switch (index)
+
+            switch (MenuListView.SelectedIndex)
             {
                 case 0:
-                    DirectPrintUserControl directPrintUserControl = new DirectPrintUserControl();
-                    GridProUserControl.Children.Add(directPrintUserControl);
+                    _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Rozhodci);
                     break;
                 case 1:
-                    TechnickaCetaUserControl technickaCetaUserControl = new TechnickaCetaUserControl();
-                    GridProUserControl.Children.Add(technickaCetaUserControl);
+                    _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Ceta);
                     break;
                 case 2:
-                    NastaveniUserControl nastaveniUserControl = new NastaveniUserControl();
-                    GridProUserControl.Children.Add(nastaveniUserControl);
+                    _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Settings);
                     break;
             }
-            GridProUserControl.Children.Add(_dialogHost);
+        }
+
+        protected override async void OnClosed(EventArgs e)
+        {
+            await SettingsHelper.SaveSettingsAsync(_mainViewModel.Settings);
+
+            base.OnClosed(e);
         }
     }
 }
