@@ -30,12 +30,12 @@ namespace Referee.Infrastructure
 			_settings = settings;
 		}
 
-		public async Task RawPrint(int pagesCount)
+		public async Task RawPrint<T>(int pagesCount) where T : IPerson
 		{
 			if (!_isCreatingPdf)
 			{
 				_isCreatingPdf = true;
-				await Task.Run(() => Print(true, new List<Rozhodci>(), pagesCount));
+				await Task.Run(() => Print(true, new List<T>(), pagesCount));
 				await Task.Delay(100);
 				_isCreatingPdf = false;
 			}

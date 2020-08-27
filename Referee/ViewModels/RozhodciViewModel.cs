@@ -62,7 +62,7 @@ namespace Referee.ViewModels
 				IsDialogHostOpen = true;
 			});
 #pragma warning disable 4014
-			RawPrintCommand = new Command(() => printer.RawPrint(RawPagesCount));
+			RawPrintCommand = new Command(() => printer.RawPrint<Rozhodci>(RawPagesCount));
 			SelectionPrintCommand = new Command(() => printer.Print(_selectedRozhodciCollection.ToList()));
 			LoadCommand = new Command(() => LoadRozhodciAsync());
 			CreateOrEditRozhodciCommand = new Command(() => HandleRozhodci(),
