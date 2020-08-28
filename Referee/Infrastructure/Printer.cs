@@ -72,7 +72,8 @@ namespace Referee.Infrastructure
 					PdfFont font = PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA, PdfEncodings.CP1250, false);
 					PdfFont bold = PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD, PdfEncodings.CP1250, false);
 
-					Paragraph documentMainHeader = new Paragraph($"TJ, Sportovní klub, Atletický oddíl, Atletický klub: {_settings.ClubName}")
+					string mainHeaderTitle = _settings.IsClubNameEnabled ? _settings.ClubName : new string('.', 80);
+					Paragraph documentMainHeader = new Paragraph($"TJ, Sportovní klub, Atletický oddíl, Atletický klub: {mainHeaderTitle}")
 					                               .SetFont(bold).SetFontSize(16).SetTextAlignment(TextAlignment.CENTER);
 					string listinaHeadText = "VÝPLATNÍ LISTINA ODMĚN ";
 					listinaHeadText += typeof(T) == typeof(Rozhodci) ? "ROZHODČÍCH" : "TECHNICKÉ ČETY";
