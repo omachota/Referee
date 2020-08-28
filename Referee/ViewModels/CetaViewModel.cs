@@ -62,7 +62,7 @@ namespace Referee.ViewModels
 				IsDialogHostOpen = true;
 			});
 #pragma warning disable 4014
-			RawPrintCommand = new Command(() => printer.RawPrint(RawPagesCount));
+			RawPrintCommand = new Command(() => printer.RawPrint<Cetar>(RawPagesCount));
 			SelectionPrintCommand = new Command(() => printer.Print(_selectedCetaCollection.ToList()));
 			LoadCommand = new Command(() => LoadCetaAsync());
 			CreateOrEditCetarCommand = new Command(() => HandleCetar(),
