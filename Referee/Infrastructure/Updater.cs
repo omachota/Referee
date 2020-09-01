@@ -22,7 +22,15 @@ namespace Referee.Infrastructure
 		{
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Add("User-Agent", "request");
-			HttpResponseMessage respose = await client.GetAsync("https://api.github.com/repos/omachota/Referee/releases").ConfigureAwait(false);
+			HttpResponseMessage respose;
+			try
+			{
+				respose = await client.GetAsync("https://api.github.com/repos/omachota/Referee/releases").ConfigureAwait(false);
+			}
+			catch
+			{
+				respose = new HttpResponseMessage(HttpStatusCode.Forbidden);
+			}
 			if (respose.IsSuccessStatusCode)
 			{
 				var content = await respose.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -38,14 +46,20 @@ namespace Referee.Infrastructure
 #pragma warning disable 4014
 					NewVersionDetectedEvent.Invoke();
 #pragma warning restore 4014
-
-					using (WebClient myWebClient = new WebClient())
+					try
 					{
-						await myWebClient.DownloadFileTaskAsync(new Uri(downloadUrl), Constants.WorkingDirectory + "\\" + downloadUrl.Split('/')[^1])
-						                 .ConfigureAwait(false);
-					}
+						using (WebClient myWebClient = new WebClient())
+						{
+							await myWebClient.DownloadFileTaskAsync(new Uri(downloadUrl), Constants.WorkingDirectory + "\\" + downloadUrl.Split('/')[^1])
+							                 .ConfigureAwait(false);
+						}
 
-					Process.Start("explorer.exe", Constants.WorkingDirectory);
+						Process.Start("explorer.exe", Constants.WorkingDirectory);
+					}
+					catch (Exception)
+					{
+						// ignored
+					}
 				}
 			}
 			else
