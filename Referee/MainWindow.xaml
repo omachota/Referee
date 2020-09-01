@@ -88,6 +88,7 @@
                                        CloseOnClickAway="True">
                 <ContentControl Content="{Binding WindowManager.ActiveViewModel}" />
             </materialDesign:DialogHost>
+            <materialDesign:Snackbar Message="Stahuji novou verzi" IsActive="{Binding IsMessageOpen}"/>
         </Grid>
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 using MySqlConnector;
 using Referee.Infrastructure.SettingsFd;
@@ -25,7 +26,8 @@ namespace Referee.Infrastructure.DataServices
 
 				MySqlCommand command = new MySqlCommand("SELECT * FROM Ceta", connection);
 
-				DbDataReader reader = await command.ExecuteReaderAsync();
+				DbDataReader reader = await command.ExecuteReaderAsync(new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token)
+				                                   .ConfigureAwait(false);
 				while (await reader.ReadAsync().ConfigureAwait(false))
 				{
 					yield return new Cetar

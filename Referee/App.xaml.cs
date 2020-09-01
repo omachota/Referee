@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Referee.Infrastructure;
 using Referee.Infrastructure.SettingsFd;
 using Referee.ViewModels;
 
@@ -17,6 +18,8 @@ namespace Referee
 			window.Show();
 
 			base.OnStartup(e);
+
+			await Updater.CheckVersion().ConfigureAwait(false);
 		}
 	}
 }
