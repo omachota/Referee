@@ -172,7 +172,17 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					RozhodciCollection.Add(await _rozhodciService.AddNewRozhodci(CreateRozhodci));
+					Rozhodci rozhodci = await _rozhodciService.AddNewRozhodci(CreateRozhodci);
+					rozhodci.PropertyChanged += (sender, args) =>
+					{
+						if (args.PropertyName == nameof(Rozhodci.IsSelected))
+						{
+							_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
+							SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+							OnPropertyChanged(nameof(IsAllSelected));
+						}
+					};
+					RozhodciCollection.Add(rozhodci);
 					CreateRozhodci = Rozhodci.CreateEmpty();
 					break;
 				case EditorMode.Edit:
@@ -188,6 +198,7 @@ namespace Referee.ViewModels
 				case EditorMode.Delete:
 				{
 					var selected = RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id);
+					SelectedRozhodci.IsSelected = false;
 					await _rozhodciService.DeleteRozhodciFromDatabase(selected);
 					RozhodciCollection.Remove(selected);
 					break;

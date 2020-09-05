@@ -84,7 +84,7 @@
                                          Margin="10 5"
                                          Text="{Binding CreateRozhodci.Class}">
                                     <i:Interaction.Behaviors>
-                                        <infrastructure:TextBoxInputMaskBehavior InputMask="0" PromptChar="_" />
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="0" PromptChar=" " />
                                     </i:Interaction.Behaviors>
                                 </TextBox>
                                 <TextBox materialDesign:HintAssist.Hint="Telefonní číslo" Width="80"
@@ -92,7 +92,7 @@
                                          Margin="10 5"
                                          Text="{Binding CreateRozhodci.TelephoneNumber}">
                                     <i:Interaction.Behaviors>
-                                        <infrastructure:TextBoxInputMaskBehavior InputMask="000 000 000" PromptChar="_" />
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="000 000 000" PromptChar=" " />
                                     </i:Interaction.Behaviors>
                                 </TextBox>
                                 <TextBox materialDesign:HintAssist.Hint="Evidenční číslo" Width="113"
@@ -160,7 +160,7 @@
                                          Margin="10 5"
                                          Text="{Binding SelectedRozhodci.Class}">
                                     <i:Interaction.Behaviors>
-                                        <infrastructure:TextBoxInputMaskBehavior InputMask="0" PromptChar="_" />
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="0" PromptChar=" " />
                                     </i:Interaction.Behaviors>
                                 </TextBox>
                                 <TextBox materialDesign:HintAssist.Hint="Telefonní číslo" Width="80"
@@ -168,7 +168,7 @@
                                          Margin="10 5"
                                          Text="{Binding SelectedRozhodci.TelephoneNumber}">
                                     <i:Interaction.Behaviors>
-                                        <infrastructure:TextBoxInputMaskBehavior InputMask="000 000 000" PromptChar="_" />
+                                        <infrastructure:TextBoxInputMaskBehavior InputMask="000 000 000" PromptChar=" " />
                                     </i:Interaction.Behaviors>
                                 </TextBox>
                                 <TextBox materialDesign:HintAssist.Hint="Evidenční číslo" Width="113"

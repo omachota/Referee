@@ -45,7 +45,7 @@ namespace Referee.Infrastructure.DataServices
 			}
 		}
 
-		public async Task<Cetar> AddNewCerat(Cetar cetar)
+		public async Task<Cetar> AddNewCetar(Cetar cetar)
 		{
 			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{

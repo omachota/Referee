@@ -172,7 +172,17 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					CetaCollection.Add(await _cetaService.AddNewCerat(CreateCetar));
+					Cetar cetar = await _cetaService.AddNewCetar(CreateCetar);
+					cetar.PropertyChanged += (sender, args) =>
+					{
+						if (args.PropertyName == nameof(Cetar.IsSelected))
+						{
+							_selectedCetaCollection = CetaCollection.Where(x => x.IsSelected).ToList();
+							SelectedCetaCount = _selectedCetaCollection.Count;
+							OnPropertyChanged(nameof(IsAllSelected));
+						}
+					};
+					CetaCollection.Add(cetar);
 					CreateCetar = Cetar.CreateEmpty();
 					break;
 				case EditorMode.Edit:
@@ -188,6 +198,7 @@ namespace Referee.ViewModels
 				case EditorMode.Delete:
 				{
 					var selected = CetaCollection.FirstOrDefault(x => x.Id == SelectedCetar.Id);
+					SelectedCetar.IsSelected = false;
 					await _cetaService.DeleteCetarFromDatabase(selected);
 					CetaCollection.Remove(selected);
 					break;
