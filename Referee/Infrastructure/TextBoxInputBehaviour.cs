@@ -16,38 +16,38 @@ namespace Referee.Infrastructure
     {
         #region DependencyProperties
 
-        public static readonly DependencyProperty InputMaskProperty =
-          DependencyProperty.Register("InputMask", typeof(string), typeof(TextBoxInputMaskBehavior), null);
+		public static readonly DependencyProperty InputMaskProperty =
+			DependencyProperty.Register("InputMask", typeof(string), typeof(TextBoxInputMaskBehavior), null);
 
-        public string InputMask
-        {
-            get => (string)GetValue(InputMaskProperty);
-            set => SetValue(InputMaskProperty, value);
-        }
+		public string InputMask
+		{
+			get => (string) GetValue(InputMaskProperty);
+			set => SetValue(InputMaskProperty, value);
+		}
 
-        public static readonly DependencyProperty PromptCharProperty =
-           DependencyProperty.Register("PromptChar", typeof(char), typeof(TextBoxInputMaskBehavior),
-                                        new PropertyMetadata('_'));
+		public static readonly DependencyProperty PromptCharProperty =
+			DependencyProperty.Register("PromptChar", typeof(char), typeof(TextBoxInputMaskBehavior),
+				new PropertyMetadata('_'));
 
-        public char PromptChar
-        {
-            get => (char)GetValue(PromptCharProperty);
-            set => SetValue(PromptCharProperty, value);
-        }
+		public char PromptChar
+		{
+			get => (char) GetValue(PromptCharProperty);
+			set => SetValue(PromptCharProperty, value);
+		}
 
-        #endregion
+		#endregion
 
-        public MaskedTextProvider Provider { get; private set; }
+		public MaskedTextProvider Provider { get; private set; }
 
-        protected override void OnAttached()
-        {
-            base.OnAttached();
-            AssociatedObject.Loaded += AssociatedObjectLoaded;
-            AssociatedObject.PreviewTextInput += AssociatedObjectPreviewTextInput;
-            AssociatedObject.PreviewKeyDown += AssociatedObjectPreviewKeyDown;
+		protected override void OnAttached()
+		{
+			base.OnAttached();
+			AssociatedObject.Loaded += AssociatedObjectLoaded;
+			AssociatedObject.PreviewTextInput += AssociatedObjectPreviewTextInput;
+			AssociatedObject.PreviewKeyDown += AssociatedObjectPreviewKeyDown;
 
-            DataObject.AddPastingHandler(AssociatedObject, Pasting);
-        }
+			DataObject.AddPastingHandler(AssociatedObject, Pasting);
+		}
 
 
         protected override void OnDetaching()
@@ -124,12 +124,11 @@ namespace Referee.Infrastructure
             e.Handled = true;
         }
 
-        void AssociatedObjectPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-
-            if (e.Key == Key.Space)//handle the space
-            {
-                TreatSelectedText();
+		void AssociatedObjectPreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Space) //handle the space
+			{
+				TreatSelectedText();
 
                 var position = GetNextCharacterPosition(AssociatedObject.SelectionStart);
 
@@ -139,54 +138,58 @@ namespace Referee.Infrastructure
                 e.Handled = true;
             }
 
-            if (e.Key == Key.Back)//handle the back space
-            {
-                if (TreatSelectedText())
-                {
-                    RefreshText(AssociatedObject.SelectionStart);
-                }
-                else
-                {
-                    if (AssociatedObject.SelectionStart != 0)
-                    {
-                        if (Provider.RemoveAt(AssociatedObject.SelectionStart - 1))
-                            RefreshText(AssociatedObject.SelectionStart - 1);
-                    }
-                }
+			if (e.Key == Key.Back) //handle the back space
+			{
+				if (TreatSelectedText())
+				{
+					RefreshText(AssociatedObject.SelectionStart);
+				}
+				else
+				{
+					if (AssociatedObject.SelectionStart != 0)
+					{
+						if (Provider.RemoveAt(AssociatedObject.SelectionStart - 1))
+							RefreshText(AssociatedObject.SelectionStart - 1);
+					}
+				}
 
-                e.Handled = true;
-            }
+				if (AssociatedObject.SelectionStart != 0)
+					if (AssociatedObject.Text[AssociatedObject.SelectionStart + AssociatedObject.SelectionLength - 1] == ' ')
+					{
+						Provider.RemoveAt(AssociatedObject.SelectionStart - 1);
+						RefreshText(AssociatedObject.SelectionStart - 1);
+					}
 
-            if (e.Key == Key.Delete)//handle the delete key
-            {
-                //treat selected text
-                if (TreatSelectedText())
-                {
-                    RefreshText(AssociatedObject.SelectionStart);
-                }
-                else
-                {
+				e.Handled = true;
+			}
 
-                    if (Provider.RemoveAt(AssociatedObject.SelectionStart))
-                        RefreshText(AssociatedObject.SelectionStart);
+			if (e.Key == Key.Delete) //handle the delete key
+			{
+				//treat selected text
+				if (TreatSelectedText())
+				{
+					RefreshText(AssociatedObject.SelectionStart);
+				}
+				else
+				{
+					if (Provider.RemoveAt(AssociatedObject.SelectionStart))
+						RefreshText(AssociatedObject.SelectionStart);
+				}
 
-                }
+				e.Handled = true;
+			}
+		}
 
-                e.Handled = true;
-            }
-
-        }
-
-        /// <summary>
-        /// Pasting prüft ob korrekte Daten reingepastet werden
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Pasting(object sender, DataObjectPastingEventArgs e)
-        {
-            if (e.DataObject.GetDataPresent(typeof(string)))
-            {
-                var pastedText = (string)e.DataObject.GetData(typeof(string));
+		/// <summary>
+		/// Pasting prüft ob korrekte Daten reingepastet werden
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Pasting(object sender, DataObjectPastingEventArgs e)
+		{
+			if (e.DataObject.GetDataPresent(typeof(string)))
+			{
+				var pastedText = (string) e.DataObject.GetData(typeof(string));
 
                 TreatSelectedText();
 
@@ -198,54 +201,55 @@ namespace Referee.Infrastructure
                 }
             }
 
-            e.CancelCommand();
-        }
+			e.CancelCommand();
+		}
 
-        private void UpdateText()
-        {
-            //check Provider.Text + TextBox.Text
-            if (Provider.ToDisplayString().Equals(AssociatedObject.Text))
-                return;
+		private void UpdateText()
+		{
+			//check Provider.Text + TextBox.Text
+			if (Provider.ToDisplayString().Equals(AssociatedObject.Text))
+				return;
 
-            //use provider to format
-            var success = Provider.Set(AssociatedObject.Text);
+			//use provider to format
+			var success = Provider.Set(AssociatedObject.Text);
 
-            //ui and mvvm/codebehind should be in sync
-            SetText(success ? Provider.ToDisplayString() : AssociatedObject.Text);
-        }
+			//ui and mvvm/codebehind should be in sync
+			SetText(success ? Provider.ToDisplayString() : AssociatedObject.Text);
+		}
 
-        /// <summary>
-        /// Falls eine Textauswahl vorliegt wird diese entsprechend behandelt.
-        /// </summary>
-        /// <returns>true Textauswahl behandelt wurde, ansonsten falls </returns>
-        private bool TreatSelectedText()
-        {
-            if (AssociatedObject.SelectionLength > 0)
-            {
-                return Provider.RemoveAt(AssociatedObject.SelectionStart,
-                                              AssociatedObject.SelectionStart + AssociatedObject.SelectionLength - 1);
-            }
-            return false;
-        }
+		/// <summary>
+		/// Falls eine Textauswahl vorliegt wird diese entsprechend behandelt.
+		/// </summary>
+		/// <returns>true Textauswahl behandelt wurde, ansonsten falls </returns>
+		private bool TreatSelectedText()
+		{
+			if (AssociatedObject.SelectionLength > 0)
+			{
+				return Provider.RemoveAt(AssociatedObject.SelectionStart,
+					AssociatedObject.SelectionStart + AssociatedObject.SelectionLength - 1);
+			}
 
-        private void RefreshText(int position)
-        {
-            SetText(Provider.ToDisplayString());
-            AssociatedObject.SelectionStart = position;
-        }
+			return false;
+		}
 
-        private void SetText(string text)
-        {
-            AssociatedObject.Text = String.IsNullOrWhiteSpace(text) ? String.Empty : text;
-        }
+		private void RefreshText(int position)
+		{
+			SetText(Provider.ToDisplayString());
+			AssociatedObject.SelectionStart = position;
+		}
 
-        private int GetNextCharacterPosition(int startPosition)
-        {
-            var position = Provider.FindEditPositionFrom(startPosition, true);
+		private void SetText(string text)
+		{
+			AssociatedObject.Text = String.IsNullOrWhiteSpace(text) ? String.Empty : text;
+		}
 
-            if (position == -1)
-                return startPosition;
-            return position;
-        }
-    }
+		private int GetNextCharacterPosition(int startPosition)
+		{
+			var position = Provider.FindEditPositionFrom(startPosition, true);
+
+			if (position == -1)
+				return startPosition;
+			return position;
+		}
+	}
 }
