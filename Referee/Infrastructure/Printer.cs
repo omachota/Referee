@@ -185,14 +185,6 @@ namespace Referee.Infrastructure
 					                                 .SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetPadding(0);
 					sumtextCell.Add(new Paragraph("CELKEM VYPLACENO: ")).SetPaddingRight(2);
 
-					Cell sumCell = new Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY)
-					                         .SetPadding(0)
-					                         .SetFont(bold)
-					                         .SetFontSize(15)
-					                         .SetTextAlignment(TextAlignment.CENTER)
-					                         .SetVerticalAlignment(VerticalAlignment.MIDDLE);
-					sumCell.Add(new Paragraph(!isRaw ? CountSum(selectedPersons) : ""));
-
 					Paragraph last = new Paragraph(
 						                 "Vyplatil...............................................     Dne...............................................     Podpis...............................................")
 					                 .SetFont(font)
@@ -272,7 +264,7 @@ namespace Referee.Infrastructure
 							                                  .SetHeight(30);
 							signCellData.Add(new Paragraph(""));
 
-							if (!isRaw && selectedPersons.Count > j + i * 10)
+							if (!isRaw && selectedPersons.Count > index)
 							{
 								nameCellData.Add(new Paragraph(selectedPersons[index].FullName)).SetPaddingLeft(17);
 								addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
@@ -290,6 +282,7 @@ namespace Referee.Infrastructure
 								awardCellData.Add(new Paragraph(""));
 							}
 
+
 							rozhodciTable.AddCell(pdfNumberData);
 							rozhodciTable.AddCell(nameCellData);
 							rozhodciTable.AddCell(birthDateData);
@@ -299,6 +292,17 @@ namespace Referee.Infrastructure
 						}
 
 						#endregion
+
+						Cell sumCell = new Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY)
+						                         .SetPadding(0)
+						                         .SetFont(bold)
+						                         .SetFontSize(15)
+						                         .SetTextAlignment(TextAlignment.CENTER)
+						                         .SetVerticalAlignment(VerticalAlignment.MIDDLE);
+						if (selectedPersons.Count <= i * 10 + 10)
+							sumCell.Add(new Paragraph(!isRaw ? CountSum(selectedPersons.GetRange(i  * 10, selectedPersons.Count - i * 10)) : ""));
+						else
+							sumCell.Add(new Paragraph(!isRaw ? CountSum(selectedPersons.GetRange(i  * 10, 10)) : ""));
 
 						rozhodciTable.AddCell(emptyCell);
 						rozhodciTable.AddCell(sumtextCell);
