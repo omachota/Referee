@@ -36,7 +36,10 @@
                                   Mode="PrimaryMid"
                                   Padding="16"
                                   Grid.ColumnSpan="2"
-                                  materialDesign:ShadowAssist.ShadowDepth="Depth1" />
+                                  materialDesign:ShadowAssist.ShadowDepth="Depth1" >
+            <TextBlock HorizontalAlignment="Center" Text="Race name"/>
+            
+        </materialDesign:ColorZone>
         <Grid x:Name="MenuGrid"
               Width="60"
               Grid.Column="0"

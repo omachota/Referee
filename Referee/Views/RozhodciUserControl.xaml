@@ -367,14 +367,14 @@
                 <materialDesign:Card VerticalAlignment="Stretch" Margin="0,0,0,0" HorizontalAlignment="Right" Width="135">
                     <Grid>
                         <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
                                     Width="110">
-                            <StackPanel VerticalAlignment="Top"
-                                        Width="110">
+                            <StackPanel>
                                 <Button x:Name="PrintButton"
                                         Style="{StaticResource MaterialDesignRaisedButton}"
                                         Margin="0,10,0,0"
                                         Height="33"
-                                        ToolTip="Vytvoří PDF s vybranými rozhodčími"
+                                        ToolTip="Vytvořit PDF s vybranými rozhodčími"
                                         Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
@@ -383,6 +383,8 @@
                                            Margin="0,6,0,0"
                                            Height="21" />
                             </StackPanel>
+                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}"
+                                           Margin="4 2 4 -8" />
                             <StackPanel Orientation="Horizontal"
                                         Margin="0 12">
                                 <Button x:Name="ClearPrintButton"
@@ -390,7 +392,7 @@
                                         Margin="0,0,0,0"
                                         Height="34"
                                         HorizontalAlignment="Right"
-                                        Width="67"
+                                        Width="65"
                                         VerticalAlignment="Top"
                                         Command="{Binding RawPrintCommand}">
                                     <TextBlock Text="Čistý tisk" TextWrapping="Wrap" FontSize="10" Height="25" />
@@ -403,14 +405,31 @@
                                           ToolTip="Počet stran"
                                           SelectedIndex="0"
                                           Height="34"
-                                          Width="38"
-                                          HorizontalAlignment="Right">
+                                          Width="40">
                                     <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <VirtualizingStackPanel />
                                         </ItemsPanelTemplate>
                                     </ComboBox.ItemsPanel>
                                 </ComboBox>
+                            </StackPanel>
+                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}"
+                                           Margin="4 -4 4 0" />
+                            <StackPanel Orientation="Horizontal"
+                                        Width="110">
+                                <TextBox Width="40"
+                                         Height="33"
+                                         FontSize="13"
+                                         Margin="0 5 5 5"
+                                         ToolTip="Odměna"
+                                         Text="{Binding Reward, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Height="33"
+                                        Width="65"
+                                        Command="{Binding SetRewardToSelectedRozhodci}"
+                                        ToolTip="Přiřadit odměnu">
+                                    <TextBlock Text="Přidat" TextWrapping="Wrap" FontSize="10" Height="15" />
+                                </Button>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Width="110"

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Referee"
-#define MyAppVersion "1.0.3"
+#define MyAppVersion "1.0.5"
 #define MyAppPublisher "Ondøej Machota"
 #define MyAppExeName "Referee.exe"
 

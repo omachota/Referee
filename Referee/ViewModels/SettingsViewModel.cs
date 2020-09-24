@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.SettingsFd;
@@ -6,13 +7,14 @@ namespace Referee.ViewModels
 {
 	public class SettingsViewModel : BaseViewModel
 	{
+		private bool _isExpanderExpanded;
 		private readonly string _repositoryAddress = "https://github.com/omachota/Referee";
 
 		public ICommand OpenRepositoryCommand { get; }
 
 		public ICommand RevertChanges { get; }
 
-		public SettingsViewModel(Settings settings)
+		public SettingsViewModel(Settings settings, bool isExpanderExpanded = false)
 		{
 			Settings = settings;
 			var cachedSettings = new Settings(settings);
@@ -25,8 +27,16 @@ namespace Referee.ViewModels
 				Settings.CopyValuesFrom(cachedSettings);
 				changedMade = false;
 			}, () => changedMade);
+			if (isExpanderExpanded)
+				Task.Delay(700).ContinueWith(x => IsExpanderExpaded = true);
 		}
 
 		public Settings Settings { get; set; }
+
+		public bool IsExpanderExpaded
+        {
+			get => _isExpanderExpanded;
+			set => SetAndRaise(ref _isExpanderExpanded, value);
+        }
 	}
 }

@@ -16,6 +16,7 @@ namespace Referee.ViewModels
 		private bool _isDialogHostOpen;
 		private int _rawPagesCount;
 		private int _editIndex;
+		private int _reward;
 		private bool? _isAllSelected;
 		private readonly RozhodciService _rozhodciService;
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
@@ -33,6 +34,7 @@ namespace Referee.ViewModels
 		public ICommand CloseDialogHostCommand { get; }
 		public ICommand DeleteRozhodciCommand { get; }
 		public ICommand CreateOrEditRozhodciCommand { get; }
+		public ICommand SetRewardToSelectedRozhodci { get; }
 
 		public RozhodciViewModel(RozhodciService rozhodciService, Printer printer)
 		{
@@ -79,6 +81,11 @@ namespace Referee.ViewModels
 				DialogSwitchViewModel.SetValues(EditorMode.Delete);
 				IsDialogHostOpen = true;
 			});
+			SetRewardToSelectedRozhodci = new Command(() =>
+			{
+				foreach (var rozhodci in RozhodciCollection.Where(x => x.IsSelected))
+					rozhodci.Reward = Reward;
+			});
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; }
@@ -122,6 +129,12 @@ namespace Referee.ViewModels
 					SetAndRaise(ref _isAllSelected, value);
 				}
 			}
+		}
+
+		public int Reward
+		{
+			get => _reward;
+			set => SetAndRaise(ref _reward, value);
 		}
 
 		public Rozhodci SelectedRozhodci
