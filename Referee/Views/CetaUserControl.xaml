@@ -307,7 +307,7 @@
                                         Style="{StaticResource MaterialDesignRaisedButton}"
                                         Margin="0,10,0,0"
                                         Height="33"
-                                        ToolTip="Vytvořit PDF s vybranými rozhodčími"
+                                        ToolTip="Vytvořit PDF s vybranými četaři"
                                         Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
