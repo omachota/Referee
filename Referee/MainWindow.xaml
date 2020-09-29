@@ -37,7 +37,9 @@
                                   Padding="16"
                                   Grid.ColumnSpan="2"
                                   materialDesign:ShadowAssist.ShadowDepth="Depth1" >
-            <TextBlock HorizontalAlignment="Center" Text="Race name"/>
+            <TextBlock HorizontalAlignment="Center"
+                       Text="{Binding Settings.CompetitionName}"
+                       FontSize="16"/>
 
         </materialDesign:ColorZone>
         <Grid x:Name="MenuGrid"
