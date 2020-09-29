@@ -10,7 +10,7 @@
     <converters:TextFieldHintVisibilityConverter x:Key="TextFieldHintVisibilityConverter" />
     <converters:MathConverter Operation="Divide" x:Key="DivisionMathConverter" />
 
-    <Style x:Key="MaterialDesignTimePickerLocal" TargetType="{x:Type wpf:TimePicker}">
+    <Style x:Key="MaterialDesignTimePicker" TargetType="{x:Type wpf:TimePicker}">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground"
                 Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
@@ -76,7 +76,7 @@
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                         <ControlTemplate x:Key="DropDownButtonTemplate" TargetType="{x:Type Button}">
-                            <Grid Background="Transparent">
+                            <Grid x:Name="IconGrid" Background="Transparent">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
                                         <VisualStateGroup.Transitions>
@@ -92,12 +92,17 @@
                                 </VisualStateManager.VisualStateGroups>
                                 <Viewbox>
                                     <Canvas Width="24" Height="24">
-                                        <Path
+                                        <Path x:Name="ICON"
                                             Data="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"
-                                            Fill="{TemplateBinding Foreground}" />
+                                            Fill="{TemplateBinding Foreground}"/>
                                     </Canvas>
                                 </Viewbox>
                             </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger SourceName="ICON" Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="ICON" Property="Fill" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </ControlTemplate.Resources>
                     <Grid x:Name="PART_Root">
@@ -137,12 +142,12 @@
                                                     Margin="4 0 0 -3"
                                                     Template="{StaticResource DropDownButtonTemplate}"
                                                     Padding="0"
-                                                    Height="17" /> <!--Done-->
+                                                    Height="17" />
                                             <Popup Grid.Column="1" x:Name="PART_Popup" AllowsTransparency="True"
                                                    Placement="Custom"
                                                    CustomPopupPlacementCallback="{x:Static wpf:CustomPopupPlacementCallbackHelper.LargePopupCallback}"
                                                    PlacementTarget="{Binding ElementName=PART_TextBox}" StaysOpen="False"
-                                                   PopupAnimation="Fade" /> <!-- Done-->
+                                                   PopupAnimation="Fade" />
                                         </Grid>
                                     </Border>
                                 </AdornerDecorator>
@@ -167,9 +172,9 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="BorderBrush" TargetName="border" Value="Transparent" />
                         </MultiTrigger>
-                        <Trigger Property="IsMouseOver" Value="true">
+                        <!--<Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsKeyboardFocusWithin" Value="true">
                             <Setter Property="IsActive" TargetName="Underline" Value="True" />
                             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
@@ -235,7 +240,7 @@
                                 <Condition Property="wpf:TextFieldAssist.HasOutlinedTextField" Value="False" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Opacity" TargetName="border" Value="0.42" />
-                            <!-- <Setter TargetName="border" Property="BorderBrush" Value="Transparent" /> -->
+                            <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -289,6 +294,7 @@
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="wpf:TextFieldAssist.HasFilledTextField" Value="True" />
+                                <Condition Property="wpf:TextFieldAssist.HasOutlinedTextField" Value="False" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="textFieldBoxBorder" Property="Background"
                                     Value="{DynamicResource MaterialDesignTextFieldBoxHoverBackground}" />
@@ -303,6 +309,7 @@
                             <Setter TargetName="textFieldBoxBorder" Property="BorderThickness" Value="2" />
                             <Setter Property="BorderBrush"
                                     Value="{Binding Path=(wpf:TextFieldAssist.UnderlineBrush), RelativeSource={RelativeSource Self}}" />
+                            <Setter TargetName="PART_Button" Property="Foreground" Value="{DynamicResource MaterialDesignTextBoxBorder}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -314,6 +321,7 @@
                             <Setter TargetName="textFieldBoxBorder" Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
                             <Setter Property="BorderBrush"
                                     Value="{Binding Path=(wpf:TextFieldAssist.UnderlineBrush), RelativeSource={RelativeSource Self}}" />
+                            <Setter TargetName="PART_Button" Property="Foreground" Value="{DynamicResource MaterialDesignTextBoxBorder}" />
                         </MultiTrigger>
                         <Trigger Property="wpf:ValidationAssist.HasError" Value="True">
                             <Setter Property="BorderBrush" Value="{DynamicResource ValidationErrorBrush}" />
@@ -328,7 +336,6 @@
                             <Setter TargetName="textFieldBoxBorder" Property="BorderThickness" Value="2" />
                             <Setter TargetName="textFieldBoxBorder" Property="BorderBrush" Value="{DynamicResource ValidationErrorBrush}" />
                         </MultiTrigger>
-                        <!-- Done start -->
                         <Trigger Property="wpf:TextFieldAssist.HasFilledTextField" Value="True">
                             <Setter TargetName="PART_TextBox" Property="Padding" Value="0,0,22,0" />
                             <Setter TargetName="PART_Button" Property="Margin" Value="4 0 12 -3" />
@@ -351,9 +358,9 @@
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="wpf:TextFieldAssist.HasFilledTextField" Value="False" />
                                 <Condition Property="wpf:TextFieldAssist.HasOutlinedTextField" Value="False" />
-                                <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
                         </MultiTrigger>
@@ -377,7 +384,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="MaterialDesignFloatingHintTimePicker" TargetType="{x:Type wpf:TimePicker}" BasedOn="{StaticResource MaterialDesignTimePickerLocal}">
+    <Style x:Key="MaterialDesignFloatingHintTimePicker" TargetType="{x:Type wpf:TimePicker}" BasedOn="{StaticResource MaterialDesignTimePicker}">
         <Setter Property="wpf:HintAssist.IsFloating" Value="True" />
     </Style>
 

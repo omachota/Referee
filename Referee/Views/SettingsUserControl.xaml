@@ -7,7 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
-             d:DesignHeight="509" d:DesignWidth="932">
+             d:DesignHeight="500" d:DesignWidth="930" MaxHeight="500" MinHeight="500" MaxWidth="1000" MinWidth="1000">
 
     <Grid Margin="7">
         <Grid.ColumnDefinitions>
@@ -19,7 +19,7 @@
                 <ScrollViewer>
                     <StackPanel Margin="5">
                         <Expander HorizontalAlignment="Stretch"
-                                  IsExpanded="{Binding IsExpanderExpaded}"
+                                  IsExpanded="True"
                                   Header="Automaticky vyplňované údaje">
                             <StackPanel Margin="24,8,24,16">
                                 <ListBox Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineListBox}">
@@ -112,7 +112,8 @@
                                          materialDesign:HintAssist.Hint="Heslo" />
                             </StackPanel>
                         </Expander>
-                        <Button Content="Zahodit změny" Margin="5" HorizontalAlignment="Right" Command="{Binding RevertChanges}"/>
+                        <Button Content="Zahodit změny" Margin="5" HorizontalAlignment="Right"
+                                Command="{Binding RevertChanges}" />
                     </StackPanel>
                 </ScrollViewer>
             </materialDesign:Card>

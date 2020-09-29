@@ -32,7 +32,7 @@ namespace Referee.Infrastructure.WindowNavigation
 				{typeof(CetaViewModel), 1},
 				{typeof(SettingsViewModel), 2}
 			};
-			_activeViewModel = new SettingsViewModel(settings, true);
+			_activeViewModel = new RozhodciViewModel(rozhodciService, printer);
 			ViewType = (ViewType) _modelsIndexes[ActiveViewModel.GetType()];
 		}
 

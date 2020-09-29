@@ -16,6 +16,7 @@ namespace Referee.ViewModels
 		private bool _isDialogHostOpen;
 		private int _rawPagesCount;
 		private int _editIndex;
+		private int _reward;
 		private bool? _isAllSelected;
 		private readonly CetaService _cetaService;
 		private Cetar _selectedCetar = Cetar.CreateEmpty();
@@ -33,6 +34,7 @@ namespace Referee.ViewModels
 		public ICommand CloseDialogHostCommand { get; }
 		public ICommand DeleteCetarCommand { get; }
 		public ICommand CreateOrEditCetarCommand { get; }
+		public ICommand SetRewardToSelectedCetari { get; }
 
 		public CetaViewModel(CetaService cetaService, Printer printer)
 		{
@@ -79,6 +81,11 @@ namespace Referee.ViewModels
 				DialogSwitchViewModel.SetValues(EditorMode.Delete);
 				IsDialogHostOpen = true;
 			});
+			SetRewardToSelectedCetari = new Command(() =>
+			{
+				foreach (var cetar in CetaCollection.Where(x => x.IsSelected))
+					cetar.Reward = Reward;
+			});
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; }
@@ -122,6 +129,12 @@ namespace Referee.ViewModels
 					SetAndRaise(ref _isAllSelected, value);
 				}
 			}
+		}
+
+		public int Reward
+		{
+			get => _reward;
+			set => SetAndRaise(ref _reward, value);
 		}
 
 		public Cetar SelectedCetar

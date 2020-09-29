@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.SettingsFd;
@@ -7,36 +6,34 @@ namespace Referee.ViewModels
 {
 	public class SettingsViewModel : BaseViewModel
 	{
-		private bool _isExpanderExpanded;
+		private bool _changedMade;
+		private Settings _cachedSettings;
 		private readonly string _repositoryAddress = "https://github.com/omachota/Referee";
 
 		public ICommand OpenRepositoryCommand { get; }
 
 		public ICommand RevertChanges { get; }
 
-		public SettingsViewModel(Settings settings, bool isExpanderExpanded = false)
+		public SettingsViewModel(Settings settings)
 		{
 			Settings = settings;
-			var cachedSettings = new Settings(settings);
-			var changedMade = false;
-			Settings.PropertyChanged += (sender, args) => changedMade = true;
-			Settings.DbSettings.PropertyChanged += (sender, args) => changedMade = true;
+			_cachedSettings = new Settings(settings);
+			Settings.PropertyChanged += (sender, args) => { _changedMade = true; };
+			Settings.DbSettings.PropertyChanged += (sender, args) => { _changedMade = true; };
 			OpenRepositoryCommand = new Command(() => ChromeLauncher.OpenLink(_repositoryAddress));
 			RevertChanges = new Command(() =>
 			{
-				Settings.CopyValuesFrom(cachedSettings);
-				changedMade = false;
-			}, () => changedMade);
-			if (isExpanderExpanded)
-				Task.Delay(700).ContinueWith(x => IsExpanderExpaded = true);
+				Settings.CopyValuesFrom(_cachedSettings);
+				_changedMade = false;
+			}, () => _changedMade);
 		}
 
 		public Settings Settings { get; set; }
 
-		public bool IsExpanderExpaded
-        {
-			get => _isExpanderExpanded;
-			set => SetAndRaise(ref _isExpanderExpanded, value);
-        }
+		public void UpdateChangesMadeValue()
+		{
+			_changedMade = false;
+			_cachedSettings = new Settings(Settings);
+		}
 	}
 }
