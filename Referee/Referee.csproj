@@ -3,10 +3,11 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+<!--    <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
     <UseWPF>true</UseWPF>
     <ApplicationIcon>athletics_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.3</FileVersion>
+    <AssemblyVersion>1.0.5</AssemblyVersion>
+    <FileVersion>1.0.5</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

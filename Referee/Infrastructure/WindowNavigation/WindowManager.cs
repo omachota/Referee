@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.SettingsFd;
@@ -14,29 +16,36 @@ namespace Referee.Infrastructure.WindowNavigation
 
 	public class WindowManager : AbstractNotifyPropertyChanged, IWindowManager
 	{
-		private readonly Settings _settings;
-		private readonly Printer _printer;
 		private BaseViewModel _activeViewModel;
-		private readonly RozhodciService _rozhodciService;
-		private readonly CetaService _cetaService;
+		private readonly UpdateWindowCommand _updateWindowCommand;
+		private readonly IDictionary<Type, int> _modelsIndexes;
 
 		public WindowManager(Settings settings)
 		{
-			_settings = settings;
-			_printer = new Printer(settings);
-			_rozhodciService = new RozhodciService(_settings);
-			_cetaService = new CetaService(_settings);
-			_activeViewModel = new RozhodciViewModel(_rozhodciService, _printer);
+			var printer = new Printer(settings);
+			var rozhodciService = new RozhodciService(settings);
+			var cetaService = new CetaService(settings);
+			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer);
+			_modelsIndexes = new Dictionary<Type, int>
+			{
+				{typeof(RozhodciViewModel), 0},
+				{typeof(CetaViewModel), 1},
+				{typeof(SettingsViewModel), 2}
+			};
+			_activeViewModel = new RozhodciViewModel(rozhodciService, printer);
+			ViewType = (ViewType) _modelsIndexes[ActiveViewModel.GetType()];
 		}
 
 		public ViewType ViewType { get; set; }
 
-		public ICommand UpdateWindowCommand => new UpdateWindowCommand(this, _rozhodciService, _cetaService, _settings, _printer);
+		public ICommand UpdateWindowCommand => _updateWindowCommand;
 
 		public BaseViewModel ActiveViewModel
 		{
 			get => _activeViewModel;
 			set => SetAndRaise(ref _activeViewModel, value);
 		}
+
+		public int ActiveViewModelIndex => _modelsIndexes[ActiveViewModel.GetType()];
 	}
 }

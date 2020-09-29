@@ -18,8 +18,9 @@ namespace Referee
 			window.Show();
 
 			base.OnStartup(e);
-
+#if !DEBUG
 			await Updater.CheckVersion().ConfigureAwait(false);
+#endif
 		}
 	}
 }

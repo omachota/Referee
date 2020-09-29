@@ -217,6 +217,7 @@
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
                               CanUserAddRows="False"
+                              IsReadOnly="True"
                               SelectedItem="{Binding SelectedRozhodci}">
                         <DataGrid.Resources>
                             <infrastructure:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
@@ -225,6 +226,7 @@
                             <!-- CheckBox -->
                             <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                                                     ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                    IsReadOnly="False"
                                                     EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
                                 <DataGridCheckBoxColumn.Header>
                                     <Border Background="Transparent">
@@ -241,7 +243,6 @@
                             </DataGridCheckBoxColumn>
                             <!-- FirstName -->
                             <DataGridTextColumn Binding="{Binding FirstName}"
-                                                IsReadOnly="True"
                                                 Header="Jméno">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -251,7 +252,6 @@
                             </DataGridTextColumn>
                             <!-- LastName -->
                             <DataGridTextColumn Binding="{Binding LastName}"
-                                                IsReadOnly="True"
                                                 Header="Příjmení">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -261,7 +261,6 @@
                             </DataGridTextColumn>
                             <!-- BirthDate -->
                             <DataGridTextColumn Binding="{Binding BirthDate, StringFormat=dd.MM.yyyy}"
-                                                IsReadOnly="True"
                                                 Header="Datum narození">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -271,7 +270,6 @@
                             </DataGridTextColumn>
                             <!-- Address -->
                             <DataGridTextColumn Binding="{Binding Address}"
-                                                IsReadOnly="True"
                                                 Header="Adresa">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -281,7 +279,6 @@
                             </DataGridTextColumn>
                             <!-- City -->
                             <DataGridTextColumn Binding="{Binding City}"
-                                                IsReadOnly="True"
                                                 Header="Město">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -293,6 +290,7 @@
                             <materialDesign:DataGridTextColumn Binding="{Binding Reward, TargetNullValue={x:Static system:String.Empty}}"
                                                                Header="Odměna"
                                                                Width="85"
+                                                               IsReadOnly="True"
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="{x:Type DataGridColumnHeader}"
@@ -314,8 +312,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </materialDesign:DataGridTextColumn>
                             <!-- EditColumn -->
-                            <DataGridTemplateColumn Header="Edit"
-                                                    IsReadOnly="True">
+                            <DataGridTemplateColumn Header="Edit">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -333,8 +330,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <!-- DeleteColumn -->
-                            <DataGridTemplateColumn Header="Smazat"
-                                                    IsReadOnly="True">
+                            <DataGridTemplateColumn Header="Smazat">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment"
@@ -353,7 +349,6 @@
                             </DataGridTemplateColumn>
                             <!-- BankAccountNumber -->
                             <DataGridTextColumn Binding="{Binding BankAccountNumber}"
-                                                IsReadOnly="True"
                                                 Header="Číslo účtu">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -367,14 +362,14 @@
                 <materialDesign:Card VerticalAlignment="Stretch" Margin="0,0,0,0" HorizontalAlignment="Right" Width="135">
                     <Grid>
                         <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
                                     Width="110">
-                            <StackPanel VerticalAlignment="Top"
-                                        Width="110">
+                            <StackPanel>
                                 <Button x:Name="PrintButton"
                                         Style="{StaticResource MaterialDesignRaisedButton}"
                                         Margin="0,10,0,0"
                                         Height="33"
-                                        ToolTip="Vytvoří PDF s vybranými rozhodčími"
+                                        ToolTip="Vytvořit PDF s vybranými rozhodčími"
                                         Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
@@ -383,6 +378,8 @@
                                            Margin="0,6,0,0"
                                            Height="21" />
                             </StackPanel>
+                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}"
+                                           Margin="4 0 4 -8" />
                             <StackPanel Orientation="Horizontal"
                                         Margin="0 12">
                                 <Button x:Name="ClearPrintButton"
@@ -390,7 +387,7 @@
                                         Margin="0,0,0,0"
                                         Height="34"
                                         HorizontalAlignment="Right"
-                                        Width="67"
+                                        Width="65"
                                         VerticalAlignment="Top"
                                         Command="{Binding RawPrintCommand}">
                                     <TextBlock Text="Čistý tisk" TextWrapping="Wrap" FontSize="10" Height="25" />
@@ -403,14 +400,31 @@
                                           ToolTip="Počet stran"
                                           SelectedIndex="0"
                                           Height="34"
-                                          Width="38"
-                                          HorizontalAlignment="Right">
+                                          Width="40">
                                     <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <VirtualizingStackPanel />
                                         </ItemsPanelTemplate>
                                     </ComboBox.ItemsPanel>
                                 </ComboBox>
+                            </StackPanel>
+                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}"
+                                           Margin="4 -4 4 0" />
+                            <StackPanel Orientation="Horizontal"
+                                        Width="110">
+                                <TextBox Width="40"
+                                         Height="33"
+                                         FontSize="13"
+                                         Margin="0 5 5 5"
+                                         ToolTip="Odměna"
+                                         Text="{Binding Reward, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Height="33"
+                                        Width="65"
+                                        Command="{Binding SetRewardToSelectedRozhodci}"
+                                        ToolTip="Přiřadit odměnu">
+                                    <TextBlock Text="Přidat" TextWrapping="Wrap" FontSize="10" Height="15" />
+                                </Button>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Width="110"

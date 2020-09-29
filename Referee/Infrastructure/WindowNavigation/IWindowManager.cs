@@ -7,5 +7,6 @@ namespace Referee.Infrastructure.WindowNavigation
 	{
 		BaseViewModel ActiveViewModel { get; set; }
 		ICommand UpdateWindowCommand { get; }
+		int ActiveViewModelIndex { get; }
 	}
 }

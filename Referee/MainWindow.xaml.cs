@@ -14,6 +14,7 @@ namespace Referee
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _firstChange = true;
         private readonly MainViewModel _mainViewModel;
 
         public MainWindow(MainViewModel mainViewModel)
@@ -21,8 +22,7 @@ namespace Referee
             DataContext = mainViewModel;
             _mainViewModel = mainViewModel;
             InitializeComponent();
-
-            MenuListView.SelectedIndex = 0;
+            MenuListView.SelectedIndex = _mainViewModel.WindowManager.ActiveViewModelIndex;
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -76,18 +76,21 @@ namespace Referee
                 _mainViewModel.IsDialogOpen = false;
             }
 
-            switch (MenuListView.SelectedIndex)
-            {
-                case 0:
-                    _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Rozhodci);
-                    break;
-                case 1:
-                    _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Ceta);
-                    break;
-                case 2:
-                    _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Settings);
-                    break;
-            }
+            if (!_firstChange)
+                switch (MenuListView.SelectedIndex)
+                {
+                    case 0:
+                        _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Rozhodci);
+                        break;
+                    case 1:
+                        _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Ceta);
+                        break;
+                    case 2:
+                        _mainViewModel.WindowManager.UpdateWindowCommand.Execute(ViewType.Settings);
+                        break;
+                }
+            else
+                _firstChange = !_firstChange;
         }
 
         protected override async void OnClosed(EventArgs e)
