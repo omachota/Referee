@@ -165,7 +165,6 @@
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
                               CanUserAddRows="False"
-                              IsReadOnly="True"
                               SelectedItem="{Binding SelectedCetar}">
                         <DataGrid.Resources>
                             <infrastructure:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
@@ -174,6 +173,7 @@
                             <!-- CheckBox -->
                             <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                                                     ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                    IsReadOnly="False"
                                                     EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
                                 <DataGridCheckBoxColumn.Header>
                                     <Border Background="Transparent">
@@ -190,6 +190,7 @@
                             </DataGridCheckBoxColumn>
                             <!-- FirstName -->
                             <DataGridTextColumn Binding="{Binding FirstName}"
+                                                IsReadOnly="True"
                                                 Header="Jméno">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -199,6 +200,7 @@
                             </DataGridTextColumn>
                             <!-- LastName -->
                             <DataGridTextColumn Binding="{Binding LastName}"
+                                                IsReadOnly="True"
                                                 Header="Příjmení">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -208,6 +210,7 @@
                             </DataGridTextColumn>
                             <!-- BirthDate -->
                             <DataGridTextColumn Binding="{Binding BirthDate, StringFormat=dd.MM.yyyy}"
+                                                IsReadOnly="True"
                                                 Header="Datum narození">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -217,6 +220,7 @@
                             </DataGridTextColumn>
                             <!-- Address -->
                             <DataGridTextColumn Binding="{Binding Address}"
+                                                IsReadOnly="True"
                                                 Header="Adresa">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -226,6 +230,7 @@
                             </DataGridTextColumn>
                             <!-- City -->
                             <DataGridTextColumn Binding="{Binding City}"
+                                                IsReadOnly="True"
                                                 Header="Město">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -237,7 +242,7 @@
                             <materialDesign:DataGridTextColumn Binding="{Binding Reward, TargetNullValue={x:Static system:String.Empty}}"
                                                                Header="Odměna"
                                                                Width="85"
-                                                               IsReadOnly="True"
+                                                               IsReadOnly="False"
                                                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="{x:Type DataGridColumnHeader}"
@@ -259,7 +264,8 @@
                                 </DataGridTextColumn.ElementStyle>
                             </materialDesign:DataGridTextColumn>
                             <!-- EditColumn -->
-                            <DataGridTemplateColumn Header="Edit">
+                            <DataGridTemplateColumn Header="Edit"
+                                                    IsReadOnly="True">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -277,7 +283,8 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <!-- DeleteColumn -->
-                            <DataGridTemplateColumn Header="Smazat">
+                            <DataGridTemplateColumn Header="Smazat"
+                                                    IsReadOnly="True">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
                                         <Setter Property="HorizontalContentAlignment"
@@ -317,7 +324,7 @@
                                            Height="21" />
                             </StackPanel>
                             <Separator Style="{StaticResource MaterialDesignDarkSeparator}"
-                                           Margin="4 0 4 -8" />
+                                       Margin="4 0 4 -8" />
                             <StackPanel Orientation="Horizontal"
                                         Margin="0 12">
                                 <Button x:Name="ClearPrintButton"
@@ -347,7 +354,7 @@
                                 </ComboBox>
                             </StackPanel>
                             <Separator Style="{StaticResource MaterialDesignDarkSeparator}"
-                                           Margin="4 -4 4 0" />
+                                       Margin="4 -4 4 0" />
                             <StackPanel Orientation="Horizontal"
                                         Width="110">
                                 <TextBox Width="40"
@@ -355,7 +362,7 @@
                                          FontSize="13"
                                          Margin="0 5 5 5"
                                          ToolTip="Odměna"
-                                         Text="{Binding Reward, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding Reward, UpdateSourceTrigger=PropertyChanged}" />
                                 <Button Style="{StaticResource MaterialDesignRaisedButton}"
                                         Height="33"
                                         Width="65"
