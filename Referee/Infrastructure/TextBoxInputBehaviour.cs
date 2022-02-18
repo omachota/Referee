@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
@@ -93,11 +92,11 @@ namespace Referee.Infrastructure
             Provider = new MaskedTextProvider(InputMask, CultureInfo.CurrentCulture);
             Provider.Set(AssociatedObject.Text);
             Provider.PromptChar = PromptChar;
-            AssociatedObject.Text = Provider.ToDisplayString();
+            AssociatedObject.Text = Provider.ToDisplayString().Trim();
 
             //seems the only way that the text is formatted correct, when source is updated
             var textProp = DependencyPropertyDescriptor.FromProperty(TextBox.TextProperty, typeof(TextBox));
-            textProp?.AddValueChanged(AssociatedObject, (s, args) => UpdateText());
+            textProp?.AddValueChanged(AssociatedObject, (_, _) => UpdateText());
         }
 
         void AssociatedObjectPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -240,7 +239,7 @@ namespace Referee.Infrastructure
 
 		private void SetText(string text)
 		{
-			AssociatedObject.Text = String.IsNullOrWhiteSpace(text) ? String.Empty : text;
+			AssociatedObject.Text = string.IsNullOrWhiteSpace(text) ? string.Empty : text;
 		}
 
 		private int GetNextCharacterPosition(int startPosition)

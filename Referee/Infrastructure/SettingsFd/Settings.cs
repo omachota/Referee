@@ -36,8 +36,6 @@ namespace Referee.Infrastructure.SettingsFd
 
 		public DbSettings DbSettings { get; set; }
 
-		// public List<OptionalColumn> OptionalColumns;
-
 		#region ClubName
 
 		private string _clubName;

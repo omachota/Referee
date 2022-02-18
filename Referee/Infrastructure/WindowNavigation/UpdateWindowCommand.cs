@@ -36,18 +36,13 @@ namespace Referee.Infrastructure.WindowNavigation
 			{
 				await SettingsHelper.SaveSettingsAsync(_settings);
 
-				switch (viewType)
+				_windowManager.ActiveViewModel = viewType switch
 				{
-					case ViewType.Rozhodci:
-						_windowManager.ActiveViewModel = new RozhodciViewModel(_rozhodciService, _printer);
-						break;
-					case ViewType.Ceta:
-						_windowManager.ActiveViewModel = new CetaViewModel(_cetaService, _printer);
-						break;
-					case ViewType.Settings:
-						_windowManager.ActiveViewModel = new SettingsViewModel(_settings);
-						break;
-				}
+					ViewType.Rozhodci => new RozhodciViewModel(_rozhodciService, _printer),
+					ViewType.Ceta => new CetaViewModel(_cetaService, _printer),
+					ViewType.Settings => new SettingsViewModel(_settings),
+					_ => _windowManager.ActiveViewModel
+				};
 
 				_windowManager.ViewType = viewType;
 			}

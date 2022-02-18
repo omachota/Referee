@@ -41,15 +41,15 @@ namespace Referee
 
         private void OpenCloseMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)OpenCloseMenuButton.IsChecked)
+            if (OpenCloseMenuButton.IsChecked != null && OpenCloseMenuButton.IsChecked.Value)
             {
-                Storyboard openMenu = (Storyboard)OpenCloseMenuButton.FindResource("OpenMenu");
+                var openMenu = (Storyboard)OpenCloseMenuButton.FindResource("OpenMenu");
                 openMenu.Begin();
                 _mainViewModel.IsDialogOpen = true;
             }
             else
             {
-                Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
+                var closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 closeMenu.Begin();
                 _mainViewModel.IsDialogOpen = false;
             }
@@ -59,7 +59,7 @@ namespace Referee
         {
             if (MenuGrid.Width > 180)
             {
-                Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
+                var closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 closeMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
                 _mainViewModel.IsDialogOpen = false;
@@ -70,7 +70,7 @@ namespace Referee
         {
             if (MenuGrid.Width > 180)
             {
-                Storyboard closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
+                var closeMenu = (Storyboard)OpenCloseMenuButton.FindResource("CloseMenu");
                 closeMenu.Begin();
                 OpenCloseMenuButton.IsChecked = false;
                 _mainViewModel.IsDialogOpen = false;

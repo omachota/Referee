@@ -18,8 +18,8 @@ namespace Referee.ViewModels
 		{
 			Settings = settings;
 			_cachedSettings = new Settings(settings);
-			Settings.PropertyChanged += (sender, args) => { _changedMade = true; };
-			Settings.DbSettings.PropertyChanged += (sender, args) => { _changedMade = true; };
+			Settings.PropertyChanged += (_, _) => { _changedMade = true; };
+			Settings.DbSettings.PropertyChanged += (_, _) => { _changedMade = true; };
 			OpenRepositoryCommand = new Command(() => ChromeLauncher.OpenLink(_repositoryAddress));
 			RevertChanges = new Command(() =>
 			{

@@ -28,12 +28,12 @@ namespace Referee.Infrastructure.WindowNavigation
 			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer);
 			_modelsIndexes = new Dictionary<Type, int>
 			{
-				{typeof(RozhodciViewModel), 0},
-				{typeof(CetaViewModel), 1},
-				{typeof(SettingsViewModel), 2}
+				{ typeof(RozhodciViewModel), 0 },
+				{ typeof(CetaViewModel), 1 },
+				{ typeof(SettingsViewModel), 2 }
 			};
 			_activeViewModel = new RozhodciViewModel(rozhodciService, printer);
-			ViewType = (ViewType) _modelsIndexes[ActiveViewModel.GetType()];
+			ViewType = (ViewType)_modelsIndexes[ActiveViewModel.GetType()];
 		}
 
 		public ViewType ViewType { get; set; }

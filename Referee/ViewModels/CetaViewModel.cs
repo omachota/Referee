@@ -115,7 +115,7 @@ namespace Referee.ViewModels
 				var selected = CetaCollection.Select(x => x.IsSelected).Distinct().ToList();
 				if (selected.Count == 0)
 					return false;
-				return selected.Count == 1 ? selected.Single() : (bool?) null;
+				return selected.Count == 1 ? selected.Single() : null;
 			}
 			set
 			{
@@ -153,7 +153,7 @@ namespace Referee.ViewModels
 		{
 			await foreach (var cetar in _cetaService.LoadCetaFromDb())
 			{
-				cetar.PropertyChanged += (sender, args) =>
+				cetar.PropertyChanged += (_, args) =>
 				{
 					if (args.PropertyName == nameof(Cetar.IsSelected))
 					{
@@ -163,7 +163,7 @@ namespace Referee.ViewModels
 					}
 				};
 				CetaCollection.Add(cetar);
-				await Task.Delay(35);
+				await Task.Delay(30);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace Referee.ViewModels
 			{
 				case EditorMode.Create:
 					Cetar cetar = await _cetaService.AddNewCetar(CreateCetar);
-					cetar.PropertyChanged += (sender, args) =>
+					cetar.PropertyChanged += (_, args) =>
 					{
 						if (args.PropertyName == nameof(Cetar.IsSelected))
 						{

@@ -47,7 +47,7 @@ namespace Referee.Infrastructure
 		protected virtual void SetAndRaise<T>(ref T backingField, T newValue, IEqualityComparer<T> comparer,
 		                                      [CallerMemberName] string propertyName = null)
 		{
-			comparer = comparer ?? EqualityComparer<T>.Default;
+			comparer ??= EqualityComparer<T>.Default;
 			if (comparer.Equals(backingField, newValue))
 			{
 				return;

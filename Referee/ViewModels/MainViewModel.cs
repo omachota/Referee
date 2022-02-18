@@ -17,7 +17,7 @@ namespace Referee.ViewModels
 
 		public Settings Settings { get; }
 
-		public WindowManager WindowManager { get; set; }
+		public WindowManager WindowManager { get; }
 
 		public MainViewModel(Settings settings)
 		{

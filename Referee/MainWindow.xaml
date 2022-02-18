@@ -64,21 +64,40 @@
             </Grid>
             <StackPanel VerticalAlignment="Top">
                 <ListView x:Name="MenuListView"
-                      Margin="0,140,0,0"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      SelectionMode="Single"
-                      SelectionChanged="MenuListView_SelectionChanged">
+                          Margin="0,140,0,0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          SelectionMode="Single"
+                          SelectionChanged="MenuListView_SelectionChanged">
                     <ListViewItem Height="60">
-                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="UserCardDetails" HorizontalAlignment="Center" Margin="7" Height="30" Width="30"
-                                                 Foreground="White" />
-                            <TextBlock Text="Rozhodčí" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
+                        <StackPanel VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="UserCardDetails"
+                                                     HorizontalAlignment="Center"
+                                                     Margin="7"
+                                                     Height="30"
+                                                     Width="30"
+                                                     Foreground="White" />
+                            <TextBlock Text="Rozhodčí"
+                                       Margin="10,0"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       Foreground="White" />
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Shovel" HorizontalAlignment="Center" Margin="7" Height="30" Width="30" Foreground="White" />
-                            <TextBlock Text="Technická četa" Margin="10,0" FontSize="16" VerticalAlignment="Center" Foreground="White" />
+                        <StackPanel VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Shovel"
+                                                     HorizontalAlignment="Center"
+                                                     Margin="7"
+                                                     Height="30"
+                                                     Width="30"
+                                                     Foreground="White" />
+                            <TextBlock Text="Technická četa"
+                                       Margin="10,0"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       Foreground="White" />
                         </StackPanel>
                     </ListViewItem>
                 </ListView>
@@ -90,24 +109,34 @@
                         Style="{StaticResource MaterialDesignFlatMidBgButton}"
                         Margin="-8 0 0 0">
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Settings" Margin="7" Height="30" Width="30"
+                        <materialDesign:PackIcon Kind="Settings"
+                                                 Margin="7"
+                                                 Height="30"
+                                                 Width="30"
                                                  Foreground="White" />
-                        <TextBlock Text="Nastavení" Margin="10,0" FontSize="16" FontWeight="Normal" VerticalAlignment="Center" Foreground="White" />
+                        <TextBlock Text="Nastavení"
+                                   Margin="10,0"
+                                   FontSize="16"
+                                   FontWeight="Normal"
+                                   VerticalAlignment="Center"
+                                   Foreground="White" />
                     </StackPanel>
                 </Button>
             </StackPanel>
         </Grid>
-        <materialDesign:DialogHost Grid.Column="1" IsOpen="{Binding IsSettingsDialogOpen}"
-                                       CloseOnClickAway="True">
+        <materialDesign:DialogHost Grid.Column="1"
+                                   IsOpen="{Binding IsSettingsDialogOpen}"
+                                   CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
                 <ContentControl Content="{Binding SettingsViewModel}" />
             </materialDesign:DialogHost.DialogContent>
-            <Grid x:Name="GridProUserControl" Margin="0,60,0,0">
+            <Grid>
                 <materialDesign:DialogHost IsOpen="{Binding IsDialogOpen}"
-                                       CloseOnClickAway="True">
+                                           CloseOnClickAway="True">
                     <ContentControl Content="{Binding WindowManager.ActiveViewModel}" />
                 </materialDesign:DialogHost>
-                <materialDesign:Snackbar Message="Stahuji novou verzi" IsActive="{Binding IsMessageOpen}"/>
+                <materialDesign:Snackbar Message="Stahuji novou verzi"
+                                         IsActive="{Binding IsMessageOpen}" />
             </Grid>
         </materialDesign:DialogHost>
     </Grid>

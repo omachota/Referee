@@ -22,10 +22,10 @@ namespace Referee.ViewModels
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _createRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _selectedRozhodciCache = Rozhodci.CreateEmpty();
-		private List<Rozhodci> _selectedRozhodciCollection = new List<Rozhodci>();
+		private List<Rozhodci> _selectedRozhodciCollection = new();
 
-		public ObservableCollection<int> RawPages { get; set; } = new ObservableCollection<int>(Enumerable.Range(1, 9));
-		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new ObservableCollection<Rozhodci>();
+		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
+		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new();
 
 		public ICommand OpenDialogHost { get; }
 		public ICommand RawPrintCommand { get; }
@@ -60,7 +60,9 @@ namespace Referee.ViewModels
 				}
 
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
+				{
 					CreateRozhodci ??= Rozhodci.CreateEmpty();
+				}
 				IsDialogHostOpen = true;
 			});
 #pragma warning disable 4014
@@ -115,7 +117,7 @@ namespace Referee.ViewModels
 				var selected = RozhodciCollection.Select(x => x.IsSelected).Distinct().ToList();
 				if (selected.Count == 0)
 					return false;
-				return selected.Count == 1 ? selected.Single() : (bool?) null;
+				return selected.Count == 1 ? selected.Single() : null;
 			}
 			set
 			{
@@ -153,7 +155,7 @@ namespace Referee.ViewModels
 		{
 			await foreach (var rozhodci in _rozhodciService.LoadRozhodciFromDb())
 			{
-				rozhodci.PropertyChanged += (sender, args) =>
+				rozhodci.PropertyChanged += (_, args) =>
 				{
 					if (args.PropertyName == nameof(Rozhodci.IsSelected))
 					{
@@ -163,7 +165,7 @@ namespace Referee.ViewModels
 					}
 				};
 				RozhodciCollection.Add(rozhodci);
-				await Task.Delay(35);
+				await Task.Delay(30);
 			}
 		}
 
@@ -185,8 +187,8 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					Rozhodci rozhodci = await _rozhodciService.AddNewRozhodci(CreateRozhodci);
-					rozhodci.PropertyChanged += (sender, args) =>
+					var rozhodci = await _rozhodciService.AddNewRozhodci(CreateRozhodci);
+					rozhodci.PropertyChanged += (_, args) =>
 					{
 						if (args.PropertyName == nameof(Rozhodci.IsSelected))
 						{
