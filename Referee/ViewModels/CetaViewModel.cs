@@ -24,8 +24,8 @@ namespace Referee.ViewModels
 		private Cetar _selectedCetarCache = Cetar.CreateEmpty();
 		private List<Cetar> _selectedCetaCollection = new List<Cetar>();
 
-		public ObservableCollection<int> RawPages { get; set; } = new ObservableCollection<int>(Enumerable.Range(1, 9));
-		public ObservableCollection<Cetar> CetaCollection { get; set; } = new ObservableCollection<Cetar>();
+		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
+		public ObservableCollection<Cetar> CetaCollection { get; set; } = new();
 
 		public ICommand OpenDialogHost { get; }
 		public ICommand RawPrintCommand { get; }
@@ -146,7 +146,7 @@ namespace Referee.ViewModels
 		public Cetar CreateCetar
 		{
 			get => _createCetar;
-			set => SetAndRaise(ref _createCetar, value);
+			private set => SetAndRaise(ref _createCetar, value);
 		}
 
 		private async Task LoadCetaAsync()
@@ -185,7 +185,7 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					Cetar cetar = await _cetaService.AddNewCetar(CreateCetar);
+					var cetar = await _cetaService.AddNewCetar(CreateCetar);
 					cetar.PropertyChanged += (_, args) =>
 					{
 						if (args.PropertyName == nameof(Cetar.IsSelected))

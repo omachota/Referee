@@ -20,7 +20,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
+    <Grid Margin="0,60,0,0">
         <materialDesign:DialogHost IsOpen="{Binding IsDialogHostOpen}"
                                    CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>

@@ -5,12 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewModels="clr-namespace:Referee.ViewModels"
+        xmlns:models="clr-namespace:Referee.Models"
+        xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
         d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Title="Referee" Height="600" MinHeight="600" Width="1200" MinWidth="1000" WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
+        <infrastructure:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
         <!-- ReSharper disable once Xaml.RedundantResource -->
         <Storyboard x:Key="OpenMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Width)" Storyboard.TargetName="MenuGrid">
@@ -34,13 +37,15 @@
         </Grid.ColumnDefinitions>
         <materialDesign:ColorZone Height="60"
                                   Mode="PrimaryMid"
-                                  Padding="16"
+                                  Padding="2"
                                   Grid.ColumnSpan="2"
-                                  materialDesign:ShadowAssist.ShadowDepth="Depth1" >
-            <TextBlock HorizontalAlignment="Center"
-                       Text="{Binding Settings.CompetitionName}"
-                       FontSize="16"/>
-
+                                  materialDesign:ShadowAssist.ShadowDepth="Depth1">
+            <Grid Margin="0,0,2,0">
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding Settings.CompetitionName}"
+                           FontSize="16" />
+            </Grid>
         </materialDesign:ColorZone>
         <Grid x:Name="MenuGrid"
               Width="60"
@@ -122,6 +127,56 @@
                                    Foreground="White" />
                     </StackPanel>
                 </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1" Panel.ZIndex="3">
+            <StackPanel HorizontalAlignment="Right" Width="300" Margin="0,4,4,0">
+                <TextBox HorizontalAlignment="Right"
+                         Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=400}"
+                         Width="300"
+                         Height="52"
+                         Background="White"
+                         Foreground="Black"
+                         materialDesign:HintAssist.Hint="Hledat rozhodčího/četaře"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                <materialDesign:Card
+                    Visibility="{Binding WindowManager.ActiveViewModel.FilterCollection.Count, Converter={StaticResource CountToVisibilityConverter}}"
+                    Margin="0, 5, 0, 0">
+                    <ItemsControl ItemsSource="{Binding WindowManager.ActiveViewModel.FilterCollection}"
+                                  Grid.IsSharedSizeScope="True"
+                                  Background="White"
+                                  Width="300"
+                                  Margin="5 0 5 0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:IPerson}">
+                                <Border x:Name="Border"
+                                        Padding="8">
+                                    <Grid VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition
+                                                SharedSizeGroup="Checkerz" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Grid.Column="1"
+                                                   Margin="8 0 0 0"
+                                                   Text="{Binding FullName}"
+                                                   FontWeight="Bold" />
+                                    </Grid>
+                                </Border>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsSelected}"
+                                                 Value="True">
+                                        <Setter TargetName="Border"
+                                                Property="Background"
+                                                Value="{DynamicResource MaterialDesignSelection}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </materialDesign:Card>
             </StackPanel>
         </Grid>
         <materialDesign:DialogHost Grid.Column="1"

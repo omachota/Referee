@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
@@ -11,6 +12,7 @@ namespace Referee.ViewModels
 		private bool _isDialogOpen;
 		private bool _isSettingsDialogOpen;
 		private bool _isMessageOpen;
+		private string _search;
 		private SettingsViewModel _settingsViewModel;
 
 		public ICommand OpenCloseSettings { get; }
@@ -31,7 +33,9 @@ namespace Referee.ViewModels
 					SettingsViewModel.UpdateChangesMadeValue();
 				IsSettingsDialogOpen = !IsSettingsDialogOpen;
 			});
+#if !DEBUG
 			IsSettingsDialogOpen = true;
+#endif
 		}
 
 		private async Task NewVersionDetectedEvent()
@@ -57,6 +61,18 @@ namespace Referee.ViewModels
 		{
 			get => _isMessageOpen;
 			set => SetAndRaise(ref _isMessageOpen, value);
+		}
+
+		public string Search
+		{
+			get => _search;
+			set
+			{
+				if (SetAndRaise(ref _search, value))
+				{
+					WindowManager.ActiveViewModel.SearchChanged?.Invoke(Search);
+				}
+			}
 		}
 
 		public SettingsViewModel SettingsViewModel

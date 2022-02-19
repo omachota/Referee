@@ -88,6 +88,17 @@ namespace Referee.ViewModels
 				foreach (var rozhodci in RozhodciCollection.Where(x => x.IsSelected))
 					rozhodci.Reward = Reward;
 			});
+			SearchChanged = value =>
+			{
+				FilterCollection.Clear();
+				if (value is { Length: > 2 })
+				{
+					foreach (var rozhodci in RozhodciCollection.Where(x => x.FullName.Contains(value)))
+					{
+						FilterCollection.Add(rozhodci);
+					}
+				}
+			};
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; }
@@ -148,11 +159,36 @@ namespace Referee.ViewModels
 		public Rozhodci CreateRozhodci
 		{
 			get => _createRozhodci;
-			set => SetAndRaise(ref _createRozhodci, value);
+			private set => SetAndRaise(ref _createRozhodci, value);
 		}
 
 		private async Task LoadRozhodciAsync()
 		{
+#if DEBUG
+			RozhodciCollection.Add(new Rozhodci(1, "Ondřej", "Machota", DateTime.Today, "Address", "City"));
+			RozhodciCollection.Add(new Rozhodci(1, "Ondřej", "Test", DateTime.Today, "Address", "City"));
+			RozhodciCollection.Add(new Rozhodci(1, "Vratislav", "Machota", DateTime.Today, "Address", "City"));
+			RozhodciCollection.Add(new Rozhodci(1, "Eduard", "Machota", DateTime.Today, "Address", "City"));
+
+			foreach (var rozhodci in RozhodciCollection)
+			{
+				rozhodci.PropertyChanged += (_, args) =>
+				{
+					if (args.PropertyName == nameof(Rozhodci.IsSelected))
+					{
+						_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
+						SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+						OnPropertyChanged(nameof(IsAllSelected));
+					}
+				};
+			}
+
+			// foreach (var rozhodci in RozhodciCollection)
+			// {
+			// 	FilterCollection.Add(rozhodci);
+			// }
+#endif
+
 			await foreach (var rozhodci in _rozhodciService.LoadRozhodciFromDb())
 			{
 				rozhodci.PropertyChanged += (_, args) =>

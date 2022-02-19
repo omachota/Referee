@@ -30,10 +30,10 @@ namespace Referee.Infrastructure
 		/// <param name="backingField">The backing field.</param>
 		/// <param name="newValue">The new value.</param>
 		/// <param name="propertyName">Name of the property.</param>
-		protected virtual void SetAndRaise<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null)
+		protected virtual bool SetAndRaise<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null)
 		{
 			// ReSharper disable once ExplicitCallerInfoArgument
-			SetAndRaise(ref backingField, newValue, EqualityComparer<T>.Default, propertyName);
+			return SetAndRaise(ref backingField, newValue, EqualityComparer<T>.Default, propertyName);
 		}
 
 		/// <summary>
@@ -44,17 +44,18 @@ namespace Referee.Infrastructure
 		/// <param name="newValue">The new value.</param>
 		/// <param name="comparer">The comparer.</param>
 		/// <param name="propertyName">Name of the property.</param>
-		protected virtual void SetAndRaise<T>(ref T backingField, T newValue, IEqualityComparer<T> comparer,
+		protected virtual bool SetAndRaise<T>(ref T backingField, T newValue, IEqualityComparer<T> comparer,
 		                                      [CallerMemberName] string propertyName = null)
 		{
 			comparer ??= EqualityComparer<T>.Default;
 			if (comparer.Equals(backingField, newValue))
 			{
-				return;
+				return false;
 			}
 
 			backingField = newValue;
 			OnPropertyChanged(propertyName);
+			return true;
 		}
 	}
 }
