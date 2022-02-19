@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
@@ -12,7 +11,6 @@ namespace Referee.ViewModels
 		private bool _isDialogOpen;
 		private bool _isSettingsDialogOpen;
 		private bool _isMessageOpen;
-		private string _search;
 		private SettingsViewModel _settingsViewModel;
 
 		public ICommand OpenCloseSettings { get; }
@@ -65,12 +63,12 @@ namespace Referee.ViewModels
 
 		public string Search
 		{
-			get => _search;
+			get => WindowManager.Search;
 			set
 			{
-				if (SetAndRaise(ref _search, value))
+				if (SetAndRaise(ref WindowManager.Search, value))
 				{
-					WindowManager.ActiveViewModel.SearchChanged?.Invoke(Search);
+					WindowManager.ActiveViewModel.FilterCollection.Refresh();
 				}
 			}
 		}

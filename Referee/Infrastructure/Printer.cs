@@ -339,8 +339,7 @@ namespace Referee.Infrastructure
 			int? sum = 0;
 			selectedPersons.ForEach(x => sum += x.Reward);
 			if (sum.HasValue)
-				// ReSharper disable once PossibleInvalidOperationException
-				return sum.Value == 0 ? "" : sum?.ToString();
+				return sum.Value == 0 ? "" : sum.Value.ToString();
 			return "";
 		}
 	}

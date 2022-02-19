@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
@@ -22,7 +23,7 @@ namespace Referee.ViewModels
 		private Cetar _selectedCetar = Cetar.CreateEmpty();
 		private Cetar _createCetar = Cetar.CreateEmpty();
 		private Cetar _selectedCetarCache = Cetar.CreateEmpty();
-		private List<Cetar> _selectedCetaCollection = new List<Cetar>();
+		private List<Cetar> _selectedCetaCollection = new();
 
 		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
 		public ObservableCollection<Cetar> CetaCollection { get; set; } = new();
@@ -86,6 +87,7 @@ namespace Referee.ViewModels
 				foreach (var cetar in CetaCollection.Where(x => x.IsSelected))
 					cetar.Reward = Reward;
 			});
+			FilterCollection = CollectionViewSource.GetDefaultView(CetaCollection);
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; }

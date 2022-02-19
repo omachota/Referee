@@ -5,14 +5,13 @@ using System.Windows.Data;
 
 namespace Referee.Infrastructure;
 
-public class CountToVisibilityConverter : IValueConverter
+public class BooleanToVisibilityConverter : IValueConverter
 {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 	{
 		if (value != null)
 		{
-			var count = (int)value;
-			return count > 0 ? Visibility.Visible : Visibility.Hidden;
+			return (bool)value ? Visibility.Hidden : Visibility.Visible;
 		}
 
 		return Visibility.Hidden;

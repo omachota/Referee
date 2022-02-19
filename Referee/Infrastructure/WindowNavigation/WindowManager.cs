@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.SettingsFd;
+using Referee.Models;
 using Referee.ViewModels;
 
 namespace Referee.Infrastructure.WindowNavigation
 {
 	public enum ViewType
 	{
+		None,
 		Rozhodci,
 		Ceta,
 		Settings
@@ -18,7 +20,15 @@ namespace Referee.Infrastructure.WindowNavigation
 	{
 		private BaseViewModel _activeViewModel;
 		private readonly UpdateWindowCommand _updateWindowCommand;
-		private readonly IDictionary<Type, int> _modelsIndexes;
+
+		private readonly IDictionary<Type, int> _modelsIndexes = new Dictionary<Type, int>
+		{
+			{ typeof(RozhodciViewModel), 0 },
+			{ typeof(CetaViewModel), 1 },
+			{ typeof(SettingsViewModel), 2 }
+		};
+
+		public string Search;
 
 		public WindowManager(Settings settings)
 		{
@@ -26,14 +36,7 @@ namespace Referee.Infrastructure.WindowNavigation
 			var rozhodciService = new RozhodciService(settings);
 			var cetaService = new CetaService(settings);
 			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer);
-			_modelsIndexes = new Dictionary<Type, int>
-			{
-				{ typeof(RozhodciViewModel), 0 },
-				{ typeof(CetaViewModel), 1 },
-				{ typeof(SettingsViewModel), 2 }
-			};
-			_activeViewModel = new RozhodciViewModel(rozhodciService, printer);
-			ViewType = (ViewType)_modelsIndexes[ActiveViewModel.GetType()];
+			_updateWindowCommand.Execute(ViewType.Rozhodci);
 		}
 
 		public ViewType ViewType { get; set; }
@@ -47,5 +50,15 @@ namespace Referee.Infrastructure.WindowNavigation
 		}
 
 		public int ActiveViewModelIndex => _modelsIndexes[ActiveViewModel.GetType()];
+
+		public bool Filter(object o)
+		{
+			if (Search is { Length: > 2 })
+			{
+				return o is IPerson item && item.FullName.ToLower().Contains(Search.ToLower());
+			}
+
+			return false;
+		}
 	}
 }

@@ -13,7 +13,7 @@
         WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
-        <infrastructure:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+        <infrastructure:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <!-- ReSharper disable once Xaml.RedundantResource -->
         <Storyboard x:Key="OpenMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Width)" Storyboard.TargetName="MenuGrid">
@@ -105,6 +105,15 @@
                                        Foreground="White" />
                         </StackPanel>
                     </ListViewItem>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="False">
+                                    <Setter Property="Opacity" Value="0.70" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
                 <Button Command="{Binding OpenCloseSettings}"
                         Height="60"
@@ -150,7 +159,7 @@
                                      materialDesign:TextFieldAssist.HasClearButton="True"
                                      Style="{StaticResource MaterialDesignOutlinedTextBox}" />
                             <materialDesign:Card
-                                Visibility="{Binding WindowManager.ActiveViewModel.FilterCollection.Count, Converter={StaticResource CountToVisibilityConverter}}"
+                                Visibility="{Binding WindowManager.ActiveViewModel.FilterCollection.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Margin="0, 5, 0, 0">
                                 <ItemsControl ItemsSource="{Binding WindowManager.ActiveViewModel.FilterCollection}"
                                               Grid.IsSharedSizeScope="True"

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
@@ -88,17 +89,7 @@ namespace Referee.ViewModels
 				foreach (var rozhodci in RozhodciCollection.Where(x => x.IsSelected))
 					rozhodci.Reward = Reward;
 			});
-			SearchChanged = value =>
-			{
-				FilterCollection.Clear();
-				if (value is { Length: > 2 })
-				{
-					foreach (var rozhodci in RozhodciCollection.Where(x => x.FullName.Contains(value)))
-					{
-						FilterCollection.Add(rozhodci);
-					}
-				}
-			};
+			FilterCollection = CollectionViewSource.GetDefaultView(RozhodciCollection);
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; }
@@ -182,11 +173,6 @@ namespace Referee.ViewModels
 					}
 				};
 			}
-
-			// foreach (var rozhodci in RozhodciCollection)
-			// {
-			// 	FilterCollection.Add(rozhodci);
-			// }
 #endif
 
 			await foreach (var rozhodci in _rozhodciService.LoadRozhodciFromDb())

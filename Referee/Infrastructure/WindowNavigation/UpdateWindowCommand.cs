@@ -39,9 +39,11 @@ namespace Referee.Infrastructure.WindowNavigation
 					ViewType.Rozhodci => new RozhodciViewModel(_rozhodciService, _printer),
 					ViewType.Ceta => new CetaViewModel(_cetaService, _printer),
 					ViewType.Settings => new SettingsViewModel(_settings),
-					_ => _windowManager.ActiveViewModel
+					_ => new RozhodciViewModel(_rozhodciService, _printer)
 				};
 
+				if (_windowManager.ActiveViewModel.FilterCollection != null)
+					_windowManager.ActiveViewModel.FilterCollection.Filter = _windowManager.Filter;  
 				_windowManager.ViewType = viewType;
 			}
 		}
