@@ -314,7 +314,7 @@ namespace Referee.Infrastructure
 				}
 			}
 
-			ChromeLauncher.OpenLink(filePath, true);
+			Browser.OpenLink(filePath);
 		}
 
 		private Cell AboutCompetitionCell(string text, PdfFont pdfFont)

@@ -20,7 +20,7 @@ namespace Referee.ViewModels
 			_cachedSettings = new Settings(settings);
 			Settings.PropertyChanged += (_, _) => { _changedMade = true; };
 			Settings.DbSettings.PropertyChanged += (_, _) => { _changedMade = true; };
-			OpenRepositoryCommand = new Command(() => ChromeLauncher.OpenLink(_repositoryAddress));
+			OpenRepositoryCommand = new Command(() => Browser.OpenLink(_repositoryAddress));
 			RevertChanges = new Command(() =>
 			{
 				Settings.CopyValuesFrom(_cachedSettings);
