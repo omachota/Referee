@@ -201,7 +201,7 @@
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection}">
+                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection, IsAsync=True}">
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="LastName" />
                         </CollectionViewSource.SortDescriptions>

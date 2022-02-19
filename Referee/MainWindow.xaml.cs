@@ -25,20 +25,6 @@ namespace Referee
             MenuListView.SelectedIndex = _mainViewModel.WindowManager.ActiveViewModelIndex;
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-
-            try
-            {
-                DragMove();
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
         private void OpenCloseMenuButton_Click(object sender, RoutedEventArgs e)
         {
             if (OpenCloseMenuButton.IsChecked != null && OpenCloseMenuButton.IsChecked.Value)

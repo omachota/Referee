@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +22,6 @@ namespace Referee.ViewModels
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _createRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _selectedRozhodciCache = Rozhodci.CreateEmpty();
-		private List<Rozhodci> _selectedRozhodciCollection = new();
 
 		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
 		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new();
@@ -64,11 +62,12 @@ namespace Referee.ViewModels
 				{
 					CreateRozhodci ??= Rozhodci.CreateEmpty();
 				}
+
 				IsDialogHostOpen = true;
 			});
 #pragma warning disable 4014
 			RawPrintCommand = new Command(() => printer.RawPrint<Rozhodci>(RawPagesCount));
-			SelectionPrintCommand = new Command(() => printer.Print(_selectedRozhodciCollection.ToList()));
+			SelectionPrintCommand = new Command(() => printer.Print(RozhodciCollection.Where(x => x.IsSelected).ToList()));
 			LoadCommand = new Command(() => LoadRozhodciAsync());
 			CreateOrEditRozhodciCommand = new Command(() => HandleRozhodci(),
 				() =>
@@ -167,8 +166,7 @@ namespace Referee.ViewModels
 				{
 					if (args.PropertyName == nameof(Rozhodci.IsSelected))
 					{
-						_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
-						SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+						SelectedRozhodciCount = RozhodciCollection.Count(x => x.IsSelected);
 						OnPropertyChanged(nameof(IsAllSelected));
 					}
 				};
@@ -181,8 +179,7 @@ namespace Referee.ViewModels
 				{
 					if (args.PropertyName == nameof(Rozhodci.IsSelected))
 					{
-						_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
-						SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+						SelectedRozhodciCount = RozhodciCollection.Count(x => x.IsSelected);
 						OnPropertyChanged(nameof(IsAllSelected));
 					}
 				};
@@ -214,8 +211,7 @@ namespace Referee.ViewModels
 					{
 						if (args.PropertyName == nameof(Rozhodci.IsSelected))
 						{
-							_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
-							SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+							SelectedRozhodciCount = RozhodciCollection.Count(x => x.IsSelected);
 							OnPropertyChanged(nameof(IsAllSelected));
 						}
 					};
