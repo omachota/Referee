@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ namespace Referee.Infrastructure.SettingsFd
 		{
 			await CheckFolderAndFile();
 
-			string content = JsonConvert.SerializeObject(settings);
+			var content = JsonConvert.SerializeObject(settings);
 
 			await using (var streamWriter = new StreamWriter(FilePath, false))
 			{
@@ -32,7 +33,21 @@ namespace Referee.Infrastructure.SettingsFd
 				content = await streamReader.ReadToEndAsync();
 			}
 
-			return JsonConvert.DeserializeObject<Settings>(content);
+			var settings = JsonConvert.DeserializeObject<Settings>(content);
+			if (settings != null)
+			{
+				if (settings.CompetitionStartDate < DateTime.Today)
+				{
+					settings.CompetitionStartDate = DateTime.Today;
+				}
+				
+				if (settings.CompetitionEndDate < DateTime.Today)
+				{
+					settings.CompetitionEndDate = DateTime.Today;
+				}
+			}
+
+			return settings;
 		}
 
 		private static async Task CheckFolderAndFile()

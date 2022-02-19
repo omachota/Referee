@@ -30,12 +30,10 @@ namespace Referee.Infrastructure.WindowNavigation
 			return true;
 		}
 
-		public async void Execute(object parameter)
+		public void Execute(object parameter)
 		{
 			if (parameter is ViewType viewType && _windowManager.ViewType != viewType)
 			{
-				await SettingsHelper.SaveSettingsAsync(_settings);
-
 				_windowManager.ActiveViewModel = viewType switch
 				{
 					ViewType.Rozhodci => new RozhodciViewModel(_rozhodciService, _printer),

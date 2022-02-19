@@ -8,7 +8,7 @@ namespace Referee.ViewModels
 	{
 		private bool _changedMade;
 		private Settings _cachedSettings;
-		private readonly string _repositoryAddress = "https://github.com/omachota/Referee";
+		private const string RepositoryAddress = "https://github.com/omachota/Referee";
 
 		public ICommand OpenRepositoryCommand { get; }
 
@@ -20,7 +20,7 @@ namespace Referee.ViewModels
 			_cachedSettings = new Settings(settings);
 			Settings.PropertyChanged += (_, _) => { _changedMade = true; };
 			Settings.DbSettings.PropertyChanged += (_, _) => { _changedMade = true; };
-			OpenRepositoryCommand = new Command(() => Browser.OpenLink(_repositoryAddress));
+			OpenRepositoryCommand = new Command(() => Browser.OpenLink(RepositoryAddress));
 			RevertChanges = new Command(() =>
 			{
 				Settings.CopyValuesFrom(_cachedSettings);
@@ -28,7 +28,7 @@ namespace Referee.ViewModels
 			}, () => _changedMade);
 		}
 
-		public Settings Settings { get; set; }
+		public Settings Settings { get; }
 
 		public void UpdateChangesMadeValue()
 		{
