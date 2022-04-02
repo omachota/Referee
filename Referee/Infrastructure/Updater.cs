@@ -36,7 +36,7 @@ namespace Referee.Infrastructure
 			if (respose.IsSuccessStatusCode)
 			{
 				var content = await respose.Content.ReadAsStringAsync().ConfigureAwait(false);
-				var json = JsonConvert.DeserializeObject<List<Temperatures>>(content);
+				var json = JsonConvert.DeserializeObject<List<GithubAssets>>(content);
 				if (json != null)
 				{
 					var downloadUrl = json[0].Assets[0].BrowserDownloadUrl.ToString();
@@ -50,17 +50,18 @@ namespace Referee.Infrastructure
 						await NewVersionDetectedEvent.Invoke(); // TODO: await?
 						try
 						{
+							var path = Constants.WorkingDirectory + "\\" + downloadUrl.Split('/')[^1];
+							
 							using (var httpClient = new HttpClient())
 							{
 								var stream = await httpClient.GetStreamAsync(new Uri(downloadUrl)).ConfigureAwait(false);
-								var path = Constants.WorkingDirectory + "\\" + downloadUrl.Split('/')[^1];
-								await using (var writer = new StreamWriter(stream))
+								await using (var writer = File.Create(path))
 								{
-									await writer.WriteAsync(path);
+									await stream.CopyToAsync(writer);
 								}
 							}
 
-							Process.Start("explorer.exe", Constants.WorkingDirectory);
+							Process.Start(path);
 						}
 						catch (Exception)
 						{
