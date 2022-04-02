@@ -1,4 +1,3 @@
 # Referee
-App for Atletika Stará Boleslav, z.s.
 
-Možnost tisku výplatních listin jak rozhodčích, tak i technické čety
+This application is developed for Atletika Stará Boleslav. Its purpose is to print payrolls for referees and technical crew.
