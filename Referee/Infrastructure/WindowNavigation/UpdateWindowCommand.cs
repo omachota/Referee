@@ -30,25 +30,20 @@ namespace Referee.Infrastructure.WindowNavigation
 			return true;
 		}
 
-		public async void Execute(object parameter)
+		public void Execute(object parameter)
 		{
 			if (parameter is ViewType viewType && _windowManager.ViewType != viewType)
 			{
-				await SettingsHelper.SaveSettingsAsync(_settings);
-
-				switch (viewType)
+				_windowManager.ActiveViewModel = viewType switch
 				{
-					case ViewType.Rozhodci:
-						_windowManager.ActiveViewModel = new RozhodciViewModel(_rozhodciService, _printer);
-						break;
-					case ViewType.Ceta:
-						_windowManager.ActiveViewModel = new CetaViewModel(_cetaService, _printer);
-						break;
-					case ViewType.Settings:
-						_windowManager.ActiveViewModel = new SettingsViewModel(_settings);
-						break;
-				}
+					ViewType.Rozhodci => new RozhodciViewModel(_rozhodciService, _printer),
+					ViewType.Ceta => new CetaViewModel(_cetaService, _printer),
+					ViewType.Settings => new SettingsViewModel(_settings),
+					_ => new RozhodciViewModel(_rozhodciService, _printer)
+				};
 
+				if (_windowManager.ActiveViewModel.FilterCollection != null)
+					_windowManager.ActiveViewModel.FilterCollection.Filter = _windowManager.Filter;  
 				_windowManager.ViewType = viewType;
 			}
 		}

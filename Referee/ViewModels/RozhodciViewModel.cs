@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
@@ -22,10 +22,9 @@ namespace Referee.ViewModels
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _createRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _selectedRozhodciCache = Rozhodci.CreateEmpty();
-		private List<Rozhodci> _selectedRozhodciCollection = new List<Rozhodci>();
 
-		public ObservableCollection<int> RawPages { get; set; } = new ObservableCollection<int>(Enumerable.Range(1, 9));
-		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new ObservableCollection<Rozhodci>();
+		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
+		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new();
 
 		public ICommand OpenDialogHost { get; }
 		public ICommand RawPrintCommand { get; }
@@ -60,12 +59,15 @@ namespace Referee.ViewModels
 				}
 
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Create)
+				{
 					CreateRozhodci ??= Rozhodci.CreateEmpty();
+				}
+
 				IsDialogHostOpen = true;
 			});
 #pragma warning disable 4014
 			RawPrintCommand = new Command(() => printer.RawPrint<Rozhodci>(RawPagesCount));
-			SelectionPrintCommand = new Command(() => printer.Print(_selectedRozhodciCollection.ToList()));
+			SelectionPrintCommand = new Command(() => printer.Print(RozhodciCollection.Where(x => x.IsSelected).ToList()));
 			LoadCommand = new Command(() => LoadRozhodciAsync());
 			CreateOrEditRozhodciCommand = new Command(() => HandleRozhodci(),
 				() =>
@@ -86,6 +88,7 @@ namespace Referee.ViewModels
 				foreach (var rozhodci in RozhodciCollection.Where(x => x.IsSelected))
 					rozhodci.Reward = Reward;
 			});
+			FilterCollection = CollectionViewSource.GetDefaultView(RozhodciCollection);
 		}
 
 		public DialogSwitchViewModel DialogSwitchViewModel { get; }
@@ -115,7 +118,7 @@ namespace Referee.ViewModels
 				var selected = RozhodciCollection.Select(x => x.IsSelected).Distinct().ToList();
 				if (selected.Count == 0)
 					return false;
-				return selected.Count == 1 ? selected.Single() : (bool?) null;
+				return selected.Count == 1 ? selected.Single() : null;
 			}
 			set
 			{
@@ -146,24 +149,42 @@ namespace Referee.ViewModels
 		public Rozhodci CreateRozhodci
 		{
 			get => _createRozhodci;
-			set => SetAndRaise(ref _createRozhodci, value);
+			private set => SetAndRaise(ref _createRozhodci, value);
 		}
 
 		private async Task LoadRozhodciAsync()
 		{
-			await foreach (var rozhodci in _rozhodciService.LoadRozhodciFromDb())
+#if DEBUG
+			RozhodciCollection.Add(new Rozhodci(1, "Ondřej", "Machota", DateTime.Today, "Address", "City"));
+			RozhodciCollection.Add(new Rozhodci(1, "Ondřej", "Test", DateTime.Today, "Address", "City"));
+			RozhodciCollection.Add(new Rozhodci(1, "Vratislav", "Machota", DateTime.Today, "Address", "City"));
+			RozhodciCollection.Add(new Rozhodci(1, "Eduard", "Machota", DateTime.Today, "Address", "City"));
+
+			foreach (var rozhodci in RozhodciCollection)
 			{
-				rozhodci.PropertyChanged += (sender, args) =>
+				rozhodci.PropertyChanged += (_, args) =>
 				{
 					if (args.PropertyName == nameof(Rozhodci.IsSelected))
 					{
-						_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
-						SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+						SelectedRozhodciCount = RozhodciCollection.Count(x => x.IsSelected);
+						OnPropertyChanged(nameof(IsAllSelected));
+					}
+				};
+			}
+#endif
+
+			await foreach (var rozhodci in _rozhodciService.LoadRozhodciFromDb())
+			{
+				rozhodci.PropertyChanged += (_, args) =>
+				{
+					if (args.PropertyName == nameof(Rozhodci.IsSelected))
+					{
+						SelectedRozhodciCount = RozhodciCollection.Count(x => x.IsSelected);
 						OnPropertyChanged(nameof(IsAllSelected));
 					}
 				};
 				RozhodciCollection.Add(rozhodci);
-				await Task.Delay(35);
+				await Task.Delay(30);
 			}
 		}
 
@@ -185,13 +206,12 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					Rozhodci rozhodci = await _rozhodciService.AddNewRozhodci(CreateRozhodci);
-					rozhodci.PropertyChanged += (sender, args) =>
+					var rozhodci = await _rozhodciService.AddNewRozhodci(CreateRozhodci);
+					rozhodci.PropertyChanged += (_, args) =>
 					{
 						if (args.PropertyName == nameof(Rozhodci.IsSelected))
 						{
-							_selectedRozhodciCollection = RozhodciCollection.Where(x => x.IsSelected).ToList();
-							SelectedRozhodciCount = _selectedRozhodciCollection.Count;
+							SelectedRozhodciCount = RozhodciCollection.Count(x => x.IsSelected);
 							OnPropertyChanged(nameof(IsAllSelected));
 						}
 					};

@@ -20,11 +20,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async IAsyncEnumerable<Rozhodci> LoadRozhodciFromDb()
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand("SELECT * FROM Rozhodci", connection);
+				var command = new MySqlCommand("SELECT * FROM Rozhodci", connection);
 
 				DbDataReader reader = await command.ExecuteReaderAsync(new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token)
 				                                   .ConfigureAwait(false);
@@ -52,11 +52,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async Task<Rozhodci> AddNewRozhodci(Rozhodci rozhodci)
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand(
+				var command = new MySqlCommand(
 					"INSERT INTO Rozhodci (FirstName, LastName, BirthDate, Address, City, Email, Class, TelephoneNumber, RegistrationNumber, BankAccountNumber) VALUES (@firstName, @lastName, @birthDate, @address, @city, @email, @class, @telephoneNumber, @registrationNumber, @bankAccountNumber)",
 					connection);
 				command.Parameters.AddWithValue("@firstName", rozhodci.FirstName.Trim());
@@ -72,10 +72,10 @@ namespace Referee.Infrastructure.DataServices
 
 				await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-				MySqlCommand getCommand = new MySqlCommand("select * FROM Rozhodci where Id=(SELECT LAST_INSERT_ID());", connection);
+				var getCommand = new MySqlCommand("select * FROM Rozhodci where Id=(SELECT LAST_INSERT_ID());", connection);
 
 				DbDataReader reader = await getCommand.ExecuteReaderAsync().ConfigureAwait(false);
-				Rozhodci r = Rozhodci.CreateEmpty();
+				var r = Rozhodci.CreateEmpty();
 				while (await reader.ReadAsync().ConfigureAwait(false))
 				{
 					r = new Rozhodci
@@ -103,11 +103,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async Task UpdateRozhodciInDatabase(Rozhodci rozhodci)
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand(
+				var command = new MySqlCommand(
 					"UPDATE Rozhodci SET FirstName=@firstName, LastName=@lastName, BirthDate=@birthDate, Address=@address, City=@city, Email=@email, Class=@class, TelephoneNumber=@telephoneNumber, RegistrationNumber=@registrationNumber, BankAccountNumber=@bankAccountNumber WHERE Id=@id",
 					connection);
 				command.Parameters.AddWithValue("@firstName", rozhodci.FirstName.Trim());
@@ -130,11 +130,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async Task DeleteRozhodciFromDatabase(Rozhodci rozhodci)
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand("DELETE FROM Rozhodci WHERE Id=@id", connection);
+				var command = new MySqlCommand("DELETE FROM Rozhodci WHERE Id=@id", connection);
 				command.Parameters.AddWithValue("@id", rozhodci.Id);
 
 				await command.ExecuteNonQueryAsync().ConfigureAwait(false);

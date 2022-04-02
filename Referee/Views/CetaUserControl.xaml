@@ -20,7 +20,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
+    <Grid Margin="0,60,0,0">
         <materialDesign:DialogHost IsOpen="{Binding IsDialogHostOpen}"
                                    CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
@@ -150,7 +150,7 @@
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Ceta" Source="{Binding CetaCollection}">
+                    <CollectionViewSource x:Key="Ceta" Source="{Binding CetaCollection, IsAsync=True}">
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="LastName" />
                         </CollectionViewSource.SortDescriptions>

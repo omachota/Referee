@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -12,9 +13,9 @@ namespace Referee.Infrastructure.SettingsFd
 		{
 			await CheckFolderAndFile();
 
-			string content = JsonConvert.SerializeObject(settings);
+			var content = JsonConvert.SerializeObject(settings);
 
-			await using (StreamWriter streamWriter = new StreamWriter(FilePath, false))
+			await using (var streamWriter = new StreamWriter(FilePath, false))
 			{
 				await streamWriter.WriteAsync(content);
 				await streamWriter.FlushAsync();
@@ -27,12 +28,26 @@ namespace Referee.Infrastructure.SettingsFd
 
 			string content;
 
-			using (StreamReader streamReader = new StreamReader(FilePath))
+			using (var streamReader = new StreamReader(FilePath))
 			{
 				content = await streamReader.ReadToEndAsync();
 			}
 
-			return JsonConvert.DeserializeObject<Settings>(content);
+			var settings = JsonConvert.DeserializeObject<Settings>(content);
+			if (settings != null)
+			{
+				if (settings.CompetitionStartDate < DateTime.Today)
+				{
+					settings.CompetitionStartDate = DateTime.Today;
+				}
+				
+				if (settings.CompetitionEndDate < DateTime.Today)
+				{
+					settings.CompetitionEndDate = DateTime.Today;
+				}
+			}
+
+			return settings;
 		}
 
 		private static async Task CheckFolderAndFile()
@@ -42,7 +57,7 @@ namespace Referee.Infrastructure.SettingsFd
 
 			if (!File.Exists(FilePath))
 			{
-				await using (StreamWriter streamWriter = new StreamWriter(FilePath))
+				await using (var streamWriter = new StreamWriter(FilePath))
 				{
 					await streamWriter.WriteAsync(JsonConvert.SerializeObject(Constants.DefaultSettings));
 					await streamWriter.FlushAsync();

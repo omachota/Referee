@@ -20,11 +20,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async IAsyncEnumerable<Cetar> LoadCetaFromDb()
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand("SELECT * FROM Ceta", connection);
+				var command = new MySqlCommand("SELECT * FROM Ceta", connection);
 
 				DbDataReader reader = await command.ExecuteReaderAsync(new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token)
 				                                   .ConfigureAwait(false);
@@ -47,11 +47,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async Task<Cetar> AddNewCetar(Cetar cetar)
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand(
+				var command = new MySqlCommand(
 					"INSERT INTO Ceta (FirstName, LastName, BirthDate, Address, City) VALUES (@firstName, @lastName, @birthDate, @address, @city)",
 					connection);
 				command.Parameters.AddWithValue("@firstName", cetar.FirstName.Trim());
@@ -62,10 +62,10 @@ namespace Referee.Infrastructure.DataServices
 
 				await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-				MySqlCommand getCommand = new MySqlCommand("select * FROM Ceta where Id=(SELECT LAST_INSERT_ID());", connection);
+				var getCommand = new MySqlCommand("select * FROM Ceta where Id=(SELECT LAST_INSERT_ID());", connection);
 
 				DbDataReader reader = await getCommand.ExecuteReaderAsync().ConfigureAwait(false);
-				Cetar r = Cetar.CreateEmpty();
+				var r = Cetar.CreateEmpty();
 				while (await reader.ReadAsync().ConfigureAwait(false))
 				{
 					r = new Cetar
@@ -88,11 +88,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async Task UpdateCetarInDatabase(Cetar cetar)
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand(
+				var command = new MySqlCommand(
 					"UPDATE Ceta SET FirstName=@firstName, LastName=@lastName, BirthDate=@birthDate, Address=@address, City=@city WHERE Id=@id",
 					connection);
 				command.Parameters.AddWithValue("@firstName", cetar.FirstName.Trim());
@@ -110,11 +110,11 @@ namespace Referee.Infrastructure.DataServices
 
 		public async Task DeleteCetarFromDatabase(Cetar cetar)
 		{
-			await using (MySqlConnection connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
 			{
 				await connection.OpenAsync().ConfigureAwait(false);
 
-				MySqlCommand command = new MySqlCommand("DELETE FROM Ceta WHERE Id=@id", connection);
+				var command = new MySqlCommand("DELETE FROM Ceta WHERE Id=@id", connection);
 				command.Parameters.AddWithValue("@id", cetar.Id);
 
 				await command.ExecuteNonQueryAsync().ConfigureAwait(false);

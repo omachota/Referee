@@ -1,22 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
 <!--    <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
     <UseWPF>true</UseWPF>
     <ApplicationIcon>athletics_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.0.5</AssemblyVersion>
-    <FileVersion>1.0.5</FileVersion>
+    <AssemblyVersion>1.0.6</AssemblyVersion>
+    <FileVersion>1.0.6</FileVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="itext7" Version="7.1.12" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.7-ci1837" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.2.0-ci1837" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
-    <PackageReference Include="MySqlConnector" Version="1.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="itext7" Version="7.2.1" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="MySqlConnector" Version="2.1.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,9 +28,6 @@
       <Generator></Generator>
     </Page>
     <Page Update="Views\SettingsUserControl.xaml">
-      <Generator></Generator>
-    </Page>
-    <Page Update="Themes\TimePickerStyle.xaml">
       <Generator></Generator>
     </Page>
   </ItemGroup>

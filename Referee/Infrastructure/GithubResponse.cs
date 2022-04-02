@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Referee.Infrastructure
 {
-	public class Temperatures
+	public class GithubAssets
 	{
 		[JsonProperty("assets")] public List<Asset> Assets { get; set; }
 	}

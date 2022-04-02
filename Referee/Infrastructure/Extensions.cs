@@ -18,9 +18,7 @@ namespace Referee.Infrastructure
 				return false;
 			if (person.City == "")
 				return false;
-			if (person.BirthDate >= DateTime.Today)
-				return false;
-			return true;
+			return person.BirthDate < DateTime.Today;
 		}
 
 		public static void CopyValuesFrom(this Rozhodci rozhodci, Rozhodci rozhodciCache)

@@ -12,7 +12,7 @@ namespace Referee
 	{
 		protected override async void OnStartup(StartupEventArgs e)
 		{
-			Settings settings = await SettingsHelper.LoadSettings();
+			var settings = await SettingsHelper.LoadSettings();
 
 			Window window = new MainWindow(new MainViewModel(settings));
 			window.Show();

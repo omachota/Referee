@@ -20,12 +20,11 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
+    <Grid Margin="0,60,0,0">
         <materialDesign:DialogHost IsOpen="{Binding IsDialogHostOpen}"
                                    CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
-                <GroupBox x:Name="DialogHostContentGrid"
-                          Header="{Binding DialogSwitchViewModel.EditorTitle}"
+                <GroupBox Header="{Binding DialogSwitchViewModel.EditorTitle}"
                           Width="300" Height="{Binding DialogSwitchViewModel.DialogHeight}">
                     <Grid>
                         <StackPanel Visibility="{Binding DialogSwitchViewModel.Create}">
@@ -202,7 +201,7 @@
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection}">
+                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection, IsAsync=True}">
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="LastName" />
                         </CollectionViewSource.SortDescriptions>
@@ -438,8 +437,7 @@
                                     Margin="0 0 0 10"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom">
-                            <Button x:Name="AddNovyRozhodci"
-                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
                                     Margin="0,0,0,0"
                                     Height="33"
                                     Command="{Binding OpenDialogHost}"

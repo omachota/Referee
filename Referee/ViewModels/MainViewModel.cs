@@ -17,7 +17,7 @@ namespace Referee.ViewModels
 
 		public Settings Settings { get; }
 
-		public WindowManager WindowManager { get; set; }
+		public WindowManager WindowManager { get; }
 
 		public MainViewModel(Settings settings)
 		{
@@ -31,7 +31,9 @@ namespace Referee.ViewModels
 					SettingsViewModel.UpdateChangesMadeValue();
 				IsSettingsDialogOpen = !IsSettingsDialogOpen;
 			});
+#if !DEBUG
 			IsSettingsDialogOpen = true;
+#endif
 		}
 
 		private async Task NewVersionDetectedEvent()
@@ -57,6 +59,18 @@ namespace Referee.ViewModels
 		{
 			get => _isMessageOpen;
 			set => SetAndRaise(ref _isMessageOpen, value);
+		}
+
+		public string Search
+		{
+			get => WindowManager.Search;
+			set
+			{
+				if (SetAndRaise(ref WindowManager.Search, value))
+				{
+					WindowManager.ActiveViewModel.FilterCollection.Refresh();
+				}
+			}
 		}
 
 		public SettingsViewModel SettingsViewModel

@@ -38,14 +38,14 @@ namespace Referee.Infrastructure
 		private readonly Action<object> _execute;
 		private readonly Func<object, bool> _canExecute;
 
-		public Command(Action<object> execute) : this(execute, x => true)
+		public Command(Action<object> execute) : this(execute, _ => true)
 		{
 		}
 
 		public Command(Action<object> execute, Func<object, bool> canExecute)
 		{
 			_execute = execute ?? throw new ArgumentNullException(nameof(execute));
-			_canExecute = canExecute ?? (x => true);
+			_canExecute = canExecute ?? (_ => true);
 		}
 
 		public bool CanExecute(object parameter)
