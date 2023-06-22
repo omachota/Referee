@@ -68,6 +68,7 @@ namespace Referee.ViewModels
 			{
 				if (SetAndRaise(ref WindowManager.Search, value))
 				{
+					WindowManager.UpdateRegex();
 					WindowManager.ActiveViewModel.FilterCollection.Refresh();
 				}
 			}

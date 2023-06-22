@@ -20,7 +20,7 @@ namespace Referee.Infrastructure.SettingsFd
 			IsCompetitionNameEnabled= settings.IsCompetitionNameEnabled;
 			IsCompetitionPlaceEnabled= settings.IsCompetitionPlaceEnabled;
 			IsCompetitionTimeEnabled= settings.IsCompetitionTimeEnabled;
-			DbSettings = new DbSettings(settings.DbSettings);
+			DbSettings = settings.DbSettings;
 		}
 
 		public Settings(string clubName, string competitionName, DateTime competitionStartDate,

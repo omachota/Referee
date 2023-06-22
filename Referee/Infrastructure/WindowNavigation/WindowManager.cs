@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.SettingsFd;
@@ -10,7 +12,7 @@ namespace Referee.Infrastructure.WindowNavigation
 {
 	public enum ViewType
 	{
-		None,
+		None, // Do not delete
 		Rozhodci,
 		Ceta,
 		Settings
@@ -27,8 +29,6 @@ namespace Referee.Infrastructure.WindowNavigation
 			{ typeof(CetaViewModel), 1 },
 			{ typeof(SettingsViewModel), 2 }
 		};
-
-		public string Search;
 
 		public WindowManager(Settings settings)
 		{
@@ -51,14 +51,27 @@ namespace Referee.Infrastructure.WindowNavigation
 
 		public int ActiveViewModelIndex => _modelsIndexes[ActiveViewModel.GetType()];
 
+		public string Search;
+		private Regex _reg;
+
 		public bool Filter(object o)
 		{
 			if (Search is { Length: > 2 })
 			{
-				return o is IPerson item && item.FullName.ToLower().Contains(Search.ToLower());
+				return o is IPerson item && _reg.IsMatch(item.FullName);
 			}
 
 			return false;
+		}
+
+		public void UpdateRegex()
+		{
+			var pattern = new StringBuilder();
+
+			pattern.Append(Search);
+			pattern.Append("[a-zA-Z]*");
+			
+			_reg = new Regex(pattern.ToString(), RegexOptions.IgnoreCase);
 		}
 	}
 }

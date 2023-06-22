@@ -55,7 +55,8 @@ namespace Referee.Infrastructure
 
 		private void Print<T>(bool isRaw, List<T> selectedPersons, int rawpagesCount = 0) where T : IPerson
 		{
-			var filePath = Path.Combine(Constants.WorkingDirectory, typeof(T) == typeof(Rozhodci) ? "vyplatni-listina-rozhodci.pdf" : "vyplatni-listina-ceta.pdf");
+			var filePath = Path.Combine(Constants.WorkingDirectory,
+				typeof(T) == typeof(Rozhodci) ? "vyplatni-listina-rozhodci.pdf" : "vyplatni-listina-ceta.pdf");
 
 			using (var writer = new PdfWriter(filePath))
 			{
@@ -63,7 +64,7 @@ namespace Referee.Infrastructure
 				{
 					var doc = new Document(pdf, PageSize.A4.Rotate());
 					doc.SetMargins(23, 38, 20, 38);
-					var pagesCount = (int) Math.Ceiling((double) selectedPersons.Count / 10);
+					var pagesCount = (int)Math.Ceiling((double)selectedPersons.Count / 10);
 					if (pagesCount == 0)
 						pagesCount = 1;
 					if (isRaw)
@@ -87,7 +88,7 @@ namespace Referee.Infrastructure
 								$"Tyto údaje budou součástí evidence {new string('.', 123)} a budou jen pro vnitřní potřebu.")
 							.SetFont(font).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(-1);
 
-					var aboutcompetition = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(1).UseAllAvailableWidth();
+					var aboutcompetition = new Table(UnitValue.CreatePercentArray(new[] { 52.15f, 47.85f })).SetMarginTop(1).UseAllAvailableWidth();
 					aboutcompetition.AddCell(_settings.IsCompetitionNameEnabled
 						? AboutCompetitionCell($"Název soutěže: {_settings.CompetitionName}", bold)
 						: AboutCompetitionCell($"Název soutěže {new string('.', 89)}", bold));
@@ -105,7 +106,7 @@ namespace Referee.Infrastructure
 					else
 						aboutcompetition.AddCell(AboutCompetitionCell($"Datum konání soutěže {new string('.', 70)}", bold));
 
-					var aboutcompetition2 = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(3).UseAllAvailableWidth();
+					var aboutcompetition2 = new Table(UnitValue.CreatePercentArray(new[] { 52.15f, 47.85f })).SetMarginTop(3).UseAllAvailableWidth();
 					if (_settings.IsCompetitionTimeEnabled)
 					{
 						if (_settings.CompetitionStartTime.HasValue && _settings.CompetitionEndTime == null)
@@ -202,7 +203,7 @@ namespace Referee.Infrastructure
 
 						#region Table
 
-						var rozhodciTable = new Table(new float[] {65, 355, 100, 80, 170})
+						var rozhodciTable = new Table(new float[] { 65, 355, 100, 80, 170 })
 						                    .UseAllAvailableWidth()
 						                    .SetMarginTop(6f)
 						                    .SetFontSize(FontSize);

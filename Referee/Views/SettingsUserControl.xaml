@@ -98,18 +98,22 @@
                             <StackPanel Orientation="Vertical"
                                         TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
                                         Margin="24,8,24,16">
-                                <TextBox Text="{Binding Settings.DbSettings.ServerAddress}"
-                                         Style="{StaticResource OutlinedTextBox}"
-                                         materialDesign:HintAssist.Hint="Adresa serveru" />
-                                <TextBox Text="{Binding Settings.DbSettings.Database}"
-                                         Style="{StaticResource OutlinedTextBox}"
-                                         materialDesign:HintAssist.Hint="Název databáze" />
-                                <TextBox Text="{Binding Settings.DbSettings.Username}"
-                                         Style="{StaticResource OutlinedTextBox}"
-                                         materialDesign:HintAssist.Hint="Uživatelské jméno" />
-                                <TextBox Text="{Binding Settings.DbSettings.Password}"
-                                         Style="{StaticResource OutlinedTextBox}"
-                                         materialDesign:HintAssist.Hint="Heslo" />
+                                <CheckBox Content="Použít externí databázi"
+                                          IsChecked="{Binding Settings.DbSettings.ExternalDb}" />
+                                <StackPanel IsEnabled="{Binding Settings.DbSettings.ExternalDb}">
+                                    <TextBox Text="{Binding Settings.DbSettings.ServerAddress}"
+                                             Style="{StaticResource OutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Adresa serveru" />
+                                    <TextBox Text="{Binding Settings.DbSettings.Database}"
+                                             Style="{StaticResource OutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Název databáze" />
+                                    <TextBox Text="{Binding Settings.DbSettings.Username}"
+                                             Style="{StaticResource OutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Uživatelské jméno" />
+                                    <TextBox Text="{Binding Settings.DbSettings.Password}"
+                                             Style="{StaticResource OutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Heslo" />
+                                </StackPanel>
                             </StackPanel>
                         </Expander>
                         <Button Content="Zahodit změny" Margin="5" HorizontalAlignment="Right"

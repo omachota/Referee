@@ -3,28 +3,11 @@ namespace Referee.Infrastructure.SettingsFd
 {
 	public class DbSettings : AbstractNotifyPropertyChanged
 	{
-		private string _serverAddress;
-		private string _username;
-		private string _database;
-		private string _password;
-
-		public DbSettings() { }
-
-		public DbSettings(DbSettings settings)
-		{
-			_serverAddress = settings._serverAddress;
-			_username = settings._username;
-			_database = settings._database;
-			_password = settings._password;
-		}
-
-		public DbSettings(string serverAddress, string username, string database, string password)
-		{
-			_serverAddress = serverAddress;
-			_username = username;
-			_database = database;
-			_password = password;
-		}
+		private string _serverAddress = "";
+		private string _username = "";
+		private string _database = "";
+		private string _password = "";
+		private bool _externalDb;
 
 		public string ServerAddress
 		{
@@ -48,6 +31,12 @@ namespace Referee.Infrastructure.SettingsFd
 		{
 			get => _password;
 			set => SetAndRaise(ref _password, value);
+		}
+
+		public bool ExternalDb
+		{
+			get => _externalDb;
+			set => SetAndRaise(ref _externalDb, value);
 		}
 
 		public override string ToString()

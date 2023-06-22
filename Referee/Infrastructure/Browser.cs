@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Text;
+using System.Windows;
 
 namespace Referee.Infrastructure
 {
@@ -6,11 +9,17 @@ namespace Referee.Infrastructure
 	{
 		public static void OpenLink(string url)
 		{
-			url = url.Replace("&", "^&");
-			// Process.Start(new ProcessStartInfo(new Uri(url).ToString()) { UseShellExecute = true });
-			Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+			var sb = new StringBuilder();
+			sb.Append("file:///");
+			sb.Append(url.Replace("\\", "/"));
+			try
+			{
+				Process.Start(new ProcessStartInfo(sb.ToString()) { UseShellExecute = true });
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(e.Message, "PDF error");
+			}
 		}
-		
 	}
-
 }
