@@ -1,10 +1,14 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Referee.Infrastructure.SettingsFd
 {
 	public class Settings : AbstractNotifyPropertyChanged
 	{
-		public Settings() { }
+		public Settings()
+		{
+			DbSettings = new DbSettings();
+		}
 
 		public Settings(Settings settings)
 		{
@@ -17,9 +21,9 @@ namespace Referee.Infrastructure.SettingsFd
 			CompetitionPlace = settings.CompetitionPlace;
 			IsClubNameEnabled = settings.IsClubNameEnabled;
 			IsCompetitionDateEnabled = settings.IsCompetitionDateEnabled;
-			IsCompetitionNameEnabled= settings.IsCompetitionNameEnabled;
-			IsCompetitionPlaceEnabled= settings.IsCompetitionPlaceEnabled;
-			IsCompetitionTimeEnabled= settings.IsCompetitionTimeEnabled;
+			IsCompetitionNameEnabled = settings.IsCompetitionNameEnabled;
+			IsCompetitionPlaceEnabled = settings.IsCompetitionPlaceEnabled;
+			IsCompetitionTimeEnabled = settings.IsCompetitionTimeEnabled;
 			DbSettings = settings.DbSettings;
 		}
 
@@ -34,7 +38,8 @@ namespace Referee.Infrastructure.SettingsFd
 			DbSettings = dbSettings;
 		}
 
-		public DbSettings DbSettings { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public DbSettings DbSettings { get; }
 
 		#region ClubName
 

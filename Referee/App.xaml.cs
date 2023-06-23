@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Referee.Infrastructure;
 using Referee.Infrastructure.SettingsFd;
 using Referee.ViewModels;
 

@@ -18,7 +18,7 @@ namespace Referee.ViewModels
 		private int _editIndex;
 		private int _reward;
 		private bool? _isAllSelected;
-		private readonly CetaService _cetaService;
+		private readonly CetarService _cetarService;
 		private Cetar _selectedCetar = Cetar.CreateEmpty();
 		private Cetar _createCetar = Cetar.CreateEmpty();
 		private Cetar _selectedCetarCache = Cetar.CreateEmpty();
@@ -35,9 +35,9 @@ namespace Referee.ViewModels
 		public ICommand CreateOrEditCetarCommand { get; }
 		public ICommand SetRewardToSelectedCetari { get; }
 
-		public CetaViewModel(CetaService cetaService, Printer printer)
+		public CetaViewModel(CetarService cetarService, Printer printer)
 		{
-			_cetaService = cetaService;
+			_cetarService = cetarService;
 			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "četaře", 340);
 			RawPagesCount = 1;
 			OpenDialogHost = new Command<EditorMode>(x =>
@@ -151,7 +151,7 @@ namespace Referee.ViewModels
 
 		private async Task LoadCetaAsync()
 		{
-			await foreach (var cetar in _cetaService.LoadCetaFromDb())
+			await foreach (var cetar in _cetarService.GetCeta())
 			{
 				cetar.PropertyChanged += (_, args) =>
 				{
@@ -184,8 +184,10 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					var cetar = await _cetaService.AddNewCetar(CreateCetar);
-					cetar.PropertyChanged += (_, args) =>
+					var created = new Cetar();
+					created.CopyValuesFrom(CreateCetar);
+					created.Id = await _cetarService.AddCetar(CreateCetar);
+					created.PropertyChanged += (_, args) =>
 					{
 						if (args.PropertyName == nameof(Cetar.IsSelected))
 						{
@@ -193,7 +195,7 @@ namespace Referee.ViewModels
 							OnPropertyChanged(nameof(IsAllSelected));
 						}
 					};
-					CetaCollection.Add(cetar);
+					CetaCollection.Add(created);
 					CreateCetar = Cetar.CreateEmpty();
 					break;
 				case EditorMode.Edit:
@@ -203,14 +205,14 @@ namespace Referee.ViewModels
 					if (index == -1)
 						throw new IndexOutOfRangeException("Cetar was not found");
 					CetaCollection[index].CopyValuesFrom(SelectedCetar);
-					await _cetaService.UpdateCetarInDatabase(CetaCollection[index]);
+					await _cetarService.UpdateCetar(CetaCollection[index]);
 					break;
 				}
 				case EditorMode.Delete:
 				{
 					var selected = CetaCollection.FirstOrDefault(x => x.Id == SelectedCetar.Id);
 					SelectedCetar.IsSelected = false;
-					await _cetaService.DeleteCetarFromDatabase(selected);
+					await _cetarService.DeleteCetar(selected);
 					CetaCollection.Remove(selected);
 					break;
 				}

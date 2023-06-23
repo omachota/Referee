@@ -338,8 +338,7 @@
                                                     IsReadOnly="True">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
-                                        <Setter Property="HorizontalContentAlignment"
-                                                Value="Center" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
                                     </Style>
                                 </DataGridTemplateColumn.HeaderStyle>
                                 <DataGridTemplateColumn.CellTemplate>

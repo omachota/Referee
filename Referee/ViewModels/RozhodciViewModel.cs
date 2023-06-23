@@ -173,7 +173,7 @@ namespace Referee.ViewModels
 			}
 #endif
 
-			await foreach (var rozhodci in _rozhodciService.LoadRozhodciFromDb())
+			await foreach (var rozhodci in _rozhodciService.GetRozhodci())
 			{
 				rozhodci.PropertyChanged += (_, args) =>
 				{
@@ -206,8 +206,10 @@ namespace Referee.ViewModels
 			switch (DialogSwitchViewModel.EditorMode)
 			{
 				case EditorMode.Create:
-					var rozhodci = await _rozhodciService.AddNewRozhodci(CreateRozhodci);
-					rozhodci.PropertyChanged += (_, args) =>
+					var created = new Rozhodci();
+					created.CopyValuesFrom(CreateRozhodci);
+					created.Id = await _rozhodciService.AddRozhodci(CreateRozhodci);
+					created.PropertyChanged += (_, args) =>
 					{
 						if (args.PropertyName == nameof(Rozhodci.IsSelected))
 						{
@@ -215,7 +217,7 @@ namespace Referee.ViewModels
 							OnPropertyChanged(nameof(IsAllSelected));
 						}
 					};
-					RozhodciCollection.Add(rozhodci);
+					RozhodciCollection.Add(created);
 					CreateRozhodci = Rozhodci.CreateEmpty();
 					break;
 				case EditorMode.Edit:
@@ -225,14 +227,14 @@ namespace Referee.ViewModels
 					if (index == -1)
 						throw new IndexOutOfRangeException("Rozhodci was not found");
 					RozhodciCollection[index].CopyValuesFrom(SelectedRozhodci);
-					await _rozhodciService.UpdateRozhodciInDatabase(RozhodciCollection[index]);
+					await _rozhodciService.UpdateRozhodci(RozhodciCollection[index]);
 					break;
 				}
 				case EditorMode.Delete:
 				{
 					var selected = RozhodciCollection.FirstOrDefault(x => x.Id == SelectedRozhodci.Id);
 					SelectedRozhodci.IsSelected = false;
-					await _rozhodciService.DeleteRozhodciFromDatabase(selected);
+					await _rozhodciService.DeleteRozhodci(selected);
 					RozhodciCollection.Remove(selected);
 					break;
 				}

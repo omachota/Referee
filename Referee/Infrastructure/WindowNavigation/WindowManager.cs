@@ -30,11 +30,11 @@ namespace Referee.Infrastructure.WindowNavigation
 			{ typeof(SettingsViewModel), 2 }
 		};
 
-		public WindowManager(Settings settings)
+		public WindowManager(Settings settings, DapperContext context)
 		{
 			var printer = new Printer(settings);
-			var rozhodciService = new RozhodciService(settings);
-			var cetaService = new CetaService(settings);
+			var rozhodciService = new RozhodciService(context);
+			var cetaService = new CetarService(context);
 			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer);
 			_updateWindowCommand.Execute(ViewType.Rozhodci);
 		}

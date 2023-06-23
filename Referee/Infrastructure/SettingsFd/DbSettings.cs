@@ -1,4 +1,3 @@
-
 namespace Referee.Infrastructure.SettingsFd
 {
 	public class DbSettings : AbstractNotifyPropertyChanged
@@ -41,7 +40,9 @@ namespace Referee.Infrastructure.SettingsFd
 
 		public override string ToString()
 		{
-			return $"Server={_serverAddress};Database={_database};uid={_username};pwd={_password};";
+			return _externalDb
+				? $"Server={_serverAddress};Database={_database};uid={_username};pwd={_password};"
+				: $"Data Source={Constants.DatabasePath}";
 		}
 	}
 }

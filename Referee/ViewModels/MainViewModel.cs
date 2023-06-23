@@ -21,8 +21,9 @@ namespace Referee.ViewModels
 
 		public MainViewModel(Settings settings)
 		{
+			var context = new DapperContext(settings.DbSettings);
 			SettingsViewModel = new SettingsViewModel(settings);
-			WindowManager = new WindowManager(settings);
+			WindowManager = new WindowManager(settings, context);
 			Settings = settings;
 			Updater.NewVersionDetectedEvent += NewVersionDetectedEvent;
 			OpenCloseSettings = new Command(() =>
