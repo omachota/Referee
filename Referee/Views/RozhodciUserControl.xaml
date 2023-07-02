@@ -10,6 +10,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             xmlns:validation="clr-namespace:Referee.Infrastructure.Validation"
              d:DataContext="{d:DesignInstance viewModels:RozhodciViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
@@ -32,7 +33,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -41,7 +42,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -50,7 +51,7 @@
                                 <DatePicker.SelectedDate>
                                     <Binding Path="CreateRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:DateValidationRule />
+                                            <validation:DateValidationRule />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </DatePicker.SelectedDate>
@@ -62,7 +63,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -71,7 +72,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.City" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -108,7 +109,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -117,7 +118,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -126,7 +127,7 @@
                                 <DatePicker.SelectedDate>
                                     <Binding Path="SelectedRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:DateValidationRule />
+                                            <validation:DateValidationRule />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </DatePicker.SelectedDate>
@@ -138,7 +139,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -147,7 +148,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.City" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>

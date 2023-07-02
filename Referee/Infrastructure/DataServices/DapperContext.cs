@@ -3,7 +3,7 @@ using System.Data.SQLite;
 using MySqlConnector;
 using Referee.Infrastructure.SettingsFd;
 
-namespace Referee.Infrastructure;
+namespace Referee.Infrastructure.DataServices;
 
 public class DapperContext
 {

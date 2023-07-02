@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
+using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.SettingsFd;
+using Referee.Infrastructure.Update;
 using Referee.Infrastructure.WindowNavigation;
 
 namespace Referee.ViewModels

@@ -53,6 +53,7 @@ namespace Referee.Infrastructure
 			}
 		}
 
+		// https://stackoverflow.com/questions/57895126/chrome-77-not-auto-printing-pdfs
 		private void Print<T>(bool isRaw, List<T> selectedPersons, int rawpagesCount = 0) where T : IPerson
 		{
 			var filePath = Path.Combine(Constants.WorkingDirectory,
@@ -192,7 +193,7 @@ namespace Referee.Infrastructure
 
 					#endregion
 
-					for (int i = 0; i < pagesCount; i++)
+					for (var i = 0; i < pagesCount; i++)
 					{
 						doc.Add(documentMainHeader);
 						doc.Add(vyplatniListinaHead);
@@ -217,7 +218,7 @@ namespace Referee.Infrastructure
 						rozhodciTable.AddCell(signCell);
 						rozhodciTable.AddCell(addressCell);
 
-						for (int j = 0; j < 10; j++)
+						for (var j = 0; j < 10; j++)
 						{
 							var index = j + i * 10;
 							var pdfNumberData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
@@ -266,6 +267,8 @@ namespace Referee.Infrastructure
 							if (!isRaw && selectedPersons.Count > index)
 							{
 								nameCellData.Add(new Paragraph(selectedPersons[index].FullName)).SetPaddingLeft(17);
+								
+								// Issue: if no address is enabled, paragraph should be empty
 								addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
 								               .SetPaddingLeft(17);
 								birthDateData.Add(new Paragraph(selectedPersons[index].BirthDate.ToShortDateString()));
@@ -329,7 +332,7 @@ namespace Referee.Infrastructure
 
 		private string CountSum<T>(List<T> selectedPersons) where T : IPerson
 		{
-			for (int i = 0; i < selectedPersons.Count; i++)
+			for (var i = 0; i < selectedPersons.Count; i++)
 			{
 				if (!selectedPersons[i].Reward.HasValue)
 				{
