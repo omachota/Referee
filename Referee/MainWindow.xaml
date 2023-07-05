@@ -6,14 +6,14 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewModels="clr-namespace:Referee.ViewModels"
         xmlns:models="clr-namespace:Referee.Models"
-        xmlns:infrastructure="clr-namespace:Referee.Infrastructure"
+        xmlns:converters="clr-namespace:Referee.Infrastructure.Converters"
         d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Title="Referee" Height="600" MinHeight="600" Width="1200" MinWidth="1000" WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
-        <infrastructure:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <!-- ReSharper disable once Xaml.RedundantResource -->
         <Storyboard x:Key="OpenMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.Width)" Storyboard.TargetName="MenuGrid">
@@ -39,7 +39,7 @@
                                   Mode="PrimaryMid"
                                   Padding="2"
                                   Grid.ColumnSpan="2"
-                                  materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                  materialDesign:ElevationAssist.Elevation="Dp0">
             <Grid Margin="0,0,2,0">
                 <TextBlock HorizontalAlignment="Center"
                            VerticalAlignment="Center"

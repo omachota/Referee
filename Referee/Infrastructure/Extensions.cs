@@ -6,7 +6,7 @@ namespace Referee.Infrastructure
 {
 	public static class Extensions
 	{
-		public static bool ValidatePerson<T>(T person) where T : IPerson
+		public static bool ValidatePerson<T>(T person, bool allowNoAddress = true) where T : IPerson
 		{
 			if (person == null)
 				return false;
@@ -14,10 +14,14 @@ namespace Referee.Infrastructure
 				return false;
 			if (person.LastName == "")
 				return false;
-			if (person.Address == "")
-				return false;
-			if (person.City == "")
-				return false;
+			if (!allowNoAddress)
+			{
+				if (person.Address == "")
+					return false;
+				if (person.City == "")
+					return false;
+			}
+
 			return person.BirthDate < DateTime.Today;
 		}
 
@@ -55,9 +59,9 @@ namespace Referee.Infrastructure
 			settings.CompetitionPlace = settingsCache.CompetitionPlace;
 			settings.IsClubNameEnabled = settingsCache.IsClubNameEnabled;
 			settings.IsCompetitionDateEnabled = settingsCache.IsCompetitionDateEnabled;
-			settings.IsCompetitionNameEnabled= settingsCache.IsCompetitionNameEnabled;
-			settings.IsCompetitionPlaceEnabled= settingsCache.IsCompetitionPlaceEnabled;
-			settings.IsCompetitionTimeEnabled= settingsCache.IsCompetitionTimeEnabled;
+			settings.IsCompetitionNameEnabled = settingsCache.IsCompetitionNameEnabled;
+			settings.IsCompetitionPlaceEnabled = settingsCache.IsCompetitionPlaceEnabled;
+			settings.IsCompetitionTimeEnabled = settingsCache.IsCompetitionTimeEnabled;
 			settings.DbSettings.ServerAddress = settingsCache.DbSettings.ServerAddress;
 			settings.DbSettings.Database = settingsCache.DbSettings.Database;
 			settings.DbSettings.Username = settingsCache.DbSettings.Username;

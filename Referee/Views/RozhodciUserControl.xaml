@@ -10,6 +10,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             xmlns:validation="clr-namespace:Referee.Infrastructure.Validation"
              d:DataContext="{d:DesignInstance viewModels:RozhodciViewModel,IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="509" d:DesignWidth="932">
@@ -32,7 +33,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -41,7 +42,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -50,7 +51,7 @@
                                 <DatePicker.SelectedDate>
                                     <Binding Path="CreateRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:DateValidationRule />
+                                            <validation:DateValidationRule />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </DatePicker.SelectedDate>
@@ -62,7 +63,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -71,7 +72,7 @@
                                 <TextBox.Text>
                                     <Binding Path="CreateRozhodci.City" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -108,7 +109,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.FirstName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -117,7 +118,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.LastName" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -126,7 +127,7 @@
                                 <DatePicker.SelectedDate>
                                     <Binding Path="SelectedRozhodci.BirthDate" StringFormat="dd.MM.yyyy" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:DateValidationRule />
+                                            <validation:DateValidationRule />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </DatePicker.SelectedDate>
@@ -138,7 +139,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.Address" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -147,7 +148,7 @@
                                 <TextBox.Text>
                                     <Binding Path="SelectedRozhodci.City" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <infrastructure:NotEmptyValidationRule ValidationStep="UpdatedValue" />
+                                            <validation:NotEmptyValidationRule ValidationStep="UpdatedValue" />
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -195,13 +196,13 @@
                                 Width="80"
                                 Margin="10,10"
                                 HorizontalAlignment="Right"
-                                Command="{Binding CreateOrEditRozhodciCommand}" />
+                                Command="{Binding CreateOrEditCommand}" />
                     </Grid>
                 </GroupBox>
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection, IsAsync=True}">
+                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding Collection, IsAsync=True}">
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="LastName" />
                         </CollectionViewSource.SortDescriptions>
@@ -338,14 +339,13 @@
                                                     IsReadOnly="True">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource  MaterialDesignDataGridColumnHeader}">
-                                        <Setter Property="HorizontalContentAlignment"
-                                                Value="Center" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
                                     </Style>
                                 </DataGridTemplateColumn.HeaderStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button x:Name="EditovatRozhodcihoButton"
-                                                Command="{Binding DataContext.DeleteRozhodciCommand, ElementName=RozhodciDataGrid}"
+                                                Command="{Binding DataContext.DeleteCommand, ElementName=RozhodciDataGrid}"
                                                 Width="50">
                                             <materialDesign:PackIcon Kind="Delete" />
                                         </Button>
@@ -379,7 +379,7 @@
                                         Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
-                                <TextBlock Text="{Binding SelectedRozhodciCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
+                                <TextBlock Text="{Binding SelectedCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
                                            FontSize="15"
                                            Margin="0,6,0,0"
                                            Height="21" />
@@ -427,7 +427,7 @@
                                 <Button Style="{StaticResource MaterialDesignRaisedButton}"
                                         Height="33"
                                         Width="65"
-                                        Command="{Binding SetRewardToSelectedRozhodci}"
+                                        Command="{Binding SetRewardToSelectedCommand}"
                                         ToolTip="Přiřadit odměnu">
                                     <TextBlock Text="Přidat" TextWrapping="Wrap" FontSize="10" Height="15" />
                                 </Button>
@@ -445,7 +445,7 @@
                                     ToolTip="Přidat nového rozhodčího">
                                 <materialDesign:PackIcon Kind="AccountMultiplePlus" Width="25" Height="25" />
                             </Button>
-                            <TextBlock Text="{Binding RozhodciCollection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
+                            <TextBlock Text="{Binding Collection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
                                        FontSize="15"
                                        Margin="0,6,0,0"
                                        HorizontalAlignment="Right"

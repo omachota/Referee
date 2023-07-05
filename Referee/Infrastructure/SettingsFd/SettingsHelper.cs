@@ -7,15 +7,13 @@ namespace Referee.Infrastructure.SettingsFd
 {
 	public static class SettingsHelper
 	{
-		private static readonly string FilePath = Path.Combine(Constants.WorkingDirectory, "Settings.json");
-
 		public static async Task SaveSettingsAsync(Settings settings)
 		{
 			await CheckFolderAndFile();
 
 			var content = JsonConvert.SerializeObject(settings);
 
-			await using (var streamWriter = new StreamWriter(FilePath, false))
+			await using (var streamWriter = new StreamWriter(Constants.SettingsPath, false))
 			{
 				await streamWriter.WriteAsync(content);
 				await streamWriter.FlushAsync();
@@ -28,7 +26,7 @@ namespace Referee.Infrastructure.SettingsFd
 
 			string content;
 
-			using (var streamReader = new StreamReader(FilePath))
+			using (var streamReader = new StreamReader(Constants.SettingsPath))
 			{
 				content = await streamReader.ReadToEndAsync();
 			}
@@ -55,9 +53,9 @@ namespace Referee.Infrastructure.SettingsFd
 			if (!Directory.Exists(Constants.WorkingDirectory))
 				Directory.CreateDirectory(Constants.WorkingDirectory);
 
-			if (!File.Exists(FilePath))
+			if (!File.Exists(Constants.SettingsPath))
 			{
-				await using (var streamWriter = new StreamWriter(FilePath))
+				await using (var streamWriter = new StreamWriter(Constants.SettingsPath))
 				{
 					await streamWriter.WriteAsync(JsonConvert.SerializeObject(Constants.DefaultSettings));
 					await streamWriter.FlushAsync();

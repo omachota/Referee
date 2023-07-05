@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Referee.Infrastructure
+namespace Referee.Infrastructure.Update
 {
 	public class GithubAssets
 	{

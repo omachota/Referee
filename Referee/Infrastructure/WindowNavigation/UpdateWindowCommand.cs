@@ -10,15 +10,15 @@ namespace Referee.Infrastructure.WindowNavigation
 	{
 		private readonly WindowManager _windowManager;
 		private readonly RozhodciService _rozhodciService;
-		private readonly CetaService _cetaService;
+		private readonly CetarService _cetarService;
 		private readonly Settings _settings;
 		private readonly Printer _printer;
 
-		public UpdateWindowCommand(WindowManager windowManager, RozhodciService rozhodciService, CetaService cetaService, Settings settings, Printer printer)
+		public UpdateWindowCommand(WindowManager windowManager, RozhodciService rozhodciService, CetarService cetarService, Settings settings, Printer printer)
 		{
 			_windowManager = windowManager;
 			_rozhodciService = rozhodciService;
-			_cetaService = cetaService;
+			_cetarService = cetarService;
 			_settings = settings;
 			_printer = printer;
 		}
@@ -37,7 +37,7 @@ namespace Referee.Infrastructure.WindowNavigation
 				_windowManager.ActiveViewModel = viewType switch
 				{
 					ViewType.Rozhodci => new RozhodciViewModel(_rozhodciService, _printer),
-					ViewType.Ceta => new CetaViewModel(_cetaService, _printer),
+					ViewType.Ceta => new CetaViewModel(_cetarService, _printer),
 					ViewType.Settings => new SettingsViewModel(_settings),
 					_ => new RozhodciViewModel(_rozhodciService, _printer)
 				};

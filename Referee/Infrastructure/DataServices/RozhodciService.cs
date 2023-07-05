@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Threading;
 using System.Threading.Tasks;
-using MySqlConnector;
+using Dapper;
 using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
 
@@ -11,134 +8,78 @@ namespace Referee.Infrastructure.DataServices
 {
 	public class RozhodciService
 	{
-		private readonly Settings _settings;
+		private readonly DapperContext _context;
+		private readonly DbSettings _dbSettings;
 
-		public RozhodciService(Settings settings)
+		public RozhodciService(DapperContext context, DbSettings dbSettings)
 		{
-			_settings = settings;
+			_context = context;
+			_dbSettings = dbSettings;
 		}
 
-		public async IAsyncEnumerable<Rozhodci> LoadRozhodciFromDb()
+		public async IAsyncEnumerable<Rozhodci> GetRozhodci()
 		{
-			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
+			await using var connection = _context.CreateConnection();
+			var reader = await connection.ExecuteReaderAsync("SELECT * FROM Rozhodci");
+			var parser = reader.GetRowParser<Rozhodci>();
+
+			while (await reader.ReadAsync())
 			{
-				await connection.OpenAsync().ConfigureAwait(false);
+				yield return parser(reader);
+			}
 
-				var command = new MySqlCommand("SELECT * FROM Rozhodci", connection);
-
-				DbDataReader reader = await command.ExecuteReaderAsync(new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token)
-				                                   .ConfigureAwait(false);
-				while (await reader.ReadAsync().ConfigureAwait(false))
-				{
-					yield return new Rozhodci
-					{
-						Id = int.Parse(reader["Id"].ToString()!),
-						FirstName = reader["FirstName"].ToString(),
-						LastName = reader["LastName"].ToString(),
-						BirthDate = DateTime.Parse(reader["BirthDate"].ToString()!),
-						Address = reader["Address"].ToString(),
-						City = reader["City"].ToString(),
-						Email = reader["Email"].ToString(),
-						Class = reader["Class"].ToString(),
-						TelephoneNumber = reader["TelephoneNumber"].ToString(),
-						RegistrationNumber = reader["RegistrationNumber"].ToString(),
-						BankAccountNumber = reader["BankAccountNumber"].ToString()
-					};
-				}
-
-				await connection.CloseAsync().ConfigureAwait(false);
+			while (await reader.NextResultAsync().ConfigureAwait(false))
+			{
 			}
 		}
 
-		public async Task<Rozhodci> AddNewRozhodci(Rozhodci rozhodci)
+		public async Task<int> AddRozhodci(Rozhodci rozhodci)
 		{
-			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
-			{
-				await connection.OpenAsync().ConfigureAwait(false);
+			var parameters = new DynamicParameters();
+			parameters.Add("@firstName", rozhodci.FirstName.Trim());
+			parameters.Add("@lastName", rozhodci.LastName.Trim());
+			parameters.Add("@birthDate", rozhodci.BirthDate.ToString("yyyy-M-d"));
+			parameters.Add("@address", rozhodci.Address.Trim());
+			parameters.Add("@city", rozhodci.City.Trim());
+			parameters.Add("@email", rozhodci.Email);
+			parameters.Add("@class", rozhodci.Class);
+			parameters.Add("@telephoneNumber", rozhodci.TelephoneNumber);
+			parameters.Add("@registrationNumber", rozhodci.RegistrationNumber);
+			parameters.Add("@bankAccountNumber", rozhodci.BankAccountNumber);
+			await using var connection = _context.CreateConnection();
+			var id = await connection.QuerySingleAsync<int>(
+				$"INSERT INTO Rozhodci (FirstName, LastName, BirthDate, Address, City, Email, Class, TelephoneNumber, RegistrationNumber, BankAccountNumber) VALUES (@firstName, @lastName, @birthDate, @address, @city, @email, @class, @telephoneNumber, @registrationNumber, @bankAccountNumber); SELECT {DatabaseExtension.LastId(_dbSettings.ExternalDb)}",
+				parameters);
 
-				var command = new MySqlCommand(
-					"INSERT INTO Rozhodci (FirstName, LastName, BirthDate, Address, City, Email, Class, TelephoneNumber, RegistrationNumber, BankAccountNumber) VALUES (@firstName, @lastName, @birthDate, @address, @city, @email, @class, @telephoneNumber, @registrationNumber, @bankAccountNumber)",
-					connection);
-				command.Parameters.AddWithValue("@firstName", rozhodci.FirstName.Trim());
-				command.Parameters.AddWithValue("@lastName", rozhodci.LastName.Trim());
-				command.Parameters.AddWithValue("@birthDate", rozhodci.BirthDate);
-				command.Parameters.AddWithValue("@address", rozhodci.Address.Trim());
-				command.Parameters.AddWithValue("@city", rozhodci.City.Trim());
-				command.Parameters.AddWithValue("@email", rozhodci.Email.Trim());
-				command.Parameters.AddWithValue("@class", rozhodci.Class);
-				command.Parameters.AddWithValue("@telephoneNumber", rozhodci.TelephoneNumber);
-				command.Parameters.AddWithValue("@registrationNumber", rozhodci.RegistrationNumber);
-				command.Parameters.AddWithValue("@bankAccountNumber", rozhodci.BankAccountNumber);
-
-				await command.ExecuteNonQueryAsync().ConfigureAwait(false);
-
-				var getCommand = new MySqlCommand("select * FROM Rozhodci where Id=(SELECT LAST_INSERT_ID());", connection);
-
-				DbDataReader reader = await getCommand.ExecuteReaderAsync().ConfigureAwait(false);
-				var r = Rozhodci.CreateEmpty();
-				while (await reader.ReadAsync().ConfigureAwait(false))
-				{
-					r = new Rozhodci
-					{
-						Id = int.Parse(reader["Id"].ToString()!),
-						FirstName = reader["FirstName"].ToString(),
-						LastName = reader["LastName"].ToString(),
-						BirthDate = DateTime.Parse(reader["BirthDate"].ToString()!),
-						Address = reader["Address"].ToString(),
-						City = reader["City"].ToString(),
-						Email = reader["Email"].ToString(),
-						Class = reader["Class"].ToString(),
-						TelephoneNumber = reader["TelephoneNumber"].ToString(),
-						RegistrationNumber = reader["RegistrationNumber"].ToString(),
-						BankAccountNumber = reader["BankAccountNumber"].ToString()
-					};
-					break;
-				}
-
-				await connection.CloseAsync().ConfigureAwait(false);
-
-				return r;
-			}
+			return id;
 		}
 
-		public async Task UpdateRozhodciInDatabase(Rozhodci rozhodci)
+		public async Task UpdateRozhodci(Rozhodci rozhodci)
 		{
-			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
-			{
-				await connection.OpenAsync().ConfigureAwait(false);
-
-				var command = new MySqlCommand(
-					"UPDATE Rozhodci SET FirstName=@firstName, LastName=@lastName, BirthDate=@birthDate, Address=@address, City=@city, Email=@email, Class=@class, TelephoneNumber=@telephoneNumber, RegistrationNumber=@registrationNumber, BankAccountNumber=@bankAccountNumber WHERE Id=@id",
-					connection);
-				command.Parameters.AddWithValue("@firstName", rozhodci.FirstName.Trim());
-				command.Parameters.AddWithValue("@lastName", rozhodci.LastName.Trim());
-				command.Parameters.AddWithValue("@birthDate", rozhodci.BirthDate);
-				command.Parameters.AddWithValue("@address", rozhodci.Address.Trim());
-				command.Parameters.AddWithValue("@city", rozhodci.City.Trim());
-				command.Parameters.AddWithValue("@email", rozhodci.Email.Trim());
-				command.Parameters.AddWithValue("@class", rozhodci.Class);
-				command.Parameters.AddWithValue("@telephoneNumber", rozhodci.TelephoneNumber);
-				command.Parameters.AddWithValue("@registrationNumber", rozhodci.RegistrationNumber);
-				command.Parameters.AddWithValue("@bankAccountNumber", rozhodci.BankAccountNumber);
-				command.Parameters.AddWithValue("@id", rozhodci.Id);
-
-				await command.ExecuteNonQueryAsync().ConfigureAwait(false);
-
-				await connection.CloseAsync().ConfigureAwait(false);
-			}
+			var parameters = new DynamicParameters();
+			parameters.Add("@firstName", rozhodci.FirstName.Trim());
+			parameters.Add("@lastName", rozhodci.LastName.Trim());
+			parameters.Add("@birthDate", rozhodci.BirthDate.ToString("yyyy-M-d"));
+			parameters.Add("@address", rozhodci.Address.Trim());
+			parameters.Add("@city", rozhodci.City.Trim());
+			parameters.Add("@email", rozhodci.Email);
+			parameters.Add("@class", rozhodci.Class);
+			parameters.Add("@telephoneNumber", rozhodci.TelephoneNumber);
+			parameters.Add("@registrationNumber", rozhodci.RegistrationNumber);
+			parameters.Add("@bankAccountNumber", rozhodci.BankAccountNumber);
+			parameters.Add("@id", rozhodci.Id);
+			await using var connection = _context.CreateConnection();
+			await connection.ExecuteAsync(
+				"UPDATE Rozhodci SET FirstName=@firstName, LastName=@lastName, BirthDate=@birthDate, Address=@address, City=@city, Email=@email, Class=@class, TelephoneNumber=@telephoneNumber, RegistrationNumber=@registrationNumber, BankAccountNumber=@bankAccountNumber WHERE Id=@id",
+				parameters);
 		}
 
-		public async Task DeleteRozhodciFromDatabase(Rozhodci rozhodci)
+		public async Task DeleteRozhodci(Rozhodci rozhodci)
 		{
-			await using (var connection = new MySqlConnection(_settings.DbSettings.ToString()))
-			{
-				await connection.OpenAsync().ConfigureAwait(false);
-
-				var command = new MySqlCommand("DELETE FROM Rozhodci WHERE Id=@id", connection);
-				command.Parameters.AddWithValue("@id", rozhodci.Id);
-
-				await command.ExecuteNonQueryAsync().ConfigureAwait(false);
-			}
+			var parameters = new DynamicParameters();
+			parameters.Add("@id", rozhodci.Id);
+			await using var connection = _context.CreateConnection();
+			await connection.ExecuteAsync("DELETE FROM Rozhodci WHERE Id=@id", parameters);
 		}
 	}
 }

@@ -53,9 +53,11 @@ namespace Referee.Infrastructure
 			}
 		}
 
+		// https://stackoverflow.com/questions/57895126/chrome-77-not-auto-printing-pdfs
 		private void Print<T>(bool isRaw, List<T> selectedPersons, int rawpagesCount = 0) where T : IPerson
 		{
-			var filePath = Path.Combine(Constants.WorkingDirectory, typeof(T) == typeof(Rozhodci) ? "vyplatni-listina-rozhodci.pdf" : "vyplatni-listina-ceta.pdf");
+			var filePath = Path.Combine(Constants.WorkingDirectory,
+				typeof(T) == typeof(Rozhodci) ? "vyplatni-listina-rozhodci.pdf" : "vyplatni-listina-ceta.pdf");
 
 			using (var writer = new PdfWriter(filePath))
 			{
@@ -63,7 +65,7 @@ namespace Referee.Infrastructure
 				{
 					var doc = new Document(pdf, PageSize.A4.Rotate());
 					doc.SetMargins(23, 38, 20, 38);
-					var pagesCount = (int) Math.Ceiling((double) selectedPersons.Count / 10);
+					var pagesCount = (int)Math.Ceiling((double)selectedPersons.Count / 10);
 					if (pagesCount == 0)
 						pagesCount = 1;
 					if (isRaw)
@@ -87,7 +89,7 @@ namespace Referee.Infrastructure
 								$"Tyto údaje budou součástí evidence {new string('.', 123)} a budou jen pro vnitřní potřebu.")
 							.SetFont(font).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(-1);
 
-					var aboutcompetition = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(1).UseAllAvailableWidth();
+					var aboutcompetition = new Table(UnitValue.CreatePercentArray(new[] { 52.15f, 47.85f })).SetMarginTop(1).UseAllAvailableWidth();
 					aboutcompetition.AddCell(_settings.IsCompetitionNameEnabled
 						? AboutCompetitionCell($"Název soutěže: {_settings.CompetitionName}", bold)
 						: AboutCompetitionCell($"Název soutěže {new string('.', 89)}", bold));
@@ -105,7 +107,7 @@ namespace Referee.Infrastructure
 					else
 						aboutcompetition.AddCell(AboutCompetitionCell($"Datum konání soutěže {new string('.', 70)}", bold));
 
-					var aboutcompetition2 = new Table(UnitValue.CreatePercentArray(new[] {52.15f, 47.85f})).SetMarginTop(3).UseAllAvailableWidth();
+					var aboutcompetition2 = new Table(UnitValue.CreatePercentArray(new[] { 52.15f, 47.85f })).SetMarginTop(3).UseAllAvailableWidth();
 					if (_settings.IsCompetitionTimeEnabled)
 					{
 						if (_settings.CompetitionStartTime.HasValue && _settings.CompetitionEndTime == null)
@@ -191,7 +193,7 @@ namespace Referee.Infrastructure
 
 					#endregion
 
-					for (int i = 0; i < pagesCount; i++)
+					for (var i = 0; i < pagesCount; i++)
 					{
 						doc.Add(documentMainHeader);
 						doc.Add(vyplatniListinaHead);
@@ -202,7 +204,7 @@ namespace Referee.Infrastructure
 
 						#region Table
 
-						var rozhodciTable = new Table(new float[] {65, 355, 100, 80, 170})
+						var rozhodciTable = new Table(new float[] { 65, 355, 100, 80, 170 })
 						                    .UseAllAvailableWidth()
 						                    .SetMarginTop(6f)
 						                    .SetFontSize(FontSize);
@@ -216,7 +218,7 @@ namespace Referee.Infrastructure
 						rozhodciTable.AddCell(signCell);
 						rozhodciTable.AddCell(addressCell);
 
-						for (int j = 0; j < 10; j++)
+						for (var j = 0; j < 10; j++)
 						{
 							var index = j + i * 10;
 							var pdfNumberData = new Cell(2, 1).SetTextAlignment(TextAlignment.CENTER)
@@ -265,8 +267,12 @@ namespace Referee.Infrastructure
 							if (!isRaw && selectedPersons.Count > index)
 							{
 								nameCellData.Add(new Paragraph(selectedPersons[index].FullName)).SetPaddingLeft(17);
-								addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
-								               .SetPaddingLeft(17);
+
+								if (string.IsNullOrEmpty(selectedPersons[index].Address) && string.IsNullOrEmpty(selectedPersons[index].City))
+									addressCellData.Add(new Paragraph()).SetPaddingLeft(17);
+								else
+									addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
+									               .SetPaddingLeft(17);
 								birthDateData.Add(new Paragraph(selectedPersons[index].BirthDate.ToShortDateString()));
 								awardCellData.Add(new Paragraph(selectedPersons[index].Reward.HasValue
 									? selectedPersons[index].Reward.Value.ToString()
@@ -279,8 +285,7 @@ namespace Referee.Infrastructure
 								birthDateData.Add(new Paragraph(""));
 								awardCellData.Add(new Paragraph(""));
 							}
-
-
+							
 							rozhodciTable.AddCell(pdfNumberData);
 							rozhodciTable.AddCell(nameCellData);
 							rozhodciTable.AddCell(birthDateData);
@@ -328,7 +333,7 @@ namespace Referee.Infrastructure
 
 		private string CountSum<T>(List<T> selectedPersons) where T : IPerson
 		{
-			for (int i = 0; i < selectedPersons.Count; i++)
+			for (var i = 0; i < selectedPersons.Count; i++)
 			{
 				if (!selectedPersons[i].Reward.HasValue)
 				{

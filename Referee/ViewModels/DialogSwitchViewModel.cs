@@ -7,7 +7,7 @@ namespace Referee.ViewModels
 	public class DialogSwitchViewModel : AbstractNotifyPropertyChanged
 	{
 		private int _dialogHeight;
-		private int _height;
+		private readonly int _height;
 		private readonly string _editorText;
 		private readonly string _type;
 		private string _editorTitle;

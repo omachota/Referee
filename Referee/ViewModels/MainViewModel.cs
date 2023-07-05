@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Referee.Infrastructure;
+using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.SettingsFd;
+using Referee.Infrastructure.Update;
 using Referee.Infrastructure.WindowNavigation;
 
 namespace Referee.ViewModels
@@ -21,8 +23,9 @@ namespace Referee.ViewModels
 
 		public MainViewModel(Settings settings)
 		{
+			var context = new DapperContext(settings.DbSettings);
 			SettingsViewModel = new SettingsViewModel(settings);
-			WindowManager = new WindowManager(settings);
+			WindowManager = new WindowManager(settings, context);
 			Settings = settings;
 			Updater.NewVersionDetectedEvent += NewVersionDetectedEvent;
 			OpenCloseSettings = new Command(() =>
@@ -68,6 +71,7 @@ namespace Referee.ViewModels
 			{
 				if (SetAndRaise(ref WindowManager.Search, value))
 				{
+					WindowManager.UpdateRegex();
 					WindowManager.ActiveViewModel.FilterCollection.Refresh();
 				}
 			}

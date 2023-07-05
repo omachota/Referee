@@ -5,6 +5,6 @@ namespace Referee.ViewModels
 {
 	public abstract class BaseViewModel : AbstractNotifyPropertyChanged
 	{
-		public ICollectionView FilterCollection { get; set; }
+		public ICollectionView FilterCollection { get; protected init; }
 	}
 }
