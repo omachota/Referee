@@ -6,6 +6,17 @@ Navigační menu umožňuje pohyb mezi jednotlivými okny a nastavením. Nastave
 
 ### Rozhodčí
 
+Hlavním prvek v tomto okně je tabulka. Pomocí zaškrtávátka se vybírají rozhodčí na výplatní listinu, tlačítkem ``Edit`` v řádku editujeme rozhodčího, tlačítko s ikonou koše slouží pro smazání.
+
+##### Pravé menu
+
+- Tlačítko ``Tiskárna`` vytvoří a otevře soubor s výpatní listinou.
+- Pod tlačítkem se zobrazuje počet vybraných rozhodčích
+- Tlačítko ``Čistý tisk`` vytvoří a otevře soubor s prázdnou výplatní listinou. Výberem vedle tlačítka volíme počet stránek.
+- Tlačítko ``Přidat`` nastaví vybraným rozhodčím částku zvolenou v políčku nalevo.
+- Tlačítko s osobou slouží k vytvoření nového rozhodčího.
+  - Novému rozhodčímu stačí vyplnit pouze ``jméno``, ``příjmení`` a ``datum narození``. Ostatní políčka mohou být prázdná.
+
 ### Četa
 
 Toto okno je vesměs podobné oknu s rozhodčími, pro četaře nelze vyplnit doplňující údaje jako telefon, číslo účtu, atd.
