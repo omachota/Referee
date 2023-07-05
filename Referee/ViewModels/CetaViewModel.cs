@@ -9,7 +9,7 @@ using Referee.Models;
 
 namespace Referee.ViewModels
 {
-	public class CetaViewModel : BaseViewModel
+	public class CetaViewModel : PersonViewModel
 	{
 		private bool? _isAllSelected;
 		private readonly CetarService _cetarService;

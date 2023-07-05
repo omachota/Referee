@@ -9,7 +9,7 @@ using Referee.Models;
 
 namespace Referee.ViewModels
 {
-	public class RozhodciViewModel : BaseViewModel
+	public class RozhodciViewModel : PersonViewModel
 	{
 		private bool? _isAllSelected;
 		private readonly RozhodciService _rozhodciService;
