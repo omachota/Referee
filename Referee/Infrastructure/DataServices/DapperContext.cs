@@ -22,3 +22,11 @@ public class DapperContext
 		return new SQLiteConnection(_settings.ToString());
 	}
 }
+
+public static class DatabaseExtension
+{
+	public static string LastId(bool mysql)
+	{
+		return mysql ? "LAST_INSERT_ID()" : "last_insert_rowid()";
+	}
+}

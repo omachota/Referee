@@ -23,8 +23,8 @@ namespace Referee.ViewModels
 		private Rozhodci _createRozhodci = Rozhodci.CreateEmpty();
 		private Rozhodci _selectedRozhodciCache = Rozhodci.CreateEmpty();
 
-		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
-		public ObservableCollection<Rozhodci> RozhodciCollection { get; set; } = new();
+		public ObservableCollection<int> RawPages { get; } = new(Enumerable.Range(1, 9));
+		public ObservableCollection<Rozhodci> RozhodciCollection { get; } = new();
 
 		public ICommand OpenDialogHost { get; }
 		public ICommand RawPrintCommand { get; }

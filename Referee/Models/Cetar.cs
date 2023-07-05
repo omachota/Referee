@@ -85,5 +85,6 @@ namespace Referee.Models
 		}
 
 		public string FullName => $"{_firstName} {_lastName}";
+		public string FullNameInverted => $"{_lastName} {_firstName}";
 	}
 }

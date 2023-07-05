@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using Referee.Infrastructure.SettingsFd;
 #if !DEBUG
 using Referee.Infrastructure.Update;
@@ -11,9 +13,10 @@ namespace Referee
 	{
 		protected override async void OnStartup(StartupEventArgs e)
 		{
-			// TODO : create a local database file
-			
 			var settings = await SettingsHelper.LoadSettings();
+			var db = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Referee.db");
+			if (!File.Exists(Constants.DatabasePath))
+				File.Copy(db,  Constants.DatabasePath);	
 
 			Window window = new MainWindow(new MainViewModel(settings));
 			window.Show();

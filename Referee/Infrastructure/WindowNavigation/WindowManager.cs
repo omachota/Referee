@@ -33,8 +33,8 @@ namespace Referee.Infrastructure.WindowNavigation
 		public WindowManager(Settings settings, DapperContext context)
 		{
 			var printer = new Printer(settings);
-			var rozhodciService = new RozhodciService(context);
-			var cetaService = new CetarService(context);
+			var rozhodciService = new RozhodciService(context, settings.DbSettings);
+			var cetaService = new CetarService(context, settings.DbSettings);
 			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer);
 			_updateWindowCommand.Execute(ViewType.Rozhodci);
 		}
@@ -50,15 +50,17 @@ namespace Referee.Infrastructure.WindowNavigation
 		}
 
 		public int ActiveViewModelIndex => _modelsIndexes[ActiveViewModel.GetType()];
-
+		
 		public string Search;
+		private const string Patt = "[ěščřžýáíéúůóďťňa-zA-Z ]*";
 		private Regex _reg;
+		private bool _onlySpaces;
 
 		public bool Filter(object o)
 		{
-			if (Search is { Length: > 2 })
+			if (Search is { Length: > 2 } && !_onlySpaces)
 			{
-				return o is IPerson item && _reg.IsMatch(item.FullName);
+				return o is IPerson item && (_reg.IsMatch(item.FullName) || _reg.IsMatch(item.FullNameInverted));
 			}
 
 			return false;
@@ -66,11 +68,45 @@ namespace Referee.Infrastructure.WindowNavigation
 
 		public void UpdateRegex()
 		{
+			_onlySpaces = false;
 			var pattern = new StringBuilder();
-
-			pattern.Append(Search);
-			pattern.Append("[a-zA-Z]*");
+			pattern.Append('^');
 			
+			// ignore leading whitespace
+			var i = 0;
+			for (; i < Search.Length; i++)
+			{
+				if (Search[i] != ' ')
+					break;
+			}
+			
+			// invalidate if Search contains only spaces
+			if (i == Search.Length)
+				_onlySpaces = true;
+
+			var lastSpace = -1;
+			for (; i < Search.Length; i++)
+			{
+				if (Search[i] == ' ')
+				{
+					if (lastSpace == i - 1) // ignore multiple spaces
+					{
+						lastSpace = i;
+						continue;
+					}
+					lastSpace = i;	
+					pattern.Append(Patt);
+					pattern.Append(' ');
+				}
+				else
+				{
+					pattern.Append(Search[i]);
+				}
+			}
+
+			if (Search.Length > 0 && Search[^1] != ' ')
+				pattern.Append(Patt);
+
 			_reg = new Regex(pattern.ToString(), RegexOptions.IgnoreCase);
 		}
 	}

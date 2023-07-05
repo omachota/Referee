@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
 
 namespace Referee.Infrastructure.DataServices
@@ -9,10 +10,12 @@ namespace Referee.Infrastructure.DataServices
 	public class CetarService
 	{
 		private readonly DapperContext _context;
+		private readonly DbSettings _dbSettings;
 
-		public CetarService(DapperContext context)
+		public CetarService(DapperContext context, DbSettings dbSettings)
 		{
 			_context = context;
+			_dbSettings = dbSettings;
 		}
 
 		public async IAsyncEnumerable<Cetar> GetCeta()
@@ -42,7 +45,7 @@ namespace Referee.Infrastructure.DataServices
 
 			await using var connection = _context.CreateConnection();
 			var id = await connection.QuerySingleOrDefaultAsync<int>(
-				"INSERT INTO Ceta (FirstName, LastName, BirthDate, Address, City) VALUES (@firstName, @lastName, @birthDate, @address, @city); SELECT last_insert_rowid()",
+				$"INSERT INTO Ceta (FirstName, LastName, BirthDate, Address, City) VALUES (@firstName, @lastName, @birthDate, @address, @city); SELECT {DatabaseExtension.LastId(_dbSettings.ExternalDb)}",
 				parameters);
 
 			return id;

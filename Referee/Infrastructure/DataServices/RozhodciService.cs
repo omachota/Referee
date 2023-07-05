@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
+using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
 
 namespace Referee.Infrastructure.DataServices
@@ -8,10 +9,12 @@ namespace Referee.Infrastructure.DataServices
 	public class RozhodciService
 	{
 		private readonly DapperContext _context;
+		private readonly DbSettings _dbSettings;
 
-		public RozhodciService(DapperContext context)
+		public RozhodciService(DapperContext context, DbSettings dbSettings)
 		{
 			_context = context;
+			_dbSettings = dbSettings;
 		}
 
 		public async IAsyncEnumerable<Rozhodci> GetRozhodci()
@@ -45,7 +48,7 @@ namespace Referee.Infrastructure.DataServices
 			parameters.Add("@bankAccountNumber", rozhodci.BankAccountNumber);
 			await using var connection = _context.CreateConnection();
 			var id = await connection.QuerySingleAsync<int>(
-				"INSERT INTO Rozhodci (FirstName, LastName, BirthDate, Address, City, Email, Class, TelephoneNumber, RegistrationNumber, BankAccountNumber) VALUES (@firstName, @lastName, @birthDate, @address, @city, @email, @class, @telephoneNumber, @registrationNumber, @bankAccountNumber); SELECT last_insert_rowid()",
+				$"INSERT INTO Rozhodci (FirstName, LastName, BirthDate, Address, City, Email, Class, TelephoneNumber, RegistrationNumber, BankAccountNumber) VALUES (@firstName, @lastName, @birthDate, @address, @city, @email, @class, @telephoneNumber, @registrationNumber, @bankAccountNumber); SELECT {DatabaseExtension.LastId(_dbSettings.ExternalDb)}",
 				parameters);
 
 			return id;

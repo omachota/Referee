@@ -41,41 +41,44 @@ namespace Referee.Infrastructure.Update
 
 			var content = await respose.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var json = JsonConvert.DeserializeObject<List<GithubAssets>>(content);
-			if (json != null)
+
+			if (json == null)
 			{
-				var downloadUrl = json[0].Assets[0].BrowserDownloadUrl.ToString();
-
-				var assembly = Assembly.GetExecutingAssembly();
-				var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-				var version = fvi.FileVersion;
-
-				if (!string.IsNullOrEmpty(version) && !downloadUrl.Contains(version))
-				{
-					await NewVersionDetectedEvent.Invoke();
-					try
-					{
-						// Todo : use Path.Combine 
-						var path = Constants.WorkingDirectory + "\\" + downloadUrl.Split('/')[^1];
-
-						using (var httpClient = new HttpClient())
-						{
-							var stream = await httpClient.GetStreamAsync(new Uri(downloadUrl)).ConfigureAwait(false);
-							await using (var writer = File.Create(path))
-							{
-								await stream.CopyToAsync(writer);
-							}
-						}
-
-						Process.Start(path);
-					}
-					catch (Exception)
-					{
-						// ignored
-					}
-				}
+				client.Dispose();
+				return;
 			}
 
+			await Download(json[0].Assets[0].BrowserDownloadUrl.ToString(), client);
+
 			client.Dispose();
+		}
+
+		private static async Task Download(string downloadUrl, HttpClient client)
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+			var version = fvi.FileVersion;
+
+			if (string.IsNullOrEmpty(version) || downloadUrl.Contains(version))
+				return;
+
+			await NewVersionDetectedEvent.Invoke();
+			try
+			{
+				var path = Path.Combine(Constants.WorkingDirectory, downloadUrl.Split('/')[^1]);
+
+				var stream = await client.GetStreamAsync(new Uri(downloadUrl)).ConfigureAwait(false);
+				await using (var writer = File.Create(path))
+				{
+					await stream.CopyToAsync(writer);
+				}
+
+				Process.Start(path);
+			}
+			catch (Exception)
+			{
+				// ignored
+			}
 		}
 	}
 }

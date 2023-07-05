@@ -13,5 +13,6 @@ namespace Referee.Models
 		bool IsSelected { get; set; }
 		int? Reward { get; set; }
 		public string FullName { get; }
+		public string FullNameInverted { get; }
 	}
 }

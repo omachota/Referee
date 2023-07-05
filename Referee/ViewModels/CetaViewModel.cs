@@ -23,8 +23,8 @@ namespace Referee.ViewModels
 		private Cetar _createCetar = Cetar.CreateEmpty();
 		private Cetar _selectedCetarCache = Cetar.CreateEmpty();
 
-		public ObservableCollection<int> RawPages { get; set; } = new(Enumerable.Range(1, 9));
-		public ObservableCollection<Cetar> CetaCollection { get; set; } = new();
+		public ObservableCollection<int> RawPages { get; } = new(Enumerable.Range(1, 9));
+		public ObservableCollection<Cetar> CetaCollection { get; } = new();
 
 		public ICommand OpenDialogHost { get; }
 		public ICommand RawPrintCommand { get; }
