@@ -267,10 +267,12 @@ namespace Referee.Infrastructure
 							if (!isRaw && selectedPersons.Count > index)
 							{
 								nameCellData.Add(new Paragraph(selectedPersons[index].FullName)).SetPaddingLeft(17);
-								
-								// Issue: if no address is enabled, paragraph should be empty
-								addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
-								               .SetPaddingLeft(17);
+
+								if (string.IsNullOrEmpty(selectedPersons[index].Address) && string.IsNullOrEmpty(selectedPersons[index].City))
+									addressCellData.Add(new Paragraph()).SetPaddingLeft(17);
+								else
+									addressCellData.Add(new Paragraph($"{selectedPersons[index].Address}, {selectedPersons[index].City}"))
+									               .SetPaddingLeft(17);
 								birthDateData.Add(new Paragraph(selectedPersons[index].BirthDate.ToShortDateString()));
 								awardCellData.Add(new Paragraph(selectedPersons[index].Reward.HasValue
 									? selectedPersons[index].Reward.Value.ToString()
@@ -283,8 +285,7 @@ namespace Referee.Infrastructure
 								birthDateData.Add(new Paragraph(""));
 								awardCellData.Add(new Paragraph(""));
 							}
-
-
+							
 							rozhodciTable.AddCell(pdfNumberData);
 							rozhodciTable.AddCell(nameCellData);
 							rozhodciTable.AddCell(birthDateData);

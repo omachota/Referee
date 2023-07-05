@@ -69,6 +69,9 @@ namespace Referee.Infrastructure.WindowNavigation
 		public void UpdateRegex()
 		{
 			_onlySpaces = false;
+			if (string.IsNullOrEmpty(Search))
+				return;
+			
 			var pattern = new StringBuilder();
 			pattern.Append('^');
 			
