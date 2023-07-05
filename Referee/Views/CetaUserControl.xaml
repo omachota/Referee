@@ -145,13 +145,13 @@
                                 Width="80"
                                 Margin="10,10"
                                 HorizontalAlignment="Right"
-                                Command="{Binding CreateOrEditCetarCommand}" />
+                                Command="{Binding CreateOrEditCommand}" />
                     </Grid>
                 </GroupBox>
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Ceta" Source="{Binding CetaCollection, IsAsync=True}">
+                    <CollectionViewSource x:Key="Ceta" Source="{Binding Collection, IsAsync=True}">
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="LastName" />
                         </CollectionViewSource.SortDescriptions>
@@ -295,7 +295,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button x:Name="EditovatCetareButton"
-                                                Command="{Binding DataContext.DeleteCetarCommand, ElementName=CetaDataGrid}"
+                                                Command="{Binding DataContext.DeleteCommand, ElementName=CetaDataGrid}"
                                                 Width="50">
                                             <materialDesign:PackIcon Kind="Delete" />
                                         </Button>
@@ -319,7 +319,7 @@
                                         Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
-                                <TextBlock Text="{Binding SelectedCetaCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
+                                <TextBlock Text="{Binding SelectedCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
                                            FontSize="15"
                                            Margin="0,6,0,0"
                                            Height="21" />
@@ -367,7 +367,7 @@
                                 <Button Style="{StaticResource MaterialDesignRaisedButton}"
                                         Height="33"
                                         Width="65"
-                                        Command="{Binding SetRewardToSelectedCetari}"
+                                        Command="{Binding SetRewardToSelectedCommand}"
                                         ToolTip="Přiřadit odměnu">
                                     <TextBlock Text="Přidat" TextWrapping="Wrap" FontSize="10" Height="15" />
                                 </Button>
@@ -386,7 +386,7 @@
                                     ToolTip="Přidat nového četaře">
                                 <materialDesign:PackIcon Kind="AccountMultiplePlus" Width="25" Height="25" />
                             </Button>
-                            <TextBlock Text="{Binding CetaCollection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
+                            <TextBlock Text="{Binding Collection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
                                        FontSize="15"
                                        Margin="0,6,0,0"
                                        HorizontalAlignment="Right"

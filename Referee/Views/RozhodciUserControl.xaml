@@ -196,13 +196,13 @@
                                 Width="80"
                                 Margin="10,10"
                                 HorizontalAlignment="Right"
-                                Command="{Binding CreateOrEditRozhodciCommand}" />
+                                Command="{Binding CreateOrEditCommand}" />
                     </Grid>
                 </GroupBox>
             </materialDesign:DialogHost.DialogContent>
             <Grid Margin="7">
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding RozhodciCollection, IsAsync=True}">
+                    <CollectionViewSource x:Key="Rozhodci" Source="{Binding Collection, IsAsync=True}">
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="LastName" />
                         </CollectionViewSource.SortDescriptions>
@@ -345,7 +345,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button x:Name="EditovatRozhodcihoButton"
-                                                Command="{Binding DataContext.DeleteRozhodciCommand, ElementName=RozhodciDataGrid}"
+                                                Command="{Binding DataContext.DeleteCommand, ElementName=RozhodciDataGrid}"
                                                 Width="50">
                                             <materialDesign:PackIcon Kind="Delete" />
                                         </Button>
@@ -379,7 +379,7 @@
                                         Command="{Binding SelectionPrintCommand}">
                                     <materialDesign:PackIcon Kind="Printer" Width="25" Height="25" />
                                 </Button>
-                                <TextBlock Text="{Binding SelectedRozhodciCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
+                                <TextBlock Text="{Binding SelectedCount, StringFormat=Vybráno: {0}, FallbackValue=Vybráno: }"
                                            FontSize="15"
                                            Margin="0,6,0,0"
                                            Height="21" />
@@ -427,7 +427,7 @@
                                 <Button Style="{StaticResource MaterialDesignRaisedButton}"
                                         Height="33"
                                         Width="65"
-                                        Command="{Binding SetRewardToSelectedRozhodci}"
+                                        Command="{Binding SetRewardToSelectedCommand}"
                                         ToolTip="Přiřadit odměnu">
                                     <TextBlock Text="Přidat" TextWrapping="Wrap" FontSize="10" Height="15" />
                                 </Button>
@@ -445,7 +445,7 @@
                                     ToolTip="Přidat nového rozhodčího">
                                 <materialDesign:PackIcon Kind="AccountMultiplePlus" Width="25" Height="25" />
                             </Button>
-                            <TextBlock Text="{Binding RozhodciCollection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
+                            <TextBlock Text="{Binding Collection.Count, StringFormat=Celkem: {0}, FallbackValue=Celkem: }"
                                        FontSize="15"
                                        Margin="0,6,0,0"
                                        HorizontalAlignment="Right"

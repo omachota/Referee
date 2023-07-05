@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Referee.Infrastructure
 {
-	/// /// <summary>
+	/// <summary>
 	/// Base class from DynamicData library for implementing notify property changes
 	/// </summary>
 	public abstract class AbstractNotifyPropertyChanged : INotifyPropertyChanged

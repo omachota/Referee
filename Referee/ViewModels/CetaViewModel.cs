@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Input;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
 using Referee.Models;
@@ -12,34 +11,18 @@ namespace Referee.ViewModels
 {
 	public class CetaViewModel : BaseViewModel
 	{
-		private int _selectedCetaCount;
-		private bool _isDialogHostOpen;
-		private int _rawPagesCount;
-		private int _editIndex;
-		private int _reward;
 		private bool? _isAllSelected;
 		private readonly CetarService _cetarService;
 		private Cetar _selectedCetar = Cetar.CreateEmpty();
 		private Cetar _createCetar = Cetar.CreateEmpty();
 		private Cetar _selectedCetarCache = Cetar.CreateEmpty();
 
-		public ObservableCollection<int> RawPages { get; } = new(Enumerable.Range(1, 9));
-		public ObservableCollection<Cetar> CetaCollection { get; } = new();
-
-		public ICommand OpenDialogHost { get; }
-		public ICommand RawPrintCommand { get; }
-		public ICommand SelectionPrintCommand { get; }
-		public ICommand LoadCommand { get; }
-		public ICommand CloseDialogHostCommand { get; }
-		public ICommand DeleteCetarCommand { get; }
-		public ICommand CreateOrEditCetarCommand { get; }
-		public ICommand SetRewardToSelectedCetari { get; }
+		public ObservableCollection<Cetar> Collection { get; } = new();
 
 		public CetaViewModel(CetarService cetarService, Printer printer)
 		{
 			_cetarService = cetarService;
 			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "četaře", 340);
-			RawPagesCount = 1;
 			OpenDialogHost = new Command<EditorMode>(x =>
 			{
 				if (x is EditorMode mode)
@@ -47,11 +30,11 @@ namespace Referee.ViewModels
 				SelectedCetar ??= Cetar.CreateEmpty();
 				if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
 				{
-					_editIndex = CetaCollection.IndexOf(SelectedCetar);
-					if (_editIndex == -1)
+					EditIndex = Collection.IndexOf(SelectedCetar);
+					if (EditIndex == -1)
 					{
-						SelectedCetar = CetaCollection.FirstOrDefault(r => r.Id == _selectedCetarCache.Id);
-						_editIndex = CetaCollection.IndexOf(SelectedCetar);
+						SelectedCetar = Collection.FirstOrDefault(r => r.Id == _selectedCetarCache.Id);
+						EditIndex = Collection.IndexOf(SelectedCetar);
 					}
 
 					if (SelectedCetar != null && SelectedCetar.FullName != " ")
@@ -64,9 +47,9 @@ namespace Referee.ViewModels
 			});
 #pragma warning disable 4014
 			RawPrintCommand = new Command(() => printer.RawPrint<Cetar>(RawPagesCount));
-			SelectionPrintCommand = new Command(() => printer.Print(CetaCollection.Where(x => x.IsSelected).ToList()));
+			SelectionPrintCommand = new Command(() => printer.Print(Collection.Where(x => x.IsSelected).ToList()));
 			LoadCommand = new Command(() => LoadCetaAsync());
-			CreateOrEditCetarCommand = new Command(() => HandleCetar(),
+			CreateOrEditCommand = new Command(() => HandleCetar(),
 				() =>
 				{
 					if (DialogSwitchViewModel.EditorMode == EditorMode.Delete)
@@ -75,44 +58,24 @@ namespace Referee.ViewModels
 				});
 #pragma warning restore 4014
 			CloseDialogHostCommand = new Command(CloseDialog);
-			DeleteCetarCommand = new Command(() =>
+			DeleteCommand = new Command(() =>
 			{
 				DialogSwitchViewModel.SetValues(EditorMode.Delete);
 				IsDialogHostOpen = true;
 			});
-			SetRewardToSelectedCetari = new Command(() =>
+			SetRewardToSelectedCommand = new Command(() =>
 			{
-				foreach (var cetar in CetaCollection.Where(x => x.IsSelected))
+				foreach (var cetar in Collection.Where(x => x.IsSelected))
 					cetar.Reward = Reward;
 			});
-			FilterCollection = CollectionViewSource.GetDefaultView(CetaCollection);
+			FilterCollection = CollectionViewSource.GetDefaultView(Collection);
 		}
-
-		public DialogSwitchViewModel DialogSwitchViewModel { get; }
-
-		public int SelectedCetaCount
-		{
-			get => _selectedCetaCount;
-			set => SetAndRaise(ref _selectedCetaCount, value);
-		}
-
-		public bool IsDialogHostOpen
-		{
-			get => _isDialogHostOpen;
-			set => SetAndRaise(ref _isDialogHostOpen, value);
-		}
-
-		public int RawPagesCount
-		{
-			get => _rawPagesCount;
-			set => SetAndRaise(ref _rawPagesCount, value);
-		}
-
+		
 		public bool? IsAllSelected
 		{
 			get
 			{
-				var selected = CetaCollection.Select(x => x.IsSelected).Distinct().ToList();
+				var selected = Collection.Select(x => x.IsSelected).Distinct().ToList();
 				if (selected.Count == 0)
 					return false;
 				return selected.Count == 1 ? selected.Single() : null;
@@ -121,20 +84,14 @@ namespace Referee.ViewModels
 			{
 				if (value.HasValue)
 				{
-					for (int i = 0; i < CetaCollection.Count; i++)
+					for (int i = 0; i < Collection.Count; i++)
 					{
-						CetaCollection[i].IsSelected = value.Value;
+						Collection[i].IsSelected = value.Value;
 					}
 
 					SetAndRaise(ref _isAllSelected, value);
 				}
 			}
-		}
-
-		public int Reward
-		{
-			get => _reward;
-			set => SetAndRaise(ref _reward, value);
 		}
 
 		public Cetar SelectedCetar
@@ -157,11 +114,11 @@ namespace Referee.ViewModels
 				{
 					if (args.PropertyName == nameof(Cetar.IsSelected))
 					{
-						SelectedCetaCount = CetaCollection.Count(x => x.IsSelected);
+						SelectedCount = Collection.Count(x => x.IsSelected);
 						OnPropertyChanged(nameof(IsAllSelected));
 					}
 				};
-				CetaCollection.Add(cetar);
+				Collection.Add(cetar);
 				await Task.Delay(30);
 			}
 		}
@@ -171,7 +128,7 @@ namespace Referee.ViewModels
 			IsDialogHostOpen = false;
 			if (DialogSwitchViewModel.EditorMode == EditorMode.Edit)
 			{
-				CetaCollection[_editIndex].CopyValuesFrom(_selectedCetarCache);
+				Collection[EditIndex].CopyValuesFrom(_selectedCetarCache);
 				SelectedCetar = new Cetar(_selectedCetarCache);
 			}
 
@@ -191,29 +148,28 @@ namespace Referee.ViewModels
 					{
 						if (args.PropertyName == nameof(Cetar.IsSelected))
 						{
-							SelectedCetaCount = CetaCollection.Count(x => x.IsSelected);
+							SelectedCount = Collection.Count(x => x.IsSelected);
 							OnPropertyChanged(nameof(IsAllSelected));
 						}
 					};
-					CetaCollection.Add(created);
+					Collection.Add(created);
 					CreateCetar = Cetar.CreateEmpty();
 					break;
 				case EditorMode.Edit:
 				{
-					//var index = CetaCollection.IndexOf(CetaCollection.FirstOrDefault(x => x.Id == SelectedCetar.Id));
-					var index = CetaCollection.IndexOf(SelectedCetar);
+					var index = Collection.IndexOf(SelectedCetar);
 					if (index == -1)
 						throw new IndexOutOfRangeException("Cetar was not found");
-					CetaCollection[index].CopyValuesFrom(SelectedCetar);
-					await _cetarService.UpdateCetar(CetaCollection[index]);
+					Collection[index].CopyValuesFrom(SelectedCetar);
+					await _cetarService.UpdateCetar(Collection[index]);
 					break;
 				}
 				case EditorMode.Delete:
 				{
-					var selected = CetaCollection.FirstOrDefault(x => x.Id == SelectedCetar.Id);
+					var selected = Collection.FirstOrDefault(x => x.Id == SelectedCetar.Id);
 					SelectedCetar.IsSelected = false;
 					await _cetarService.DeleteCetar(selected);
-					CetaCollection.Remove(selected);
+					Collection.Remove(selected);
 					break;
 				}
 			}
