@@ -14,7 +14,7 @@ namespace Referee.Models
 		{
 		}
 
-		public Rozhodci(int id, string firstName, string lastName, DateTime birthDate, string address, string city)
+		private Rozhodci(int id, string firstName, string lastName, DateTime birthDate, string address, string city)
 		{
 			Id = id;
 			FirstName = firstName;
@@ -22,11 +22,16 @@ namespace Referee.Models
 			BirthDate = birthDate;
 			Address = address;
 			City = city;
+			Email = "";
+			Class = "";
+			TelephoneNumber = "";
+			RegistrationNumber = "";
+			BankAccountNumber = "";
 			IsSelected = false;
 		}
 
-		public Rozhodci(int id, string firstName, string lastName, DateTime birthDate, string address, string city, string email, string @class,
-		                string telephoneNumber, string registrationNumber, string bankAccountNumber)
+		private Rozhodci(int id, string firstName, string lastName, DateTime birthDate, string address, string city, string email, string @class,
+		                 string telephoneNumber, string registrationNumber, string bankAccountNumber)
 		{
 			Id = id;
 			FirstName = firstName;

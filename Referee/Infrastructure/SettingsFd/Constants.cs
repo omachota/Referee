@@ -5,7 +5,7 @@ namespace Referee.Infrastructure.SettingsFd
 {
 	public static class Constants
 	{
-		public static readonly string WorkingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+		public static readonly string WorkingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
 			"OndrejMachota", "Referee");
 
 		public static readonly Settings DefaultSettings = new Settings("ATLETIKA STARÁ BOLESLAV, z.s.", "", DateTime.Today, DateTime.Today,

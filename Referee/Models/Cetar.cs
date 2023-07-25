@@ -8,7 +8,7 @@ namespace Referee.Models
 		{
 		}
 
-		public Cetar(int id, string firstName, string lastName, DateTime birthDate, string address, string city)
+		private Cetar(int id, string firstName, string lastName, DateTime birthDate, string address, string city)
 		{
 			Id = id;
 			FirstName = firstName;

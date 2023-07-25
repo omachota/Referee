@@ -6,16 +6,16 @@ Navigační menu umožňuje pohyb mezi jednotlivými okny a nastavením. Nastave
 
 ### Rozhodčí
 
-Hlavním prvek v tomto okně je tabulka. Pomocí zaškrtávátka se vybírají rozhodčí na výplatní listinu, tlačítkem ``Edit`` v řádku editujeme rozhodčího, tlačítko s ikonou koše slouží pro smazání.
+Hlavním prvek v tomto okně je tabulka. Pomocí zaškrtávátka se vybírají rozhodčí na výplatní listinu, tlačítkem `Edit` v řádku editujeme rozhodčího, tlačítko s ikonou koše slouží pro smazání.
 
 ##### Pravé menu
 
-- Tlačítko ``Tiskárna`` vytvoří a otevře soubor s výpatní listinou.
+- Tlačítko `Tiskárna` vytvoří a otevře soubor s výpatní listinou.
 - Pod tlačítkem se zobrazuje počet vybraných rozhodčích
-- Tlačítko ``Čistý tisk`` vytvoří a otevře soubor s prázdnou výplatní listinou. Výberem vedle tlačítka volíme počet stránek.
-- Tlačítko ``Přidat`` nastaví vybraným rozhodčím částku zvolenou v políčku nalevo.
+- Tlačítko `Čistý tisk` vytvoří a otevře soubor s prázdnou výplatní listinou. Výberem vedle tlačítka volíme počet stránek.
+- Tlačítko `Přidat` nastaví vybraným rozhodčím částku zvolenou v políčku nalevo.
 - Tlačítko s osobou slouží k vytvoření nového rozhodčího.
-  - Novému rozhodčímu stačí vyplnit pouze ``jméno``, ``příjmení`` a ``datum narození``. Ostatní políčka mohou být prázdná.
+  - Novému rozhodčímu stačí vyplnit pouze `jméno`, `příjmení` a `datum narození`. Ostatní políčka mohou být prázdná.
 
 ### Četa
 
@@ -29,7 +29,7 @@ V nastavení je možné upřesnit název oddílu a informace o závodu, ke kter�
 
 Údaj se propíše do výplatní listiny pouze, když bude zaškrtnuté příslušné tlačítko (zobrazí se před ním fajfka a zmodrá). 
 
-Tlačítko ``zahodit změny`` vrátí nastavení do původního stavu.
+Tlačítko `zahodit změny` vrátí nastavení do původního stavu.
 
 ### Vyhledání osob
 
@@ -37,4 +37,4 @@ V pravém horním rohu je umístěno vyhledávací pole, přes které je možné
 
 ### Databáze
 
-Aplikace umí pracovat jak s MySQL databází, tak i s lokální SQLite databází. Typ databáze lze zvolit v nastavení. Pro použití lokální databáze stačí pouze odškrtnout zaškrtávací políčko ``Použít externí databázi``. Jinak je třeba vyplnit přístupové údaje k databázi.
+Aplikace umí pracovat jak s MySQL databází, tak i s lokální SQLite databází. Typ databáze lze zvolit v nastavení. Pro použití lokální databáze stačí pouze odškrtnout zaškrtávací políčko `Použít externí databázi`. Jinak je třeba vyplnit přístupové údaje k databázi.

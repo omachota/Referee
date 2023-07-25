@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Referee"
-#define MyAppVersion "1.0.6"
+#define MyAppVersion "1.0.7"
 #define MyAppPublisher "Ondřej Machota"
 #define MyAppExeName "Referee.exe"
 
@@ -18,7 +18,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir={#SourcePath}\bin\Release\net6.0-windows\publish-installer\
+OutputDir={#SourcePath}\bin\Release\net6.0-windows\win-x64\publish-installer\
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
@@ -31,8 +31,8 @@ Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#SourcePath}\bin\Release\net6.0-windows\publish\Referee.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourcePath}\bin\Release\net6.0-windows\publish\*"; Excludes: "*.xml, *.pdb, *.html, Referee.deps.json"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourcePath}\bin\Release\net6.0-windows\win-x64\publish\Referee.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourcePath}\bin\Release\net6.0-windows\win-x64\publish\*"; Excludes: "*.xml, *.pdb, *.html, Referee.deps.json"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
