@@ -23,6 +23,7 @@ namespace Referee.Infrastructure.WindowNavigation
 		private BaseViewModel _activeViewModel;
 		private readonly UpdateWindowCommand _updateWindowCommand;
 
+		// Jaký index v ListView patří kterému ViewModelu
 		private readonly IDictionary<Type, int> _modelsIndexes = new Dictionary<Type, int>
 		{
 			{ typeof(RozhodciViewModel), 0 },

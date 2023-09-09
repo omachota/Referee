@@ -6,6 +6,7 @@ namespace Referee.Infrastructure
 {
 	/// <summary>
 	/// Base class from DynamicData library for implementing notify property changes
+	/// source: https://github.com/reactivemarbles/DynamicData/blob/main/src/DynamicData/Binding/AbstractNotifyPropertyChanged.cs
 	/// </summary>
 	public abstract class AbstractNotifyPropertyChanged : INotifyPropertyChanged
 	{

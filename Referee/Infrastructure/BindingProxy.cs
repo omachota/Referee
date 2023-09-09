@@ -2,6 +2,7 @@ using System.Windows;
 
 namespace Referee.Infrastructure
 {
+	// https://learn.microsoft.com/en-us/answers/questions/30569/how-can-i-access-a-vm-object-declared-in-main-wind
 	public class BindingProxy : Freezable
 	{
 		protected override Freezable CreateInstanceCore() => new BindingProxy();

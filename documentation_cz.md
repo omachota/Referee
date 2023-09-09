@@ -1,5 +1,7 @@
 # Dokumentace aplikace Referee
 
+Uživatelská dokumentace aplikace Referee. Technickou dokumentaci najdete v souboru `technical_documentation_cz.md`.
+
 ### Navigační menu
 
 Navigační menu umožňuje pohyb mezi jednotlivými okny a nastavením. 
