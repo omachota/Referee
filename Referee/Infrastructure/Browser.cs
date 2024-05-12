@@ -2,13 +2,15 @@
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using Serilog;
 
 namespace Referee.Infrastructure
 {
 	internal static class Browser
 	{
-		public static void OpenLink(string url)
+		public static void OpenLink(string url, ILogger logger)
 		{
+			logger = logger.ForContext(typeof(Browser));
 			var sb = new StringBuilder();
 			sb.Append("file:///");
 			sb.Append(url.Replace("\\", "/"));
@@ -18,6 +20,7 @@ namespace Referee.Infrastructure
 			}
 			catch (Exception e)
 			{
+				logger.Error("Cannot open link in browser");
 				MessageBox.Show(e.Message, "PDF error");
 			}
 		}

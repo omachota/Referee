@@ -12,6 +12,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
+using Serilog;
 using Document = iText.Layout.Document;
 using Paragraph = iText.Layout.Element.Paragraph;
 using Path = System.IO.Path;
@@ -20,14 +21,16 @@ namespace Referee.Infrastructure
 {
 	public class Printer
 	{
+		private readonly ILogger _logger;
 		private readonly Settings _settings;
 		private const float FontSize = 11;
 
 		private bool _isCreatingPdf;
 
-		public Printer(Settings settings)
+		public Printer(Settings settings, ILogger logger)
 		{
 			_settings = settings;
+			_logger = logger.ForContext<Printer>();
 		}
 
 		public async Task RawPrint<T>(int pagesCount) where T : IPerson
@@ -319,7 +322,7 @@ namespace Referee.Infrastructure
 				}
 			}
 
-			Browser.OpenLink(filePath);
+			Browser.OpenLink(filePath, _logger);
 		}
 
 		private Cell AboutCompetitionCell(string text, PdfFont pdfFont)

@@ -6,11 +6,13 @@ using System.Windows.Data;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
 using Referee.Models;
+using Serilog;
 
 namespace Referee.ViewModels
 {
 	public class RozhodciViewModel : PersonViewModel
 	{
+		private readonly ILogger _logger;
 		private bool? _isAllSelected;
 		private readonly RozhodciService _rozhodciService;
 		private Rozhodci _selectedRozhodci = Rozhodci.CreateEmpty();
@@ -19,9 +21,10 @@ namespace Referee.ViewModels
 
 		public ObservableCollection<Rozhodci> Collection { get; } = new();
 
-		public RozhodciViewModel(RozhodciService rozhodciService, Printer printer)
+		public RozhodciViewModel(RozhodciService rozhodciService, Printer printer, ILogger logger)
 		{
 			_rozhodciService = rozhodciService;
+			_logger = logger.ForContext<RozhodciViewModel>();
 			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "rozhodčího", 480);
 			OpenDialogHost = new Command<EditorMode>(x =>
 			{
@@ -159,7 +162,10 @@ namespace Referee.ViewModels
 				{
 					var index = Collection.IndexOf(SelectedRozhodci);
 					if (index == -1)
+					{
+						_logger.Fatal("Failed to get Rozhodci");
 						throw new IndexOutOfRangeException("Rozhodci was not found");
+					}
 					Collection[index].CopyValuesFrom(SelectedRozhodci);
 					await _rozhodciService.UpdateRozhodci(Collection[index]);
 					break;

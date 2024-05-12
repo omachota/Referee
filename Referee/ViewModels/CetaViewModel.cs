@@ -6,6 +6,7 @@ using System.Windows.Data;
 using Referee.Infrastructure;
 using Referee.Infrastructure.DataServices;
 using Referee.Models;
+using Serilog;
 
 namespace Referee.ViewModels
 {
@@ -16,12 +17,14 @@ namespace Referee.ViewModels
 		private Cetar _selectedCetar = Cetar.CreateEmpty();
 		private Cetar _createCetar = Cetar.CreateEmpty();
 		private Cetar _selectedCetarCache = Cetar.CreateEmpty();
+		private readonly ILogger _logger;
 
 		public ObservableCollection<Cetar> Collection { get; } = new();
 
-		public CetaViewModel(CetarService cetarService, Printer printer)
+		public CetaViewModel(CetarService cetarService, Printer printer, ILogger logger)
 		{
 			_cetarService = cetarService;
+			_logger = logger.ForContext<CetaViewModel>();
 			DialogSwitchViewModel = new DialogSwitchViewModel("Přidat", "četaře", 340);
 			OpenDialogHost = new Command<EditorMode>(x =>
 			{
@@ -159,7 +162,10 @@ namespace Referee.ViewModels
 				{
 					var index = Collection.IndexOf(SelectedCetar);
 					if (index == -1)
+					{
+						_logger.Fatal("Failed to get Cetar");
 						throw new IndexOutOfRangeException("Cetar was not found");
+					}
 					Collection[index].CopyValuesFrom(SelectedCetar);
 					await _cetarService.UpdateCetar(Collection[index]);
 					break;

@@ -3,22 +3,26 @@ using System.Threading.Tasks;
 using Dapper;
 using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
+using Serilog;
 
 namespace Referee.Infrastructure.DataServices
 {
 	public class RozhodciService
 	{
+		private readonly ILogger _logger;
 		private readonly DapperContext _context;
 		private readonly DbSettings _dbSettings;
 
-		public RozhodciService(DapperContext context, DbSettings dbSettings)
+		public RozhodciService(DapperContext context, DbSettings dbSettings, ILogger logger)
 		{
 			_context = context;
 			_dbSettings = dbSettings;
+			_logger = logger.ForContext<RozhodciService>();
 		}
 
 		public async IAsyncEnumerable<Rozhodci> GetRozhodci()
 		{
+			_logger.Information("getting Rozhodci");
 			await using var connection = _context.CreateConnection();
 			var reader = await connection.ExecuteReaderAsync("SELECT * FROM Rozhodci");
 			var parser = reader.GetRowParser<Rozhodci>();
@@ -50,7 +54,7 @@ namespace Referee.Infrastructure.DataServices
 			var id = await connection.QuerySingleAsync<int>(
 				$"INSERT INTO Rozhodci (FirstName, LastName, BirthDate, Address, City, Email, Class, TelephoneNumber, RegistrationNumber, BankAccountNumber) VALUES (@firstName, @lastName, @birthDate, @address, @city, @email, @class, @telephoneNumber, @registrationNumber, @bankAccountNumber); SELECT {DatabaseExtension.LastId(_dbSettings.ExternalDb)}",
 				parameters);
-
+			
 			return id;
 		}
 
@@ -69,9 +73,12 @@ namespace Referee.Infrastructure.DataServices
 			parameters.Add("@bankAccountNumber", rozhodci.BankAccountNumber);
 			parameters.Add("@id", rozhodci.Id);
 			await using var connection = _context.CreateConnection();
-			await connection.ExecuteAsync(
+			var af = await connection.ExecuteAsync(
 				"UPDATE Rozhodci SET FirstName=@firstName, LastName=@lastName, BirthDate=@birthDate, Address=@address, City=@city, Email=@email, Class=@class, TelephoneNumber=@telephoneNumber, RegistrationNumber=@registrationNumber, BankAccountNumber=@bankAccountNumber WHERE Id=@id",
 				parameters);
+			
+			if (af == 0)
+				_logger.Warning("Failed to update Rozhodci");
 		}
 
 		public async Task DeleteRozhodci(Rozhodci rozhodci)
@@ -79,7 +86,9 @@ namespace Referee.Infrastructure.DataServices
 			var parameters = new DynamicParameters();
 			parameters.Add("@id", rozhodci.Id);
 			await using var connection = _context.CreateConnection();
-			await connection.ExecuteAsync("DELETE FROM Rozhodci WHERE Id=@id", parameters);
+			var af = await connection.ExecuteAsync("DELETE FROM Rozhodci WHERE Id=@id", parameters);
+			if (af == 0)
+				_logger.Warning("Failed to delete Rozhodci");
 		}
 	}
 }

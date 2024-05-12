@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Referee.Infrastructure.SettingsFd;
+using Serilog;
 
 namespace Referee.Infrastructure.Update
 {
@@ -19,13 +20,15 @@ namespace Referee.Infrastructure.Update
 
 
 		// GET https://api.github.com/repos/omachota/Referee/releases
-		public static async Task CheckVersion()
+		public static async Task CheckVersion(ILogger logger)
 		{
+			logger = logger.ForContext(typeof(Updater));
 			HttpResponseMessage respose;
 			var client = new HttpClient();
 			client.DefaultRequestHeaders.Add("User-Agent", "request");
 			try
 			{
+				logger.Information("checking version");
 				respose = await client.GetAsync("https://api.github.com/repos/omachota/Referee/releases").ConfigureAwait(false);
 			}
 			catch
@@ -48,6 +51,7 @@ namespace Referee.Infrastructure.Update
 				return;
 			}
 
+			logger.Information("downloading new version");
 			await Download(json[0].Assets[0].BrowserDownloadUrl.ToString(), client);
 
 			client.Dispose();

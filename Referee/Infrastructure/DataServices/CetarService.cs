@@ -4,22 +4,26 @@ using System.Threading.Tasks;
 using Dapper;
 using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
+using Serilog;
 
 namespace Referee.Infrastructure.DataServices
 {
 	public class CetarService
 	{
+		private ILogger _logger;
 		private readonly DapperContext _context;
 		private readonly DbSettings _dbSettings;
 
-		public CetarService(DapperContext context, DbSettings dbSettings)
+		public CetarService(DapperContext context, DbSettings dbSettings, ILogger logger)
 		{
 			_context = context;
 			_dbSettings = dbSettings;
+			_logger = logger.ForContext<CetarService>();
 		}
 
 		public async IAsyncEnumerable<Cetar> GetCeta()
 		{
+			_logger.Information("getting Ceta");
 			await using var connection = _context.CreateConnection();
 			var reader = await connection.ExecuteReaderAsync("SELECT * FROM Ceta");
 			var parser = reader.GetRowParser<Cetar>();
@@ -62,9 +66,12 @@ namespace Referee.Infrastructure.DataServices
 			parameters.Add("@id", cetar.Id);
 
 			await using var connection = _context.CreateConnection();
-			await connection.ExecuteAsync(
+			var af = await connection.ExecuteAsync(
 				"UPDATE Ceta SET FirstName=@firstName, LastName=@lastName, BirthDate=@birthDate, Address=@address, City=@city WHERE Id=@id",
 				parameters);
+			
+			if (af == 0)
+				_logger.Error("Failed to update Cetar");
 		}
 
 		public async Task DeleteCetar(Cetar cetar)
@@ -72,7 +79,10 @@ namespace Referee.Infrastructure.DataServices
 			var parameters = new DynamicParameters();
 			parameters.Add("@id", cetar.Id);
 			await using var connection = _context.CreateConnection();
-			await connection.ExecuteAsync("DELETE FROM Ceta WHERE Id=@id", parameters);
+			var af = await connection.ExecuteAsync("DELETE FROM Ceta WHERE Id=@id", parameters);
+			if (af == 0)
+				_logger.Error("Failed to delete Cetar");
+			
 		}
 	}
 }

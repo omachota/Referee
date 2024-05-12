@@ -7,6 +7,7 @@ using Referee.Infrastructure.DataServices;
 using Referee.Infrastructure.SettingsFd;
 using Referee.Models;
 using Referee.ViewModels;
+using Serilog;
 
 namespace Referee.Infrastructure.WindowNavigation
 {
@@ -31,12 +32,13 @@ namespace Referee.Infrastructure.WindowNavigation
 			{ typeof(SettingsViewModel), 2 }
 		};
 
-		public WindowManager(Settings settings, DapperContext context)
+		public WindowManager(Settings settings, DapperContext context, ILogger logger)
 		{
-			var printer = new Printer(settings);
-			var rozhodciService = new RozhodciService(context, settings.DbSettings);
-			var cetaService = new CetarService(context, settings.DbSettings);
-			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer);
+			logger = logger.ForContext<WindowManager>();
+			var printer = new Printer(settings, logger);
+			var rozhodciService = new RozhodciService(context, settings.DbSettings, logger);
+			var cetaService = new CetarService(context, settings.DbSettings, logger);
+			_updateWindowCommand = new UpdateWindowCommand(this, rozhodciService, cetaService, settings, printer, logger);
 			_updateWindowCommand.Execute(ViewType.Rozhodci);
 		}
 
@@ -51,7 +53,7 @@ namespace Referee.Infrastructure.WindowNavigation
 		}
 
 		public int ActiveViewModelIndex => _modelsIndexes[ActiveViewModel.GetType()];
-		
+
 		public string Search;
 		private const string Patt = "[ěščřžýáíéúůóďťňa-zA-Z ]*";
 		private Regex _reg;
@@ -72,10 +74,10 @@ namespace Referee.Infrastructure.WindowNavigation
 			_onlySpaces = false;
 			if (string.IsNullOrEmpty(Search))
 				return;
-			
+
 			var pattern = new StringBuilder();
 			pattern.Append('^');
-			
+
 			// ignore leading whitespace
 			var i = 0;
 			for (; i < Search.Length; i++)
@@ -83,7 +85,7 @@ namespace Referee.Infrastructure.WindowNavigation
 				if (Search[i] != ' ')
 					break;
 			}
-			
+
 			// invalidate if Search contains only spaces
 			if (i == Search.Length)
 				_onlySpaces = true;
@@ -98,7 +100,8 @@ namespace Referee.Infrastructure.WindowNavigation
 						lastSpace = i;
 						continue;
 					}
-					lastSpace = i;	
+
+					lastSpace = i;
 					pattern.Append(Patt);
 					pattern.Append(' ');
 				}
